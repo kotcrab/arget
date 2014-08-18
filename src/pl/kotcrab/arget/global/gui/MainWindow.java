@@ -32,6 +32,7 @@ import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
+import pl.kotcrab.arget.event.SaveProfileEvent;
 import pl.kotcrab.arget.global.ConnectionStatus;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.ContactStatus;
@@ -420,6 +421,11 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void onEvent (Event event) {
 		if (event instanceof MenuEvent) processMenuEvent((MenuEvent)event);
+
+		if (event instanceof SaveProfileEvent) {
+			ProfileIO.saveProfile(profile);
+			rebuildServersList();
+		}
 	}
 
 	private void processMenuEvent (MenuEvent event) {
@@ -451,16 +457,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			});
 			break;
 		case SERVERS_MANAGE:
-			new ManageServersDialog(instance, profile.servers, profile.autoconnectInfo, new ManageServersDialogFinished() {
-
-				@Override
-				public void finished (ArrayList<ServerInfo> servers, ServerInfo autoconnectInfo) {
-					profile.servers = servers;
-					profile.autoconnectInfo = autoconnectInfo;
-					ProfileIO.saveProfile(profile);
-					rebuildServersList();
-				}
-			});
+			new ManageServersDialog(instance, profile);
 			break;
 		case SERVERS_DISCONNECT:
 			if (globalClient != null) {

@@ -20,24 +20,22 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import pl.kotcrab.arget.event.SaveProfileEvent;
 import pl.kotcrab.arget.global.ServerInfo;
 import pl.kotcrab.arget.gui.ESCClosableDialog;
+import pl.kotcrab.arget.profile.Profile;
 
 public class ManageServersDialog extends ESCClosableDialog {
-	private ManageServersDialogFinished listener;
-
 	private ServerInfoListModel listModel;
 	private JList<ServerInfo> list;
 	private ServerInfo autoconnectInfo;
 	private JLabel autoconnectLabel;
 
 	// TODO just pass Profile instaned of autoconnect, and server list
-	public ManageServersDialog (JFrame frame, ArrayList<ServerInfo> serversList, ServerInfo autoconnectInfo,
-		final ManageServersDialogFinished listener) {
+	public ManageServersDialog (JFrame frame, Profile profile) {
 		super(frame, true);
 
-		this.listener = listener;
-		this.autoconnectInfo = autoconnectInfo;
+		this.autoconnectInfo = profile.autoconnectInfo;
 
 		setSize(436, 300);
 		setPositionToCenter(frame);
@@ -76,7 +74,6 @@ public class ManageServersDialog extends ESCClosableDialog {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed (ActionEvent e) {
-					// TODO remove autoconnect if matches
 					deleteSelectedItem();
 				}
 			});
@@ -96,15 +93,15 @@ public class ManageServersDialog extends ESCClosableDialog {
 			});
 		}
 
-		createBottomPane();
+		createBottomPane(profile);
 
-		for (ServerInfo desc : serversList)
+		for (ServerInfo desc : profile.servers)
 			listModel.addElement(desc);
 
 		setVisible(true);
 	}
 
-	private void createBottomPane () {
+	private void createBottomPane (final Profile profile) {
 		JPanel bottomPane = new JPanel(new BorderLayout(0, 0));
 		bottomPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		getContentPane().add(bottomPane, BorderLayout.SOUTH);
@@ -129,7 +126,9 @@ public class ManageServersDialog extends ESCClosableDialog {
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				listener.finished(listModel.toArrayList(), autoconnectInfo);
+				profile.servers = listModel.toArrayList();
+				profile.autoconnectInfo = autoconnectInfo;
+				MainWindow.eventBus.post(new SaveProfileEvent());
 				dispose();
 			}
 		});
@@ -148,7 +147,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 
 	private void modifyItem () {
 		if (isSomethingSelected() == false) return;
-// TODO change instance
+		// TODO change instance
 		new CreateServerInfoDialog(MainWindow.instance, list.getSelectedValue());
 		listModel.updateContactsTable();
 	}
@@ -215,8 +214,4 @@ public class ManageServersDialog extends ESCClosableDialog {
 		}
 	}
 
-}
-
-interface ManageServersDialogFinished {
-	public void finished (ArrayList<ServerInfo> servers, ServerInfo autoconnect);
 }
