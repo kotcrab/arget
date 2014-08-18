@@ -1,6 +1,7 @@
 
 package pl.kotcrab.arget.gui;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
@@ -41,7 +42,7 @@ public class ESCClosableDialog extends JDialog {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyDispatcher);
 	}
 
-	protected void setPositionToCenter (Frame owner) {
+	protected void setPositionToCenter (Component owner) {
 		if (owner == null)
 			setLocation(100, 100);
 		else {

@@ -31,7 +31,6 @@ public class ManageServersDialog extends ESCClosableDialog {
 	private ServerInfo autoconnectInfo;
 	private JLabel autoconnectLabel;
 
-	// TODO just pass Profile instaned of autoconnect, and server list
 	public ManageServersDialog (JFrame frame, Profile profile) {
 		super(frame, true);
 
@@ -71,6 +70,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 				}
 			});
 
+			//TODO add confirmation
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed (ActionEvent e) {
@@ -142,13 +142,12 @@ public class ManageServersDialog extends ESCClosableDialog {
 	}
 
 	private void addNewItem () {
-		new CreateServerInfoDialog(MainWindow.instance, listModel);
+		new CreateServerInfoDialog(this, listModel);
 	}
 
 	private void modifyItem () {
 		if (isSomethingSelected() == false) return;
-		// TODO change instance
-		new CreateServerInfoDialog(MainWindow.instance, list.getSelectedValue());
+		new CreateServerInfoDialog(this, list.getSelectedValue());
 		listModel.updateContactsTable();
 	}
 

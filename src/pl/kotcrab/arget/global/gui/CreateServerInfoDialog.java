@@ -4,11 +4,11 @@ package pl.kotcrab.arget.global.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -32,16 +32,20 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 	private JButton okButton;
 
 	/** @wbp.parser.constructor */
-	public CreateServerInfoDialog (JFrame frame, CreateServerDialogFinished listener) {
-		this(frame, null, listener);
+	public CreateServerInfoDialog (Window window, CreateServerDialogFinished listener) {
+		this(window, null, listener);
 	}
 
-	public CreateServerInfoDialog (JFrame frame, ServerInfo descriptor) {
-		this(frame, descriptor, null);
+	public CreateServerInfoDialog (Window window, ServerInfo descriptor) {
+		this(window, descriptor, null);
 	}
 
-	public CreateServerInfoDialog (JFrame frame, ServerInfo existingDesc, CreateServerDialogFinished listener) {
-		super(frame, true);
+	public CreateServerInfoDialog (Window window, ServerInfo existingDesc, CreateServerDialogFinished listener) {
+		super(window, ModalityType.APPLICATION_MODAL);
+		init(existingDesc, listener);
+	}
+
+	private void init (ServerInfo existingDesc, CreateServerDialogFinished listener) {
 		this.existingDesc = existingDesc;
 		this.listener = listener;
 
@@ -49,7 +53,7 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Edit Server Details");
 		setSize(233, 149);
-		setPositionToCenter(frame);
+		setPositionToCenter(getParent());
 		setResizable(false);
 
 		JPanel contentPanel = new JPanel();
