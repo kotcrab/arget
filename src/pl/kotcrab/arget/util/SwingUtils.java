@@ -7,8 +7,7 @@ import java.awt.Rectangle;
 
 public class SwingUtils {
 	public static boolean isRectangleDisplayableOnScreen (Rectangle rect) {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice[] gd = ge.getScreenDevices();
+		GraphicsDevice[] gd = getScreenDevices();
 
 		for (int i = 0; i < gd.length; i++) {
 			Rectangle screen = gd[i].getDefaultConfiguration().getBounds();
@@ -18,4 +17,15 @@ public class SwingUtils {
 		return false;
 	}
 
+	public static Rectangle getPrimaryMonitorBounds () {
+		GraphicsDevice[] gd = getScreenDevices();
+
+		if (gd.length > 0) return gd[0].getDefaultConfiguration().getBounds();
+
+		return null;
+	}
+
+	public static GraphicsDevice[] getScreenDevices () {
+		return GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+	}
 }
