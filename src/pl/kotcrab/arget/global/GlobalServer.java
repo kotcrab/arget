@@ -61,8 +61,7 @@ public class GlobalServer {
 		if (infoFileName.equals("default")) Log.w(TAG, "Configuration file not specified, using default file");
 		infoFile = new File(GlobalServerInfoIO.getServersInfoDirectory() + infoFileName);
 		info = GlobalServerInfoIO.loadInfo(infoFile);
-		Log.l(TAG, "MOTD: '" + info.motd + "'");
-		Log.l(TAG, "Hosted by: '" + info.hostedBy + "'");
+		Log.l(TAG, String.format("MOTD: '%s', hosted by: '%s'", info.motd, info.hostedBy));
 
 		try {
 			init(port);
