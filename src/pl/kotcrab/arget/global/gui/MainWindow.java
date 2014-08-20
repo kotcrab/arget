@@ -139,21 +139,13 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				instance.validate();
 				instance.revalidate();
 				instance.repaint();
-			}
-		});
-
-		addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowIconified (WindowEvent e) {
-				getCenterScreen().onHide();
-
-			}
-
-			@Override
-			public void windowDeiconified (WindowEvent e) {
+				
 				getCenterScreen().onShow();
+			}
 
+			@Override
+			public void windowLostFocus (WindowEvent e) {
+				getCenterScreen().onHide();
 			}
 
 		});
