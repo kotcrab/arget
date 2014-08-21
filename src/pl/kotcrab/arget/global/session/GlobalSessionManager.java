@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExist;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
@@ -54,7 +54,7 @@ public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
 			for (GlobalSession ses : sessions) {
 				if ((ses.requester == target && ses.target == update.reciever)
 					|| (ses.requester == update.reciever && ses.target == target)) {
-					update.reciever.send(new SessionAlreadyExist(request.id));
+					update.reciever.send(new SessionAlreadyExistNotification(request.id));
 					return;
 				}
 

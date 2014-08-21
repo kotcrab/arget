@@ -9,17 +9,17 @@ import java.util.UUID;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionAccepted;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitDataExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionAcceptedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherKeysTrsanfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionData;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejectedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReadyNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
@@ -80,12 +80,12 @@ public class LocalSessionManager {
 			SessionRemoteAcceptRequest request = (SessionRemoteAcceptRequest)ex;
 
 			if (guiCallback.isKeyInContacts(request.requesterKey)) {
-				send(new SessionAccepted(request.id));
+				send(new SessionAcceptedNotification(request.id));
 				sessions.add(new LocalSession(request.id, request.requesterKey));
 				listener.sessionCreated(request.id, request.requesterKey);
 				return;
 			} else {
-				send(new SessionRejected(request.id));
+				send(new SessionRejectedNotification(request.id));
 				return;
 			}
 
@@ -105,31 +105,31 @@ public class LocalSessionManager {
 			return;
 		}
 
-		if (ex instanceof SessionAccepted) {
-			send(new SessionCipherInitDataExchange(ex.id, session.cipherInitLine));
+		if (ex instanceof SessionAcceptedNotification) {
+			send(new SessionCipherKeysTrsanfer(ex.id, session.cipherInitLine));
 			return;
 		}
 
-		if (ex instanceof SessionCipherInitDataExchange) {
-			SessionCipherInitDataExchange init = (SessionCipherInitDataExchange)ex;
+		if (ex instanceof SessionCipherKeysTrsanfer) {
+			SessionCipherKeysTrsanfer init = (SessionCipherKeysTrsanfer)ex;
 			boolean success = session.initCipherWithKeys(server.getProfile().rsa.getPrivateKey(), init.initData);
 
 			if (success) {
 				session.sessionReady = true;
 				listener.sessionReady(init.id);
-				send(new SessionRemoteReady(init.id));
+				send(new SessionRemoteReadyNotification(init.id));
 			} else
 				send(new SessionCipherInitError(init.id));
 		}
 
-		if (ex instanceof SessionRemoteReady) {
+		if (ex instanceof SessionRemoteReadyNotification) {
 			session.sessionReady = true;
 			listener.sessionReady(ex.id);
 			return;
 		}
 
-		if (ex instanceof SessionEncryptedExchange) {
-			SessionEncryptedExchange enc = (SessionEncryptedExchange)ex;
+		if (ex instanceof SessionEncryptedTransfer) {
+			SessionEncryptedTransfer enc = (SessionEncryptedTransfer)ex;
 			byte[] data = session.decrypt(enc.data);
 			listener.sessionDataRecieved((InternalSessionExchange)KryoUtils.readClassAndObjectFromByteArray(receiverKryo, data));
 		}
@@ -145,7 +145,7 @@ public class LocalSessionManager {
 			LocalSession session = getSessionByUUID(ex.id);
 
 			byte[] data = KryoUtils.writeClassAndObjectToByteArray(senderKryo, ex);
-			server.send(new SessionEncryptedExchange(ex.id, session.encrypt(data)));
+			server.send(new SessionEncryptedTransfer(ex.id, session.encrypt(data)));
 
 			return;
 		}

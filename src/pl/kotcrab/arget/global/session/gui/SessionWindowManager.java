@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.comm.Msg;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExist;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejectedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
@@ -116,7 +116,7 @@ public class SessionWindowManager implements LocalSessionListener {
 
 		if (ex instanceof SessionCloseNotification)
 			panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
-		else if (ex instanceof SessionRejected)
+		else if (ex instanceof SessionRejectedNotification)
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session rejected by remote"));
 		else if (ex instanceof SessionCipherInitError)
 			panel.addMessage(new TextMessage(Msg.ERROR, "Remote could not initialize cipher"));
@@ -125,7 +125,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		else if (ex instanceof SessionTargetKeyNotFound)
 			panel.addMessage(new TextMessage(Msg.ERROR,
 				"Server could not found key for this contact (contact not connected or internal error)"));
-		else if (ex instanceof SessionAlreadyExist)
+		else if (ex instanceof SessionAlreadyExistNotification)
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session already exist on server"));
 		else
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session closed, error unrecognized: " + ex.getClass()));

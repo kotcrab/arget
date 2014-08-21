@@ -20,20 +20,20 @@ import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationReque
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationResponse;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionAccepted;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExist;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitDataExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionAcceptedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherKeysTrsanfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionData;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidReciever;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejectedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReadyNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
@@ -86,20 +86,20 @@ public class KryoUtils {
 		kryo.register(TestMsgResponseOKNotification.class);
 		kryo.register(ServerInfoTransfer.class);
 
-		kryo.register(SessionAccepted.class);
-		kryo.register(SessionAlreadyExist.class);
-		kryo.register(SessionCipherInitDataExchange.class);
+		kryo.register(SessionAcceptedNotification.class);
+		kryo.register(SessionAlreadyExistNotification.class);
+		kryo.register(SessionCipherKeysTrsanfer.class);
 		kryo.register(SessionCipherInitError.class);
 		kryo.register(SessionCloseNotification.class);
 		kryo.register(SessionCreateRequest.class);
 		kryo.register(SessionData.class);
-		kryo.register(SessionEncryptedExchange.class);
+		kryo.register(SessionEncryptedTransfer.class);
 		kryo.register(SessionExchange.class);
 		kryo.register(SessionInvalidIDNotification.class);
 		kryo.register(SessionInvalidReciever.class);
-		kryo.register(SessionRejected.class);
+		kryo.register(SessionRejectedNotification.class);
 		kryo.register(SessionRemoteAcceptRequest.class);
-		kryo.register(SessionRemoteReady.class);
+		kryo.register(SessionRemoteReadyNotification.class);
 		kryo.register(SessionTargetKeyNotFound.class);
 	}
 

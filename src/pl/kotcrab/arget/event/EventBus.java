@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import pl.kotcrab.arget.util.ProcessingQueue;
 
+//TODO add executors?
 public class EventBus {
 	private EventListener listener;
 	private ProcessingQueue<Event> queue;
