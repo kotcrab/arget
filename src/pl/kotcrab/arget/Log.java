@@ -9,6 +9,7 @@ import java.util.Date;
 
 /** Log utility, log events are redirected to listener and printed to standard output
  * @author Pawel Pastuszak */
+//TODO stop stealing streams
 public class Log {
 	private static final String TAG = "Log";
 	private static final boolean DEBUG = App.DEBUG;

@@ -1,5 +1,5 @@
 
-package pl.kotcrab.arget.test;
+package pl.kotcrab.arget.test.manual;
 
 import java.security.Provider;
 import java.security.Security;

@@ -1,5 +1,5 @@
 
-package pl.kotcrab.arget.test;
+package pl.kotcrab.arget.test.manual;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;

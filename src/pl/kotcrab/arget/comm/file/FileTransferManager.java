@@ -34,10 +34,8 @@ import pl.kotcrab.arget.util.FileUitls;
 import pl.kotcrab.arget.util.ImageUitls;
 import pl.kotcrab.arget.util.ThreadUtils;
 
-//TODO przewrsjki przesylanie gdy koniec sessji
-//TODO gdy osoba ktora przesyla anuluje u celu pokazuje sie komunikat done zamist canceled
+//TODO abort send on session ends
 //TODO remove illegal character from filename, for example : is allowed on linux, disallowed on windows
-//TODO huge cpu usage if sender cancels file
 public class FileTransferManager {
 	private static final String TAG = "FileTransfer";
 
