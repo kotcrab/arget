@@ -39,6 +39,7 @@ import pl.kotcrab.arget.util.ThreadUtils;
 //TODO remove illegal character from filename, for example : is allowed on linux, disallowed on windows
 //TODO huge cpu usage if sender cancels file
 public class FileTransferManager {
+	private static final String TAG = "FileTransfer";
 
 	private LocalSessionManager sessionManager;
 	private SessionWindowManager windowManager;
@@ -141,6 +142,8 @@ public class FileTransferManager {
 					BufferedImage image = ImageUitls.read(data);
 					if (image != null)
 						windowManager.addMessage(task.getSession(), new ImageMessage(Msg.LEFT, image, task.getFileName()));
+					else
+						Log.err(TAG, "Received image data but program was unable to build image form it.");
 				}
 			});
 
@@ -170,14 +173,12 @@ public class FileTransferManager {
 				public void buttonFileAccepted (FileTransferTask task) {
 					task.begin();
 					send(new FileAcceptedNotification(req.id, req.taskId));
-					// sessionManager.sendEncryptedData(session, Msg.FILE_ACCEPTED + task.getId());
 					setMessageStatus(task, FileTransferMessage.Status.INPROGRESS);
 				}
 
 				@Override
 				public void buttonFileRejectedOrCanceled (FileTransferTask task) {
 					send(new FileTransferCancelNotification(session.id, task.getId()));
-					// sessionManager.sendEncryptedData(session, Msg.FILE_CANCEL + task.getId());
 					if (task.getStatus() == Status.INPROGRESS) task.cancel();
 					setMessageStatus(task, FileTransferMessage.Status.CANCELED);
 				}
@@ -234,8 +235,7 @@ public class FileTransferManager {
 			if (task.isBlockOkShouldBeSend()) {
 				send(new FileDataBlockReceivedNotification(session.id, task.getId()));
 				task.setBlockOkShouldBeSend(false);
-			} else
-				Log.w("Warning! Received corrupted data block!");
+			}
 		}
 
 		if (ex instanceof FileDataBlockReceivedNotification) setTaskReadyToSendNextBlock(ex.taskId);

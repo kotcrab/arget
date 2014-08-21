@@ -53,6 +53,8 @@ public class SendFileTask extends FileTransferTask {
 
 				if (read != -1 && read != 0) {
 					readBytes += read;
+					
+					byte[] dataToReturn = bytes.clone();
 
 					if (in.available() != 0) {
 						bytes = getNextByteArray(in);
@@ -61,7 +63,7 @@ public class SendFileTask extends FileTransferTask {
 					blockCounter++;
 
 					if (blockCounter >= BLOCKS_IN_BATCH) readyToSendNextBlock = false;
-					return bytes;
+					return dataToReturn;
 				} else {
 					finish();
 					return null;
