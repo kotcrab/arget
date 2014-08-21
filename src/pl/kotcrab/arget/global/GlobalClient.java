@@ -19,12 +19,12 @@ import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
-import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
-import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyExchange;
+import pl.kotcrab.arget.comm.exchange.internal.KeychainTransfer;
+import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationResponse;
-import pl.kotcrab.arget.comm.exchange.internal.ResponseOKNotification;
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.global.gui.MainWindowCallback;
 import pl.kotcrab.arget.global.session.LocalSessionListener;
@@ -127,7 +127,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 		successfullyInitialized = true;
 	}
 
-	private void processKeychain (KeychainExchange keychain) {
+	private void processKeychain (KeychainTransfer keychain) {
 		lastKeychain = keychain.publicKeys;
 		guiCallback.updateContacts(); // this will call processLastKeychain
 	}
@@ -252,7 +252,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 				break;
 			}
 
-			send(new ProfilePublicKeyExchange(profile.rsa.getPublicKey().getEncoded()));
+			send(new ProfilePublicKeyTransfer(profile.rsa.getPublicKey().getEncoded()));
 			state = State.WAIT_FOR_TEST_DATA;
 		}
 
@@ -262,7 +262,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 			state = State.WAIT_FOR_OK_NOTIF;
 		}
 
-		if (ex instanceof ResponseOKNotification && state == State.WAIT_FOR_OK_NOTIF) {
+		if (ex instanceof TestMsgResponseOKNotification && state == State.WAIT_FOR_OK_NOTIF) {
 			state = State.CONNECTED;
 			guiCallback.setConnectionStatus(ConnectionStatus.CONNECTED);
 			pinger.start();
@@ -294,9 +294,9 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 				JOptionPane.showMessageDialog(null, "Somebody with your key connected to server, you were disconnected."
 					+ " WARNING: If this wasn't you that may mean that your profile keys were stolen!");
 
-			if (ex instanceof KeychainExchange) processKeychain((KeychainExchange)ex);
+			if (ex instanceof KeychainTransfer) processKeychain((KeychainTransfer)ex);
 			if (ex instanceof SessionExchange) sessionManager.processReceivedElementLater((SessionExchange)ex);
-			if (ex instanceof ServerInfoExchange) guiCallback.setServerInfo((ServerInfoExchange)ex);
+			if (ex instanceof ServerInfoTransfer) guiCallback.setServerInfo((ServerInfoTransfer)ex);
 		}
 	}
 

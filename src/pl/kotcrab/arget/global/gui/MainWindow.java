@@ -26,7 +26,7 @@ import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.Settings;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.event.EventListener;
@@ -406,7 +406,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	@Override
-	public void setServerInfo (ServerInfoExchange info) {
+	public void setServerInfo (ServerInfoTransfer info) {
 		homePanel.setServerText(info);
 	}
 

@@ -3,7 +3,7 @@ package pl.kotcrab.arget.global.gui;
 
 import java.awt.Component;
 
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.global.ConnectionStatus;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.ServerInfo;
@@ -31,5 +31,5 @@ public interface MainWindowCallback {
 
 	public void connectToServer (ServerInfo info);
 
-	public void setServerInfo (ServerInfoExchange info);
+	public void setServerInfo (ServerInfoTransfer info);
 }

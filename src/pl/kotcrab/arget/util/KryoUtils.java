@@ -13,13 +13,13 @@ import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
-import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
+import pl.kotcrab.arget.comm.exchange.internal.KeychainTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
-import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyExchange;
+import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationResponse;
-import pl.kotcrab.arget.comm.exchange.internal.ResponseOKNotification;
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAccepted;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExist;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitDataExchange;
@@ -77,14 +77,14 @@ public class KryoUtils {
 
 		kryo.register(EncryptedData.class);
 
-		kryo.register(KeychainExchange.class);
+		kryo.register(KeychainTransfer.class);
 		kryo.register(KeychainRequest.class);
 		kryo.register(KeyUsedByOtherNotification.class);
-		kryo.register(ProfilePublicKeyExchange.class);
+		kryo.register(ProfilePublicKeyTransfer.class);
 		kryo.register(ProfilePublicKeyVerificationRequest.class);
 		kryo.register(ProfilePublicKeyVerificationResponse.class);
-		kryo.register(ResponseOKNotification.class);
-		kryo.register(ServerInfoExchange.class);
+		kryo.register(TestMsgResponseOKNotification.class);
+		kryo.register(ServerInfoTransfer.class);
 
 		kryo.register(SessionAccepted.class);
 		kryo.register(SessionAlreadyExist.class);

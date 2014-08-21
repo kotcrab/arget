@@ -5,7 +5,7 @@ import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.gui.CenterPanel;
 
 public class HomePanel extends CenterPanel {
@@ -34,7 +34,7 @@ public class HomePanel extends CenterPanel {
 		setServerText(null);
 	}
 
-	public void setServerText (ServerInfoExchange info) {
+	public void setServerText (ServerInfoTransfer info) {
 		String text = "<html><center>";
 		text += "Server details:";
 		text += "<br>";

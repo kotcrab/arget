@@ -16,8 +16,8 @@ import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
-import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
+import pl.kotcrab.arget.comm.exchange.internal.KeychainTransfer;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.kryo.StoppableThreadedListener;
 import pl.kotcrab.arget.global.session.GlobalSessionManager;
 import pl.kotcrab.arget.global.session.GlobalSessionUpdate;
@@ -315,7 +315,7 @@ public class GlobalServer {
 			}
 
 			@Override
-			public ServerInfoExchange getServerInfoExchange () {
+			public ServerInfoTransfer getServerInfoExchange () {
 				return createInfoInstance();
 			}
 
@@ -327,8 +327,8 @@ public class GlobalServer {
 			server.send(createInfoInstance());
 	}
 
-	private ServerInfoExchange createInfoInstance () {
-		return new ServerInfoExchange(info.motd, info.hostedBy, new ArrayList<String>(info.publicMsg));
+	private ServerInfoTransfer createInfoInstance () {
+		return new ServerInfoTransfer(info.motd, info.hostedBy, new ArrayList<String>(info.publicMsg));
 	}
 
 	private void disconnectConnection (Connection connection) {
@@ -347,7 +347,7 @@ public class GlobalServer {
 
 	private void sendKeychainToAllClients () {
 		for (ResponseServer server : remotes.values())
-			server.send(new KeychainExchange(new ArrayList<String>(publicKeys)));
+			server.send(new KeychainTransfer(new ArrayList<String>(publicKeys)));
 
 	}
 
@@ -370,7 +370,7 @@ interface GlobalInterface {
 
 	public ArrayList<String> getKeychain ();
 
-	public ServerInfoExchange getServerInfoExchange ();
+	public ServerInfoTransfer getServerInfoExchange ();
 
 	public void disconnect (Connection connection);
 

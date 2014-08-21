@@ -15,12 +15,12 @@ import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
-import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
+import pl.kotcrab.arget.comm.exchange.internal.KeychainTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
-import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyExchange;
+import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationResponse;
-import pl.kotcrab.arget.comm.exchange.internal.ResponseOKNotification;
+import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.global.session.GlobalSessionUpdate;
 import pl.kotcrab.arget.util.KryoUtils;
@@ -184,8 +184,8 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 			state = State.WAIT_FOR_PUBLIC_PROFILE_KEY;
 		}
 
-		if (ex instanceof ProfilePublicKeyExchange && state == State.WAIT_FOR_PUBLIC_PROFILE_KEY) {
-			ProfilePublicKeyExchange keyExchange = (ProfilePublicKeyExchange)ex;
+		if (ex instanceof ProfilePublicKeyTransfer && state == State.WAIT_FOR_PUBLIC_PROFILE_KEY) {
+			ProfilePublicKeyTransfer keyExchange = (ProfilePublicKeyTransfer)ex;
 			profilePublicKey = keyExchange.key;
 
 			randomUUID = UUID.randomUUID().toString();
@@ -201,9 +201,10 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 			ProfilePublicKeyVerificationResponse resp = (ProfilePublicKeyVerificationResponse)ex;
 			if (randomUUID.equals(resp.decryptedTestData)) {
 
+				//TODO not sure if this should return boolean if already connected and stop this method if so
 				global.disconnectIfAlreadyConnected(this, profilePublicKey);
 
-				send(new ResponseOKNotification());
+				send(new TestMsgResponseOKNotification());
 				send(global.getServerInfoExchange());
 				global.addPublicKey(profilePublicKey);
 				pinger.start();
@@ -221,7 +222,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 		if (state == State.CONNECTED) {
 			pinger.update(ex);
 			if (ex instanceof DisconnectingNotification) stop();
-			if (ex instanceof KeychainRequest) send(new KeychainExchange(global.getKeychain()));
+			if (ex instanceof KeychainRequest) send(new KeychainTransfer(global.getKeychain()));
 			if (ex instanceof SessionExchange) global.sessionUpdate(new GlobalSessionUpdate(this, (SessionExchange)ex));
 		}
 	}
