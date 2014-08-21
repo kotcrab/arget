@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.NotImplementedException;
 
 import pl.kotcrab.arget.App;
@@ -14,12 +13,13 @@ import pl.kotcrab.arget.global.session.LocalSession;
 
 public class ReceiveFileToFileTask extends ReceiveFileTask {
 	private FileOutputStream out;
-	private int exceptedSize;
-	private int currentSize;
+	private long exceptedSize;
+	private long currentSize;
 
 	private String fileName;
 
-	public ReceiveFileToFileTask (int exceptedSize, LocalSession session, UUID taskId, String fileName) {
+	//TODO fix stupid argument order
+	public ReceiveFileToFileTask (long exceptedSize, LocalSession session, UUID taskId, String fileName) {
 		super(Type.RECEIVE, session, taskId);
 
 		this.exceptedSize = exceptedSize;
@@ -43,14 +43,13 @@ public class ReceiveFileToFileTask extends ReceiveFileTask {
 	}
 
 	@Override
-	public void saveNextBlock (String blockBase64) {
-		super.saveNextBlock(blockBase64);
+	public void saveNextBlock (byte[] block) {
+		super.saveNextBlock(block);
 		if (getStatus() == Status.INPROGRESS) {
 			try {
-				byte[] data = Base64.decodeBase64(blockBase64);
-				out.write(data);
+				out.write(block);
 
-				currentSize += data.length;
+				currentSize += block.length;
 
 			} catch (IOException e) {
 				e.printStackTrace();

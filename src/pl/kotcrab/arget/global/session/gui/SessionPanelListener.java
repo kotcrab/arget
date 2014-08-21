@@ -3,13 +3,10 @@ package pl.kotcrab.arget.global.session.gui;
 
 import java.io.File;
 
-import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 
 public interface SessionPanelListener {
 	public void send (InternalSessionExchange ex);
-
-	@Deprecated
-	public void send (SessionPanel panel, String data);
 
 	@Deprecated
 	public void messageTyped (SessionPanel panel, String msg);

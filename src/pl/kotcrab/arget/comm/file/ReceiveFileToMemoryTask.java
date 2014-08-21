@@ -5,8 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.commons.codec.binary.Base64;
-
 import pl.kotcrab.arget.global.session.LocalSession;
 
 public class ReceiveFileToMemoryTask extends ReceiveFileTask {
@@ -14,12 +12,13 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 
 	private ByteArrayOutputStream out;
 	private byte[] data;
-	private int exceptedSize;
+	private long exceptedSize;
 	private int currentSize;
 
 	private String fileName;
 
-	public ReceiveFileToMemoryTask (int exceptedSize, LocalSession session, UUID taskId, String fileName) {
+	//TODO fix stupid argument order
+	public ReceiveFileToMemoryTask (long exceptedSize, LocalSession session, UUID taskId, String fileName) {
 		super(Type.RECEIVE, session, taskId);
 
 		if (exceptedSize > MAX_SIZE)
@@ -33,18 +32,17 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 	@Override
 	public void begin () {
 		super.begin();
-		out = new ByteArrayOutputStream(exceptedSize);
+		out = new ByteArrayOutputStream((int)exceptedSize);
 	}
 
 	@Override
-	public void saveNextBlock (String blockBase64) {
-		super.saveNextBlock(blockBase64);
+	public void saveNextBlock (byte[] block) {
+		super.saveNextBlock(block);
 
 		try {
-			byte[] data = Base64.decodeBase64(blockBase64);
-			out.write(data);
+			out.write(block);
 
-			currentSize += data.length;
+			currentSize += block.length;
 			if (currentSize > MAX_SIZE) throw new IllegalArgumentException("Too many data received, maximum is: " + MAX_SIZE);
 
 		} catch (IOException e) {

@@ -3,7 +3,6 @@ package pl.kotcrab.arget.comm.exchange.internal.session;
 
 import java.util.UUID;
 
-import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
 import pl.kotcrab.crypto.EncryptedData;
 
 /** Seriazlied and encrypted {@link InternalSessionExchange}, see it for more info.

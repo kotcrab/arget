@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.commons.codec.binary.Base64;
-
 import pl.kotcrab.arget.global.session.LocalSession;
 
 public class SendFileTask extends FileTransferTask {
@@ -45,7 +43,7 @@ public class SendFileTask extends FileTransferTask {
 		// and filesender will start sending file before stream is ready
 	}
 
-	public String getNextBlock () {
+	public byte[] getNextBlock () {
 
 		if (getStatus() == Status.INPROGRESS) {
 			try {
@@ -55,7 +53,6 @@ public class SendFileTask extends FileTransferTask {
 
 				if (read != -1 && read != 0) {
 					readBytes += read;
-					String block = Base64.encodeBase64String(bytes);
 
 					if (in.available() != 0) {
 						bytes = getNextByteArray(in);
@@ -64,7 +61,7 @@ public class SendFileTask extends FileTransferTask {
 					blockCounter++;
 
 					if (blockCounter >= BLOCKS_IN_BATCH) readyToSendNextBlock = false;
-					return block;
+					return bytes;
 				} else {
 					finish();
 					return null;

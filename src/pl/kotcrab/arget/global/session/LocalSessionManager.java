@@ -7,22 +7,18 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.Exchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAcceptedNotification;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherKeysTrsanfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherKeysTrsanfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionData;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejectedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReadyNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
-import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
-import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.GlobalClient;
 import pl.kotcrab.arget.global.gui.MainWindowCallback;
@@ -80,12 +76,12 @@ public class LocalSessionManager {
 			SessionRemoteAcceptRequest request = (SessionRemoteAcceptRequest)ex;
 
 			if (guiCallback.isKeyInContacts(request.requesterKey)) {
-				send(new SessionAcceptedNotification(request.id));
+				sendLater(new SessionAcceptedNotification(request.id));
 				sessions.add(new LocalSession(request.id, request.requesterKey));
 				listener.sessionCreated(request.id, request.requesterKey);
 				return;
 			} else {
-				send(new SessionRejectedNotification(request.id));
+				sendLater(new SessionRejectedNotification(request.id));
 				return;
 			}
 
@@ -106,7 +102,7 @@ public class LocalSessionManager {
 		}
 
 		if (ex instanceof SessionAcceptedNotification) {
-			send(new SessionCipherKeysTrsanfer(ex.id, session.cipherInitLine));
+			sendLater(new SessionCipherKeysTrsanfer(ex.id, session.cipherInitLine));
 			return;
 		}
 
@@ -117,9 +113,9 @@ public class LocalSessionManager {
 			if (success) {
 				session.sessionReady = true;
 				listener.sessionReady(init.id);
-				send(new SessionRemoteReadyNotification(init.id));
+				sendLater(new SessionRemoteReadyNotification(init.id));
 			} else
-				send(new SessionCipherInitError(init.id));
+				sendLater(new SessionCipherInitError(init.id));
 		}
 
 		if (ex instanceof SessionRemoteReadyNotification) {
@@ -131,22 +127,21 @@ public class LocalSessionManager {
 		if (ex instanceof SessionEncryptedTransfer) {
 			SessionEncryptedTransfer enc = (SessionEncryptedTransfer)ex;
 			byte[] data = session.decrypt(enc.data);
-			listener.sessionDataRecieved((InternalSessionExchange)KryoUtils.readClassAndObjectFromByteArray(receiverKryo, data));
+			if (data != null)
+				listener.sessionDataRecieved((InternalSessionExchange)KryoUtils.readClassAndObjectFromByteArray(receiverKryo, data));
 		}
 
-		if (ex instanceof SessionData) {
-			SessionData data = (SessionData)ex;
-			listener.sessionDataRecieved(ex.id, getDecryptedData(session, data));
-		}
 	}
 
 	private void processExchangeToSend (SessionExchange ex) {
 		if (ex instanceof InternalSessionExchange) {
 			LocalSession session = getSessionByUUID(ex.id);
 
-			byte[] data = KryoUtils.writeClassAndObjectToByteArray(senderKryo, ex);
-			server.send(new SessionEncryptedTransfer(ex.id, session.encrypt(data)));
-
+			if (session != null && session.sessionReady) {
+				byte[] data = KryoUtils.writeClassAndObjectToByteArray(senderKryo, ex);
+				server.send(new SessionEncryptedTransfer(ex.id, session.encrypt(data)));
+			}
+			
 			return;
 		}
 
@@ -159,27 +154,6 @@ public class LocalSessionManager {
 
 	public void sendLater (SessionExchange exchange) {
 		sendingQueue.processLater(exchange);
-	}
-
-	@Deprecated
-	public void sendEncryptedData (UUID id, String data) {
-		LocalSession session = getSessionByUUID(id);
-		if (session != null) sendEncryptedData(session, data);
-	}
-
-	@Deprecated
-	public void sendEncryptedData (LocalSession session, String data) {
-		if (session.sessionReady) send(new SessionData(session.id, session.encrypt(data)));
-	}
-
-	@Deprecated
-	private String getDecryptedData (LocalSession session, SessionData data) {
-		return session.decryptS(data.data);
-	}
-
-	@Deprecated
-	private void send (SessionExchange ex) {
-		server.send(ex);
 	}
 
 	public LocalSession getSessionByUUID (UUID id) {
@@ -198,14 +172,14 @@ public class LocalSessionManager {
 		sessions.add(session);
 
 		listener.sessionCreated(id, contact.publicProfileKey);
-		send(new SessionCreateRequest(id, contact.publicProfileKey));
+		sendLater(new SessionCreateRequest(id, contact.publicProfileKey));
 	}
 
 	public void closeAll () {
 		for (LocalSession session : sessions) {
 			session.sessionReady = false;
 			listener.sessionClosed(session.id);
-			send(new SessionCloseNotification(session.id));
+			sendLater(new SessionCloseNotification(session.id));
 		}
 	}
 

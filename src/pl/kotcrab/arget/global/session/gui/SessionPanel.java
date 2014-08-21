@@ -31,7 +31,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;

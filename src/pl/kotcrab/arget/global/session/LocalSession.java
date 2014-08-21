@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.crypto.CascadeCipher;
 import pl.kotcrab.crypto.CryptoUtils;
 import pl.kotcrab.crypto.EncryptedData;
@@ -96,13 +97,23 @@ public class LocalSession {
 	public synchronized EncryptedData encrypt (String text) {
 		return cipher.encrypt(text.getBytes());
 	}
-	
+
 	public EncryptedData encrypt (byte[] data) {
-		return cipher.encrypt(data);
+		if (cipherReady)
+			return cipher.encrypt(data);
+		else
+			Log.err("Session", "Tried to decrypt data while session cipher not ready!");
+
+		return null;
 	}
 
 	public byte[] decrypt (EncryptedData data) {
-		return cipher.decrypt(data);
+		if (cipherReady)
+			return cipher.decrypt(data);
+		else
+			Log.err("Session", "Tried to decrypt data while session cipher not ready!");
+
+		return null;
 	}
 
 }

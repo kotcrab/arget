@@ -13,7 +13,7 @@ public abstract class ReceiveFileTask extends FileTransferTask {
 		super(type, session, taskId);
 	}
 
-	public void saveNextBlock (String blockBase64) {
+	public void saveNextBlock (byte[] block) {
 		blockCounter++;
 
 		if (blockCounter >= BLOCKS_IN_BATCH) blockOkShouldBeSend = true;

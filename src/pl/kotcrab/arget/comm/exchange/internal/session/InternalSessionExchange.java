@@ -1,15 +1,12 @@
 
-package pl.kotcrab.arget.comm.exchange.internal.session.data;
+package pl.kotcrab.arget.comm.exchange.internal.session;
 
 import java.util.UUID;
 
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.global.GlobalClient;
 import pl.kotcrab.arget.global.session.LocalSessionManager;
-import pl.kotcrab.crypto.EncryptedData;
 
 /** Classes that extends this abstract class will be serialized and encrypted using local session cipher (server won't be able to
  * tell what type and content it is). After encryption it will be enclosed in {@link SessionEncryptedTransfer} and send to server.

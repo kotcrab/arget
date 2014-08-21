@@ -12,6 +12,15 @@ import javax.swing.JOptionPane;
 
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.Msg;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileAcceptedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileDataBlockReceivedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileDataBlockTransfer;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileRejectedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferCancelNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferFinishedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Status;
 import pl.kotcrab.arget.global.gui.MainWindow;
 import pl.kotcrab.arget.global.session.LocalSession;
@@ -59,7 +68,7 @@ public class FileTransferManager {
 			public void run () {
 
 				while (running) {
-					if (sendTasks.size() == 0) {
+					if (sendTasks.size() == 0 || allTaskIdle()) {
 						ThreadUtils.sleep(1000);
 						continue;
 					}
@@ -78,10 +87,9 @@ public class FileTransferManager {
 
 						if (task.getStatus() == Status.INPROGRESS) {
 							if (task.isReadyToSendNextBlock()) { // TODO optimize this, if all task all waiting this will do empty loops
-								String nextBlock = task.getNextBlock();
+								byte[] nextBlock = task.getNextBlock();
 								if (nextBlock != null) {
-									sessionManager.sendEncryptedData(task.getSession(), Msg.FILE_DATA_BLOCK + task.getId()
-										+ Msg.FILE_DELIMITER + nextBlock);
+									send(new FileDataBlockTransfer(task.getSession().id, task.getId(), nextBlock));
 								}
 							}
 
@@ -90,7 +98,8 @@ public class FileTransferManager {
 
 						if (task.getStatus() == Status.DONE) {
 							if (task.isCanceled() == false)
-								sessionManager.sendEncryptedData(task.getSession(), Msg.FILE_FINISHED + task.getId());
+								send(new FileTransferFinishedNotification(task.getSession().id, task.getId()));
+
 							sendTasksToRemove.add(task);
 						}
 
@@ -101,32 +110,89 @@ public class FileTransferManager {
 				}
 			}
 
+			private boolean allTaskIdle () {
+				for (final SendFileTask task : sendTasks) {
+					if (task.getStatus() != Status.IDLE) return false;
+					if (task.isRequestSend() == false) return false;
+				}
+
+				return true;
+			}
+
 		}, "FileSender");
 		fileSender.start();
 	}
 
-	public void update (LocalSession session, String msg) {
-		if (msg.startsWith(Msg.FILE_PREFIX) == false) return;
+	public void update (final LocalSession session, FileTransferExchange ex) {
+		if (ex instanceof FileTransferToMemoryRequest) {
+			FileTransferToMemoryRequest req = (FileTransferToMemoryRequest)ex;
 
-		String[] data = msg.split(Msg.FILE_DELIMITER_REGEX);
-		if (data.length < 2) {
-			Log.w("Invalid FileTransferUpdate received!");
+			final ReceiveFileToMemoryTask task = new ReceiveFileToMemoryTask(req.fileSize, session, req.taskId, req.fileName);
+			task.begin();
+			receiveTasks.add(task);
+
+			task.setListener(new FileTransferListener() {
+
+				@Override
+				public void operationFinished (FileTransferTask notNeeded) {
+					byte[] data = task.getData();
+
+					// TODO check mimetype, chyba nie potrzebne
+					BufferedImage image = ImageUitls.read(data);
+					if (image != null)
+						windowManager.addMessage(task.getSession(), new ImageMessage(Msg.LEFT, image, task.getFileName()));
+				}
+			});
+
+			send(new FileAcceptedNotification(req.id, req.taskId));
 			return;
 		}
 
-		String command = data[0] + "|";
-		UUID taskId = UUID.fromString(data[1]);
+		if (ex instanceof FileTransferToFileRequest) {
+			final FileTransferToFileRequest req = (FileTransferToFileRequest)ex;
 
-		if (command.startsWith(Msg.FILE_TRANSFER_REQUEST_TO_MEMORY)) {
-			processRequestToMemory(session, data, taskId);
+			final ReceiveFileToFileTask task = new ReceiveFileToFileTask(req.fileSize, session, req.taskId, req.fileName);
+			receiveTasks.add(task);
+
+			task.setListener(new FileTransferListener() {
+
+				@Override
+				public void operationFinished (FileTransferTask notNeeded) {
+
+				}
+			});
+
+			final FileTransferMessage guiMsg = new FileTransferMessage(task, req.fileName, req.fileSize);
+
+			guiMsg.setListener(new FileTransferMessageListener() {
+
+				@Override
+				public void buttonFileAccepted (FileTransferTask task) {
+					task.begin();
+					send(new FileAcceptedNotification(req.id, req.taskId));
+					// sessionManager.sendEncryptedData(session, Msg.FILE_ACCEPTED + task.getId());
+					setMessageStatus(task, FileTransferMessage.Status.INPROGRESS);
+				}
+
+				@Override
+				public void buttonFileRejectedOrCanceled (FileTransferTask task) {
+					send(new FileTransferCancelNotification(session.id, task.getId()));
+					// sessionManager.sendEncryptedData(session, Msg.FILE_CANCEL + task.getId());
+					if (task.getStatus() == Status.INPROGRESS) task.cancel();
+					setMessageStatus(task, FileTransferMessage.Status.CANCELED);
+				}
+
+			});
+
+			guiMessages.add(guiMsg);
+			windowManager.addMessage(task.getSession(), guiMsg);
+			guiMsg.setStatus(FileTransferMessage.Status.REQUEST_RECEIVED);
+
+			return;
 		}
 
-		if (command.startsWith(Msg.FILE_TRANSFER_REQUEST_TO_FILE)) {
-			processRequestToFile(session, data, taskId);
-		}
-
-		if (command.startsWith(Msg.FILE_ACCEPTED)) {
-			SendFileTask task = getSendTaskByUUID(taskId);
+		if (ex instanceof FileAcceptedNotification) {
+			SendFileTask task = getSendTaskByUUID(ex.taskId);
 			if (task != null) task.begin();
 
 			setMessageStatus(task, FileTransferMessage.Status.INPROGRESS);
@@ -134,125 +200,49 @@ public class FileTransferManager {
 			return;
 		}
 
-		if (command.startsWith(Msg.FILE_REJECTED)) {
-			SendFileTask task = getSendTaskByUUID(taskId);
+		if (ex instanceof FileRejectedNotification) {
+			SendFileTask task = getSendTaskByUUID(ex.taskId);
 			if (task != null) task.cancel();
 			setMessageStatus(task, FileTransferMessage.Status.CANCELED);
 
 		}
 
-		if (command.startsWith(Msg.FILE_CANCEL)) {
-			FileTransferTask task = getTaskByUUID(taskId);
+		if (ex instanceof FileTransferCancelNotification) {
+			FileTransferTask task = getTaskByUUID(ex.taskId);
 			if (task != null && task.getStatus() == Status.INPROGRESS) task.cancel();
 			setMessageStatus(task, FileTransferMessage.Status.CANCELED);
 
 		}
 
-		if (command.startsWith(Msg.FILE_DATA_BLOCK)) {
-			if (data.length == 3) {
-				ReceiveFileTask task = getReceiveTaskByUUID(taskId);
-				if (task != null) task.saveNextBlock(data[2]);
-
-				if (task instanceof ReceiveFileToFileTask)
-					getMessageByUUID(taskId).setProgressBarValue((int)task.getPercentProgress());
-
-				if (task.isBlockOkShouldBeSend()) {
-					sessionManager.sendEncryptedData(session, Msg.FILE_DATA_BLOCK_RECEIVED + taskId);
-					task.setBlockOkShouldBeSend(false);
-				}
-			} else
-				Log.w("Warning! Received corrupted data block!");
-		}
-
-		if (command.startsWith(Msg.FILE_DATA_BLOCK_RECEIVED)) setTaskReadyToSendNextBlock(taskId);
-
-		if (command.startsWith(Msg.FILE_FINISHED)) {
-			ReceiveFileTask task = getReceiveTaskByUUID(taskId);
+		if (ex instanceof FileTransferFinishedNotification) {
+			ReceiveFileTask task = getReceiveTaskByUUID(ex.taskId);
 			if (task != null && task.getStatus() == Status.INPROGRESS) task.finish();
 			receiveTasks.remove(task);
 
 			setMessageStatus(task, FileTransferMessage.Status.DONE);
 		}
 
+		if (ex instanceof FileDataBlockTransfer) {
+			FileDataBlockTransfer transfer = (FileDataBlockTransfer)ex;
+
+			ReceiveFileTask task = getReceiveTaskByUUID(transfer.taskId);
+			if (task != null) task.saveNextBlock(transfer.block);
+
+			if (task instanceof ReceiveFileToFileTask)
+				getMessageByUUID(transfer.taskId).setProgressBarValue((int)task.getPercentProgress());
+
+			if (task.isBlockOkShouldBeSend()) {
+				send(new FileDataBlockReceivedNotification(session.id, task.getId()));
+				task.setBlockOkShouldBeSend(false);
+			} else
+				Log.w("Warning! Received corrupted data block!");
+		}
+
+		if (ex instanceof FileDataBlockReceivedNotification) setTaskReadyToSendNextBlock(ex.taskId);
 	}
 
-	private void processRequestToMemory (LocalSession session, String[] data, UUID taskId) {
-		if (checkIfValidRequest(data) == false) return;
-
-		String fileName = data[2];
-		int exceptedSize = Integer.parseInt(data[3]);
-
-		final ReceiveFileToMemoryTask task = new ReceiveFileToMemoryTask(exceptedSize, session, taskId, fileName);
-		task.begin();
-		receiveTasks.add(task);
-
-		task.setListener(new FileTransferListener() {
-
-			@Override
-			public void operationFinished (FileTransferTask notNeeded) {
-				byte[] data = task.getData();
-
-				// TODO check mimetype, chyba nie potrzebne
-				BufferedImage image = ImageUitls.read(data);
-				if (image != null)
-					windowManager.addMessage(task.getSession(), new ImageMessage(Msg.LEFT, image, task.getFileName()));
-			}
-		});
-
-		sessionManager.sendEncryptedData(session, Msg.FILE_ACCEPTED + taskId);
-		return;
-	}
-
-	private void processRequestToFile (final LocalSession session, String[] data, UUID taskId) {
-		if (checkIfValidRequest(data) == false) return;
-
-		String fileName = data[2];
-		int exceptedSize = Integer.parseInt(data[3]);
-
-		final ReceiveFileToFileTask task = new ReceiveFileToFileTask(exceptedSize, session, taskId, fileName);
-		receiveTasks.add(task);
-
-		task.setListener(new FileTransferListener() {
-
-			@Override
-			public void operationFinished (FileTransferTask notNeeded) {
-
-			}
-		});
-
-		final FileTransferMessage guiMsg = new FileTransferMessage(task, fileName, exceptedSize);
-
-		guiMsg.setListener(new FileTransferMessageListener() {
-
-			@Override
-			public void buttonFileAccepted (FileTransferTask task) {
-				task.begin();
-				sessionManager.sendEncryptedData(session, Msg.FILE_ACCEPTED + task.getId());
-				setMessageStatus(task, FileTransferMessage.Status.INPROGRESS);
-			}
-
-			@Override
-			public void buttonFileRejectedOrCanceled (FileTransferTask task) {
-				sessionManager.sendEncryptedData(session, Msg.FILE_CANCEL + task.getId());
-				if (task.getStatus() == Status.INPROGRESS) task.cancel();
-				setMessageStatus(task, FileTransferMessage.Status.CANCELED);
-			}
-
-		});
-
-		guiMessages.add(guiMsg);
-		windowManager.addMessage(task.getSession(), guiMsg);
-		guiMsg.setStatus(FileTransferMessage.Status.REQUEST_RECEIVED);
-
-		return;
-	}
-
-	private boolean checkIfValidRequest (String[] data) {
-		if (data.length < 3) {
-			Log.w("Received wrong request, data array too small!");
-			return false;
-		} else
-			return true;
+	private void send (FileTransferExchange exchange) {
+		sessionManager.sendLater(exchange);
 	}
 
 	public void sendFile (LocalSession session, File file) {
@@ -270,21 +260,14 @@ public class FileTransferManager {
 	}
 
 	public void sendFileTransferRequest (SendFileTask task) {
-
 		File file = task.getFile();
 
-		String toSend;
-
 		if (task.isToMemory())
-			toSend = Msg.FILE_TRANSFER_REQUEST_TO_MEMORY;
+			send(new FileTransferToMemoryRequest(task.getSession().id, task.getId(), file.getName(), file.length()));
 		else
-			toSend = Msg.FILE_TRANSFER_REQUEST_TO_FILE;
+			send(new FileTransferToFileRequest(task.getSession().id, task.getId(), file.getName(), file.length()));
 
-		toSend += task.getId() + Msg.FILE_DELIMITER + file.getName() + Msg.FILE_DELIMITER + file.length();
-
-		sessionManager.sendEncryptedData(task.getSession(), toSend);
 		task.setRequestSend(true);
-
 		if (task.isToMemory() == false) createGUIMessage(task);
 	}
 
@@ -295,7 +278,7 @@ public class FileTransferManager {
 
 			@Override
 			public void buttonFileRejectedOrCanceled (FileTransferTask task) {
-				sessionManager.sendEncryptedData(task.getSession(), Msg.FILE_CANCEL + task.getId());
+				send(new FileTransferCancelNotification(task.getSession().id, task.getId()));
 				if (task.getStatus() == Status.INPROGRESS) task.cancel();
 				setMessageStatus(task, FileTransferMessage.Status.CANCELED);
 			}
@@ -323,25 +306,22 @@ public class FileTransferManager {
 	}
 
 	private SendFileTask getSendTaskByUUID (UUID id) {
-		for (SendFileTask task : sendTasks) {
+		for (SendFileTask task : sendTasks)
 			if (task.getId().compareTo(id) == 0) return task;
-		}
 
 		return null;
 	}
 
 	private ReceiveFileTask getReceiveTaskByUUID (UUID id) {
-		for (ReceiveFileTask task : receiveTasks) {
+		for (ReceiveFileTask task : receiveTasks)
 			if (task.getId().compareTo(id) == 0) return task;
-		}
 
 		return null;
 	}
 
 	private FileTransferMessage getMessageByUUID (UUID id) {
-		for (FileTransferMessage msg : guiMessages) {
+		for (FileTransferMessage msg : guiMessages)
 			if (msg.getTaskUUID().compareTo(id) == 0) return msg;
-		}
 
 		return null;
 	}
