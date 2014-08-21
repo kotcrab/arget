@@ -295,7 +295,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 					+ " WARNING: If this wasn't you that may mean that your profile keys were stolen!");
 
 			if (ex instanceof KeychainExchange) processKeychain((KeychainExchange)ex);
-			if (ex instanceof SessionExchange) sessionManager.processLater((SessionExchange)ex);
+			if (ex instanceof SessionExchange) sessionManager.processReceivedElementLater((SessionExchange)ex);
 			if (ex instanceof ServerInfoExchange) guiCallback.setServerInfo((ServerInfoExchange)ex);
 		}
 	}

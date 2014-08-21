@@ -7,24 +7,32 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
+import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
+import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAccepted;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitDataExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionData;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.GlobalClient;
 import pl.kotcrab.arget.global.gui.MainWindowCallback;
+import pl.kotcrab.arget.util.KryoUtils;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
+import com.esotericsoftware.kryo.Kryo;
+
 //TODO implement queue for send!!!, current implementation may be thread unsafe wich will be bad
-public class LocalSessionManager extends ProcessingQueue<SessionExchange> {
+public class LocalSessionManager {
 	private static final String TAG = "SessionManager";
 
 	private GlobalClient server;
@@ -33,17 +41,41 @@ public class LocalSessionManager extends ProcessingQueue<SessionExchange> {
 
 	private List<LocalSession> sessions;
 
+	private ProcessingQueue<SessionExchange> receivingQueue;
+	private ProcessingQueue<SessionExchange> sendingQueue;
+
+	private Kryo receiverKryo;
+	private Kryo senderKryo;
+
 	public LocalSessionManager (GlobalClient server, MainWindowCallback guiCallback, LocalSessionListener listener) {
-		super("LocalSessionManager");
 		this.server = server;
 		this.guiCallback = guiCallback;
 		this.listener = listener;
 
 		sessions = Collections.synchronizedList(new ArrayList<LocalSession>());
+		receiverKryo = new Kryo();
+		senderKryo = new Kryo();
+		KryoUtils.registerInternalSessionClasses(receiverKryo);
+		KryoUtils.registerInternalSessionClasses(senderKryo);
+
+		receivingQueue = new ProcessingQueue<SessionExchange>("SessionManager Receiving Queue") {
+			@Override
+			protected void processQueueElement (SessionExchange ex) {
+				processReceivedExchange(ex);
+			}
+		};
+
+		sendingQueue = new ProcessingQueue<SessionExchange>("SessionManager Sending Queue") {
+
+			@Override
+			protected void processQueueElement (SessionExchange ex) {
+				processExchangeToSend(ex);
+			}
+
+		};
 	}
 
-	@Override
-	protected void processQueueElement (SessionExchange ex) {
+	private void processReceivedExchange (SessionExchange ex) {
 		if (ex instanceof SessionRemoteAcceptRequest) {
 			SessionRemoteAcceptRequest request = (SessionRemoteAcceptRequest)ex;
 
@@ -96,11 +128,37 @@ public class LocalSessionManager extends ProcessingQueue<SessionExchange> {
 			return;
 		}
 
+		if (ex instanceof SessionEncryptedExchange) {
+			SessionEncryptedExchange enc = (SessionEncryptedExchange)ex;
+			byte[] data = session.decrypt(enc.data);
+			listener.sessionDataRecieved((InternalSessionExchange)KryoUtils.readClassAndObjectFromByteArray(receiverKryo, data));
+		}
+
 		if (ex instanceof SessionData) {
 			SessionData data = (SessionData)ex;
 			listener.sessionDataRecieved(ex.id, getDecryptedData(session, data));
 		}
+	}
 
+	private void processExchangeToSend (SessionExchange ex) {
+		if (ex instanceof InternalSessionExchange) {
+			LocalSession session = getSessionByUUID(ex.id);
+
+			byte[] data = KryoUtils.writeClassAndObjectToByteArray(senderKryo, ex);
+			server.send(new SessionEncryptedExchange(ex.id, session.encrypt(data)));
+
+			return;
+		}
+
+		server.send(ex);
+	}
+
+	public void processReceivedElementLater (SessionExchange ex) {
+		receivingQueue.processLater(ex);
+	}
+
+	public void sendLater (SessionExchange exchange) {
+		sendingQueue.processLater(exchange);
 	}
 
 	@Deprecated
@@ -114,10 +172,12 @@ public class LocalSessionManager extends ProcessingQueue<SessionExchange> {
 		if (session.sessionReady) send(new SessionData(session.id, session.encrypt(data)));
 	}
 
+	@Deprecated
 	private String getDecryptedData (LocalSession session, SessionData data) {
-		return session.decrypt(data.data);
+		return session.decryptS(data.data);
 	}
 
+	@Deprecated
 	private void send (SessionExchange ex) {
 		server.send(ex);
 	}
@@ -148,4 +208,10 @@ public class LocalSessionManager extends ProcessingQueue<SessionExchange> {
 			send(new SessionCloseNotification(session.id));
 		}
 	}
+
+	public void stop () {
+		receivingQueue.stop();
+		sendingQueue.stop();
+	}
+
 }

@@ -29,6 +29,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 //TODO premium keys, ban list, white list
+//TODO check version
 public class GlobalServer {
 	private static final String TAG = "Global";
 	private static final int MAX_CONNECTIONS = 20;

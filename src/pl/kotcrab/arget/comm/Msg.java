@@ -3,8 +3,6 @@ package pl.kotcrab.arget.comm;
 
 import java.util.regex.Pattern;
 
-/** All messages prefixes
- * @author Pawel Pastuszak */
 public class Msg {
 	// TODO switch to enum?
 	public static final int LEFT = 0;
@@ -15,15 +13,15 @@ public class Msg {
 	// ====================================================================MESSAGES============================================================
 
 	/** Standard message */
-	@Deprecated public static final String MESSAGE = "_m_";
+	// @Deprecated public static final String MESSAGE = "_m_";
 	/** Notifies that remote started typing message */
-	@Deprecated public static final String TYPING_FINISHED = "_typstared_";
+// @Deprecated public static final String TYPING_FINISHED = "_typstared_";
 	/** Notifies that remote finished (or stopped) typing message */
-	@Deprecated public static final String TYPING_STARTED = "_typfinished_";
+// @Deprecated public static final String TYPING_STARTED = "_typfinished_";
 	/** Notifies that session window has been hidden (center panel was changed) */
-	@Deprecated public static final String REMOTE_ON_HIDE = "_remonhide_";
+	// @Deprecated public static final String REMOTE_ON_HIDE = "_remonhide_";
 	/** Notifies that session window has been shown (center panel was changed to matching session that send this message) */
-	@Deprecated public static final String REMOTE_ON_SHOW = "_remonshow_";
+	// @Deprecated public static final String REMOTE_ON_SHOW = "_remonshow_";
 
 	// ======================================================================FILES=============================================================
 	@Deprecated public static final String FILE_DELIMITER = "|";

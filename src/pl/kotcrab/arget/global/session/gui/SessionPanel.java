@@ -32,6 +32,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import pl.kotcrab.arget.comm.Msg;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotification;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.gui.CenterPanel;
 import pl.kotcrab.arget.util.Timer;
@@ -79,7 +83,7 @@ public class SessionPanel extends CenterPanel {
 		}
 	};
 
-	public SessionPanel (ContactInfo contact, UUID id, final SessionPanelListener listener) {
+	public SessionPanel (ContactInfo contact, final UUID id, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
 		this.id = id;
@@ -160,7 +164,7 @@ public class SessionPanel extends CenterPanel {
 					revalidate();
 					repaint();
 
-					listener.send(instance, Msg.TYPING_FINISHED);
+					listener.send(new TypingFinishedNotification(id));
 					typing = false;
 					typingTimer.cancel();
 
@@ -170,7 +174,7 @@ public class SessionPanel extends CenterPanel {
 
 				// TODO ignore others character, accept only letters, upper case letters, symbol, numbers
 				if (typing == false) {
-					listener.send(instance, Msg.TYPING_STARTED);
+					listener.send(new TypingStartedNotification(id));
 					typing = true;
 				}
 
@@ -209,7 +213,7 @@ public class SessionPanel extends CenterPanel {
 
 					@Override
 					public void doTask () {
-						listener.send(instance, Msg.TYPING_FINISHED);
+						listener.send(new TypingFinishedNotification(id));
 						typing = false;
 					}
 
@@ -302,12 +306,12 @@ public class SessionPanel extends CenterPanel {
 
 	@Override
 	public void onShow () {
-		listener.send(this, Msg.REMOTE_ON_SHOW);
+		listener.send(new RemotePanelShowNotification(id));
 	}
 
 	@Override
 	public void onHide () {
-		listener.send(this, Msg.REMOTE_ON_HIDE);
+		listener.send(new RemotePanelHideNotification(id));
 	}
 
 	@Override

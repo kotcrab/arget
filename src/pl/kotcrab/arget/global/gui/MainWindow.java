@@ -139,7 +139,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				instance.validate();
 				instance.revalidate();
 				instance.repaint();
-				
+
 				getCenterScreen().onShow();
 			}
 

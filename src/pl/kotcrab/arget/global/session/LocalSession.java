@@ -82,7 +82,8 @@ public class LocalSession {
 			return false;
 	}
 
-	public synchronized String decrypt (EncryptedData data) {
+	@Deprecated
+	public synchronized String decryptS (EncryptedData data) {
 		return new String(cipher.decrypt(data));
 	}
 
@@ -91,8 +92,17 @@ public class LocalSession {
 		return new String(cipher.decrypt(new EncryptedData(dataEncrypted)));
 	}
 
+	@Deprecated
 	public synchronized EncryptedData encrypt (String text) {
 		return cipher.encrypt(text.getBytes());
+	}
+	
+	public EncryptedData encrypt (byte[] data) {
+		return cipher.encrypt(data);
+	}
+
+	public byte[] decrypt (EncryptedData data) {
+		return cipher.decrypt(data);
 	}
 
 }

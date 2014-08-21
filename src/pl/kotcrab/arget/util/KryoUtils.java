@@ -27,6 +27,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionData;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidReciever;
@@ -34,6 +35,11 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotification;
 import pl.kotcrab.arget.comm.kryo.UUIDSerializer;
 import pl.kotcrab.arget.global.EncryptionMode;
 import pl.kotcrab.crypto.EncryptedData;
@@ -87,6 +93,7 @@ public class KryoUtils {
 		kryo.register(SessionCloseNotification.class);
 		kryo.register(SessionCreateRequest.class);
 		kryo.register(SessionData.class);
+		kryo.register(SessionEncryptedExchange.class);
 		kryo.register(SessionExchange.class);
 		kryo.register(SessionInvalidIDNotification.class);
 		kryo.register(SessionInvalidReciever.class);
@@ -94,6 +101,19 @@ public class KryoUtils {
 		kryo.register(SessionRemoteAcceptRequest.class);
 		kryo.register(SessionRemoteReady.class);
 		kryo.register(SessionTargetKeyNotFound.class);
+	}
+
+	public static void registerInternalSessionClasses (Kryo kryo) {
+		kryo.setRegistrationRequired(true);
+		kryo.register(byte[].class);
+		kryo.register(UUID.class, new UUIDSerializer());
+
+		kryo.register(EncryptedData.class);
+		kryo.register(MessageExchange.class);
+		kryo.register(RemotePanelHideNotification.class);
+		kryo.register(RemotePanelShowNotification.class);
+		kryo.register(TypingFinishedNotification.class);
+		kryo.register(TypingStartedNotification.class);
 	}
 
 	public static byte[] writeClassAndObjectToByteArray (Kryo kryo, Object object) {

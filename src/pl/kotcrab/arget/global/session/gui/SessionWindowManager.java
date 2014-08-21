@@ -14,6 +14,12 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotification;
 import pl.kotcrab.arget.comm.file.FileTransferManager;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.ContactStatus;
@@ -57,7 +63,8 @@ public class SessionWindowManager implements LocalSessionListener {
 				@Override
 				public void messageTyped (SessionPanel panel, String msg) {
 					panel.addMessage(new TextMessage(Msg.RIGHT, msg, panel.isRemoteCenterPanel()));
-					sessionManager.sendEncryptedData(panel.getUUID(), Msg.MESSAGE + msg);
+					sessionManager.sendLater(new MessageExchange(panel.getUUID(), msg));
+					//sessionManager.sendEncryptedData(panel.getUUID(), Msg.MESSAGE + msg);
 				}
 
 				@Override
@@ -68,6 +75,11 @@ public class SessionWindowManager implements LocalSessionListener {
 				@Override
 				public void sendFile (SessionPanel panel, File file) {
 					fileTransfer.sendFile(sessionManager.getSessionByUUID(panel.getUUID()), file);
+				}
+
+				@Override
+				public void send ( InternalSessionExchange ex) {
+					sessionManager.sendLater(ex);
 				}
 
 			});
@@ -136,17 +148,25 @@ public class SessionWindowManager implements LocalSessionListener {
 	@Override
 	public void sessionDataRecieved (UUID id, String msg) {
 		SessionPanel panel = getPanelByUUID(id);
-		if (msg.startsWith(Msg.MESSAGE)) {
-			panel.addMessage(new TextMessage(Msg.LEFT, msg.split(Msg.MESSAGE)[1]));
+		
+		fileTransfer.update(sessionManager.getSessionByUUID(panel.getUUID()), msg);
+	}
+
+	@Override
+	public void sessionDataRecieved (InternalSessionExchange ex) {
+		SessionPanel panel = getPanelByUUID(ex.id);
+
+		if (ex instanceof MessageExchange) {
+			MessageExchange msg = (MessageExchange)ex;
+
+			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
-
-		if (msg.equals(Msg.TYPING_STARTED)) panel.showTyping();
-		if (msg.equals(Msg.TYPING_FINISHED)) panel.hideTyping();
-		if (msg.equals(Msg.REMOTE_ON_SHOW)) panel.setRemoteCenterPanel(true);
-		if (msg.equals(Msg.REMOTE_ON_HIDE)) panel.setRemoteCenterPanel(false);
-
-		fileTransfer.update(sessionManager.getSessionByUUID(panel.getUUID()), msg);
+		
+		if (ex instanceof TypingStartedNotification) panel.showTyping();
+		if (ex instanceof TypingFinishedNotification) panel.hideTyping();
+		if (ex instanceof RemotePanelShowNotification) panel.setRemoteCenterPanel(true);
+		if (ex instanceof RemotePanelHideNotification) panel.setRemoteCenterPanel(false);
 	}
 
 	private void notificationIfNotMainScreen (SessionPanel panel) {
