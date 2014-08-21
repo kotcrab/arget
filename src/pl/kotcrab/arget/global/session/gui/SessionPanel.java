@@ -31,6 +31,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import pl.kotcrab.arget.comm.Msg;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
@@ -155,7 +157,8 @@ public class SessionPanel extends CenterPanel {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							listener.messageTyped(instance, msg);
+							addMessage(new TextMessage(Msg.RIGHT, msg, isRemoteCenterPanel()));
+							listener.send(new MessageTransfer(id, msg));
 						}
 					}
 

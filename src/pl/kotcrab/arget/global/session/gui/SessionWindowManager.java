@@ -62,13 +62,6 @@ public class SessionWindowManager implements LocalSessionListener {
 			panel = new SessionPanel(mainWindow.getContactsByKey(key), id, new SessionPanelListener() {
 
 				@Override
-				public void messageTyped (SessionPanel panel, String msg) {
-					panel.addMessage(new TextMessage(Msg.RIGHT, msg, panel.isRemoteCenterPanel()));
-					sessionManager.sendLater(new MessageTransfer(panel.getUUID(), msg));
-					// sessionManager.sendEncryptedData(panel.getUUID(), Msg.MESSAGE + msg);
-				}
-
-				@Override
 				public void sendFile (SessionPanel panel, File file) {
 					fileTransfer.sendFile(sessionManager.getSessionByUUID(panel.getUUID()), file);
 				}
