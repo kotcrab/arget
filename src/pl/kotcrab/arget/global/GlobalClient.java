@@ -11,13 +11,13 @@ import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
-import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeExchange;
+import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
+import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
-import pl.kotcrab.arget.comm.exchange.RSAPublicKeyExchange;
-import pl.kotcrab.arget.comm.exchange.SymmetricKeysExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange.Type;
+import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
+import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyExchange;
@@ -203,14 +203,14 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 
 	@Override
 	protected void processQueueElement (Exchange ex) {
-		if (ex instanceof EncryptedExchange) {
-			EncryptedExchange enc = (EncryptedExchange)ex;
+		if (ex instanceof EncryptedTransfer) {
+			EncryptedTransfer enc = (EncryptedTransfer)ex;
 			byte[] data = cipher.decrypt(enc.data);
 			ex = (Exchange)KryoUtils.readClassAndObjectFromByteArray(internalKryo, data);
 		}
 
-		if (ex instanceof EncryptionModeExchange && state == State.WAIT_FOR_CONFIG) {
-			EncryptionModeExchange config = (EncryptionModeExchange)ex;
+		if (ex instanceof EncryptionModeTransfer && state == State.WAIT_FOR_CONFIG) {
+			EncryptionModeTransfer config = (EncryptionModeTransfer)ex;
 			encryptionMode = config.mode;
 
 			switch (encryptionMode) {
@@ -231,22 +231,22 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 			state = State.WAIT_FOR_RSA;
 		}
 
-		if (ex instanceof RSAPublicKeyExchange && state == State.WAIT_FOR_RSA) {
-			RSAPublicKeyExchange keyEx = (RSAPublicKeyExchange)ex;
+		if (ex instanceof RSAPublicKeyTransfer && state == State.WAIT_FOR_RSA) {
+			RSAPublicKeyTransfer keyEx = (RSAPublicKeyTransfer)ex;
 			RSAEncrypter rsaEncrypter = new RSAEncrypter(keyEx.key);
 
 			switch (encryptionMode) {
 			case AES:
 				SymmetricCipher aesCipher = (SymmetricCipher)cipher;
 				byte[] encryptedAesKey = rsaEncrypter.encrypt(aesCipher.getKeyEncoded());
-				send(new SymmetricKeysExchange(encryptedAesKey));
+				send(new SymmetricKeysTransfer(encryptedAesKey));
 				break;
 			case AES_TWOFISH_SERPENT:
 				CascadeCipher cascade = (CascadeCipher)cipher;
 				byte[] encryptedKey1 = rsaEncrypter.encrypt(cascade.getKey1());
 				byte[] encryptedKey2 = rsaEncrypter.encrypt(cascade.getKey2().getBytes());
 				byte[] encryptedKey3 = rsaEncrypter.encrypt(cascade.getKey3().getBytes());
-				send(new SymmetricKeysExchange(encryptedKey1, encryptedKey2, encryptedKey3));
+				send(new SymmetricKeysTransfer(encryptedKey1, encryptedKey2, encryptedKey3));
 				break;
 			default:
 				break;
@@ -268,8 +268,8 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 			pinger.start();
 		}
 
-		if (ex instanceof UnsecuredEventExchange) {
-			UnsecuredEventExchange resp = (UnsecuredEventExchange)ex;
+		if (ex instanceof UnsecuredEventNotification) {
+			UnsecuredEventNotification resp = (UnsecuredEventNotification)ex;
 
 			if (resp.type == Type.SERVER_FULL) {
 				guiCallback.setConnectionStatus(ConnectionStatus.SERVER_FULL);

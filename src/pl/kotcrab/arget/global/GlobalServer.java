@@ -13,8 +13,8 @@ import java.util.List;
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.exchange.Exchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange.Type;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoExchange;
@@ -241,7 +241,7 @@ public class GlobalServer {
 			@Override
 			public void connected (Connection connection) {
 				if (remotes.size() >= MAX_CONNECTIONS) {
-					connection.sendTCP(new UnsecuredEventExchange(Type.SERVER_FULL));
+					connection.sendTCP(new UnsecuredEventNotification(Type.SERVER_FULL));
 					connection.close();
 					return;
 				}
@@ -354,7 +354,7 @@ public class GlobalServer {
 	private void stop () {
 		Log.l(TAG, "Shutting down server and connections...");
 
-		server.sendToAllTCP(new UnsecuredEventExchange(Type.SERVER_SHUTTING_DOWN));
+		server.sendToAllTCP(new UnsecuredEventNotification(Type.SERVER_SHUTTING_DOWN));
 
 		sessionManager.stop();
 		server.stop();

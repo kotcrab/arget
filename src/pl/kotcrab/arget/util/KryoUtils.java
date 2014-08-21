@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
-import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeExchange;
+import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
+import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
 import pl.kotcrab.arget.comm.exchange.PingRequest;
 import pl.kotcrab.arget.comm.exchange.PingResponse;
-import pl.kotcrab.arget.comm.exchange.RSAPublicKeyExchange;
-import pl.kotcrab.arget.comm.exchange.SymmetricKeysExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange;
+import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
+import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
@@ -52,18 +52,18 @@ public class KryoUtils {
 	public static void registerNetClasses (Kryo kryo) {
 		kryo.register(byte[].class);
 
-		kryo.register(EncryptionModeExchange.class);
-		kryo.register(RSAPublicKeyExchange.class);
-		kryo.register(SymmetricKeysExchange.class);
+		kryo.register(EncryptionModeTransfer.class);
+		kryo.register(RSAPublicKeyTransfer.class);
+		kryo.register(SymmetricKeysTransfer.class);
 
 		kryo.register(EncryptionMode.class);
-		kryo.register(UnsecuredEventExchange.class);
-		kryo.register(UnsecuredEventExchange.Type.class);
+		kryo.register(UnsecuredEventNotification.class);
+		kryo.register(UnsecuredEventNotification.Type.class);
 
 		kryo.register(PingRequest.class);
 		kryo.register(PingResponse.class);
 
-		kryo.register(EncryptedExchange.class);
+		kryo.register(EncryptedTransfer.class);
 		kryo.register(EncryptedData.class);
 
 		kryo.register(DisconnectingNotification.class);

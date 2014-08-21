@@ -2,7 +2,7 @@
 package pl.kotcrab.arget.comm;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
+import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.internal.InternalExchange;
 import pl.kotcrab.arget.util.KryoUtils;
@@ -41,7 +41,7 @@ public class ExchangeSender extends ProcessingQueue<Exchange> {
 
 			if (cipher != null) {
 				byte[] data = KryoUtils.writeClassAndObjectToByteArray(kryo, exchange);
-				connection.sendTCP(new EncryptedExchange(cipher.encrypt(data)));
+				connection.sendTCP(new EncryptedTransfer(cipher.encrypt(data)));
 			} else {
 				Log.err(TAG, "Tried to send InteralExchange but sender not ready. Type: " + exchange.getClass());
 			}

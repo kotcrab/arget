@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
+import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAccepted;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitDataExchange;

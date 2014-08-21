@@ -8,13 +8,13 @@ import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
-import pl.kotcrab.arget.comm.exchange.EncryptedExchange;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeExchange;
+import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
+import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
-import pl.kotcrab.arget.comm.exchange.RSAPublicKeyExchange;
-import pl.kotcrab.arget.comm.exchange.SymmetricKeysExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange;
-import pl.kotcrab.arget.comm.exchange.UnsecuredEventExchange.Type;
+import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
+import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
+import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainExchange;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyExchange;
@@ -107,8 +107,8 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	private void onConnected () {
-		send(new EncryptionModeExchange(global.getEncryptionMode()));
-		send(new RSAPublicKeyExchange(rsaCipher.getPublicKey().getEncoded()));
+		send(new EncryptionModeTransfer(global.getEncryptionMode()));
+		send(new RSAPublicKeyTransfer(rsaCipher.getPublicKey().getEncoded()));
 	}
 
 	@Override
@@ -147,14 +147,14 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 
 	@Override
 	protected void processQueueElement (Exchange ex) {
-		if (ex instanceof EncryptedExchange) {
-			EncryptedExchange enc = (EncryptedExchange)ex;
+		if (ex instanceof EncryptedTransfer) {
+			EncryptedTransfer enc = (EncryptedTransfer)ex;
 			byte[] data = cipher.decrypt(enc.data);
 			ex = (Exchange)KryoUtils.readClassAndObjectFromByteArray(internalKryo, data);
 		}
 
-		if (ex instanceof SymmetricKeysExchange && state == State.WAIT_FOR_AUTHREQUEST) {
-			SymmetricKeysExchange auth = (SymmetricKeysExchange)ex;
+		if (ex instanceof SymmetricKeysTransfer && state == State.WAIT_FOR_AUTHREQUEST) {
+			SymmetricKeysTransfer auth = (SymmetricKeysTransfer)ex;
 
 			switch (global.getEncryptionMode()) {
 			case AES: {
@@ -235,7 +235,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	public void kickUser () {
-		send(new UnsecuredEventExchange(Type.KICKED));
+		send(new UnsecuredEventNotification(Type.KICKED));
 		stopLater();
 
 	}
