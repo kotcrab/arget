@@ -35,7 +35,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
-import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
@@ -109,7 +109,7 @@ public class KryoUtils {
 		kryo.register(UUID.class, new UUIDSerializer());
 
 		kryo.register(EncryptedData.class);
-		kryo.register(MessageExchange.class);
+		kryo.register(MessageTransfer.class);
 		kryo.register(RemotePanelHideNotification.class);
 		kryo.register(RemotePanelShowNotification.class);
 		kryo.register(TypingFinishedNotification.class);

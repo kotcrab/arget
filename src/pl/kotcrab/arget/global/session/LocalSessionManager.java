@@ -22,7 +22,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptReques
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReady;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
-import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.global.ContactInfo;
 import pl.kotcrab.arget.global.GlobalClient;
 import pl.kotcrab.arget.global.gui.MainWindowCallback;

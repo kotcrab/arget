@@ -10,19 +10,6 @@ public class Msg {
 	public static final int SYSTEM = 2;
 	public static final int ERROR = 3;
 
-	// ====================================================================MESSAGES============================================================
-
-	/** Standard message */
-	// @Deprecated public static final String MESSAGE = "_m_";
-	/** Notifies that remote started typing message */
-// @Deprecated public static final String TYPING_FINISHED = "_typstared_";
-	/** Notifies that remote finished (or stopped) typing message */
-// @Deprecated public static final String TYPING_STARTED = "_typfinished_";
-	/** Notifies that session window has been hidden (center panel was changed) */
-	// @Deprecated public static final String REMOTE_ON_HIDE = "_remonhide_";
-	/** Notifies that session window has been shown (center panel was changed to matching session that send this message) */
-	// @Deprecated public static final String REMOTE_ON_SHOW = "_remonshow_";
-
 	// ======================================================================FILES=============================================================
 	@Deprecated public static final String FILE_DELIMITER = "|";
 	@Deprecated public static final String FILE_DELIMITER_REGEX = Pattern.quote("|"); // safe for regex

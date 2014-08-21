@@ -15,7 +15,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotificat
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejected;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.InternalSessionExchange;
-import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
@@ -63,7 +63,7 @@ public class SessionWindowManager implements LocalSessionListener {
 				@Override
 				public void messageTyped (SessionPanel panel, String msg) {
 					panel.addMessage(new TextMessage(Msg.RIGHT, msg, panel.isRemoteCenterPanel()));
-					sessionManager.sendLater(new MessageExchange(panel.getUUID(), msg));
+					sessionManager.sendLater(new MessageTransfer(panel.getUUID(), msg));
 					//sessionManager.sendEncryptedData(panel.getUUID(), Msg.MESSAGE + msg);
 				}
 
@@ -156,8 +156,8 @@ public class SessionWindowManager implements LocalSessionListener {
 	public void sessionDataRecieved (InternalSessionExchange ex) {
 		SessionPanel panel = getPanelByUUID(ex.id);
 
-		if (ex instanceof MessageExchange) {
-			MessageExchange msg = (MessageExchange)ex;
+		if (ex instanceof MessageTransfer) {
+			MessageTransfer msg = (MessageTransfer)ex;
 
 			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
