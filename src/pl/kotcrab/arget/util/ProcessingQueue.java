@@ -61,6 +61,8 @@ public abstract class ProcessingQueue<E> {
 					try {
 						processQueueElement(queue.take());
 					} catch (InterruptedException e) {
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}

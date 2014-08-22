@@ -17,37 +17,32 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.util;
+package pl.kotcrab.arget.test.util;
 
-//TODO change this to some standard class?
-public class Timer {
-	private String threadName;
-	private Thread thread;
+import static org.junit.Assert.*;
 
-	public Timer (String threadName) {
-		this.threadName = threadName;
+import java.util.Random;
+
+import org.junit.Test;
+
+import pl.kotcrab.arget.util.KryoUtils;
+
+import com.esotericsoftware.kryo.Kryo;
+
+public class KryoUtilsTest {
+
+	@Test
+	public void testSeriazliationToByteArray () {
+		Kryo kryo = new Kryo();
+
+		int input = new Random().nextInt();
+		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
+		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
+
+		String testString = "Test string";
+		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
+		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
+		assertTrue(outString.equals(testString));
 	}
 
-	public void schedule (final TimerListener task, final long delay) {
-		if (thread == null) {
-			thread = new Thread(new Runnable() {
-
-				@Override
-				public void run () {
-					ThreadUtils.sleep(delay);
-					if (thread != null) {
-						task.doTask();
-					}
-				}
-			}, threadName);
-			thread.start();
-		}
-	}
-
-	public void cancel () {
-		if (thread != null) {
-			thread.interrupt();
-			thread = null;
-		}
-	}
 }
