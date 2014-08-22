@@ -45,7 +45,6 @@ import pl.kotcrab.arget.Settings;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.event.Event;
-import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
@@ -79,7 +78,6 @@ import pl.kotcrab.arget.util.SwingUtils;
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
-	public static EventBus eventBus;
 
 	private Profile profile;
 	private GlobalClient globalClient;
@@ -99,11 +97,12 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	public MainWindow (Profile profile) {
 		if (checkAndSetInstance() == false) return;
-		MainWindow.eventBus = new EventBus(this);
 
 		this.profile = profile;
 
 		iconFlasher = new IconFlasher(this, App.loadImage("/data/icon.png"), App.loadImage("/data/iconunread.png"));
+
+		App.eventBus.register(this);
 
 		createAndShowGUI();
 	}
@@ -314,7 +313,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		profile.mainWindowBounds = getBounds();
 		ProfileIO.saveProfile(profile);
 
-		MainWindow.eventBus.stop();
 		MainWindow.instance = null;
 		super.dispose();
 	}

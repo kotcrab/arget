@@ -28,8 +28,14 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author Pawel Pastuszak
  *
  * @param <E> type of objects that will be processed */
+// TODO switch to callback instead of extending class?
 public abstract class ProcessingQueue<E> {
 	private boolean running = true;
+
+	private int capacity = 256;
+	private boolean daemon = false;
+	private String threadName = null;
+
 	private Thread processingThread;
 
 	private ArrayBlockingQueue<E> queue;
@@ -40,8 +46,9 @@ public abstract class ProcessingQueue<E> {
 	 * @param capacity queue capacity, if queue is full, {@link ProcessingQueue#processLater()} will block until there is space in
 	 *           queue */
 	public ProcessingQueue (String threadName, int capacity) {
-		queue = new ArrayBlockingQueue<E>(capacity);
-		start(threadName);
+		this.threadName = threadName;
+		this.capacity = capacity;
+		start();
 	}
 
 	/** Creates {@link ProcessingQueue} with fixed 256 objects capacity. If queue is full, {@link ProcessingQueue#processLater()}
@@ -49,11 +56,19 @@ public abstract class ProcessingQueue<E> {
 	 * 
 	 * @param threadName name of processing thread that will be created */
 	public ProcessingQueue (String threadName) {
-		queue = new ArrayBlockingQueue<E>(256);
-		start(threadName);
+		this.threadName = threadName;
+		start();
 	}
 
-	private void start (String threadName) {
+	public ProcessingQueue (String threadName, boolean daemon) {
+		this.threadName = threadName;
+		this.daemon = daemon;
+		start();
+	}
+
+	private void start () {
+		queue = new ArrayBlockingQueue<E>(capacity);
+
 		processingThread = new Thread(new Runnable() {
 			@Override
 			public void run () {
@@ -67,6 +82,7 @@ public abstract class ProcessingQueue<E> {
 				}
 			}
 		}, threadName);
+		processingThread.setDaemon(daemon);
 		processingThread.start();
 	}
 

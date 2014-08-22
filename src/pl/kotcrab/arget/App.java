@@ -33,18 +33,17 @@ import javax.swing.ImageIcon;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.util.DesktopUtils;
 
 import com.alee.laf.WebLookAndFeel;
 
 public class App {
-	private static final String TAG = "App";
-
 	public static final boolean DEBUG = false;
 
+	private static final String TAG = "App";
 	public static final String APP_NAME = "Arget";
-
 	public static final String APP_VERSION = "1.4-BETA2";
 
 // public static final String APP_DIRECTORY_NAME = "1.3-BETA";
@@ -59,6 +58,8 @@ public class App {
 	private static boolean guiAvailable;
 	private static boolean appInitialized;
 
+	public static EventBus eventBus;
+
 	public static void init () {
 		init(true);
 	}
@@ -67,12 +68,12 @@ public class App {
 	 * folder, and checks if proper charset is set */
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
-
-			com.esotericsoftware.minlog.Log.NONE();
-			// com.esotericsoftware.minlog.Log.DEBUG();
-
 			checkCharset();
 			Security.addProvider(new BouncyCastleProvider());
+
+			eventBus = new EventBus();
+			com.esotericsoftware.minlog.Log.NONE();
+			// com.esotericsoftware.minlog.Log.DEBUG();
 
 			if (initGui) {
 				if (WebLookAndFeel.install() == false) throw new IllegalStateException("Failed to install WebLookAndFell");

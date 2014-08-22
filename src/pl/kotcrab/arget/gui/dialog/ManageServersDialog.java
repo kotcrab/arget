@@ -38,8 +38,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.event.SaveProfileEvent;
-import pl.kotcrab.arget.gui.MainWindow;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.ServerInfo;
@@ -147,7 +147,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 			public void actionPerformed (ActionEvent e) {
 				profile.servers = listModel.toArrayList();
 				profile.autoconnectInfo = autoconnectInfo;
-				MainWindow.eventBus.post(new SaveProfileEvent());
+				App.eventBus.post(new SaveProfileEvent());
 				dispose();
 			}
 		});

@@ -20,17 +20,19 @@
 package pl.kotcrab.arget.event;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 
 import pl.kotcrab.arget.util.ProcessingQueue;
 
 //TODO add executors?
 public class EventBus {
-	private EventListener listener;
+	private ArrayList<EventListener> listeners;
 	private ProcessingQueue<Event> queue;
 
-	public EventBus (EventListener listener) {
-		this.listener = listener;
-		queue = new ProcessingQueue<Event>("EventBus") {
+	public EventBus () {
+		listeners = new ArrayList<EventListener>();
+
+		queue = new ProcessingQueue<Event>("EventBus", true) {
 
 			@Override
 			protected void processQueueElement (Event event) {
@@ -40,27 +42,38 @@ public class EventBus {
 		};
 	}
 
-	public void post (Event event) {
-		queue.processLater(event);
+	public void register (EventListener listener) {
+		listeners.add(listener);
 	}
 
-	private void processEvent (final Event event) {
-		if (event.isExectueOnAWTEventQueue()) {
+	public boolean unregister (EventListener listener) {
+		return listeners.remove(listener);
+	}
 
-			EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run () {
-					listener.onEvent(event);
-				}
-			});
-
-		} else
-			listener.onEvent(event);
-
+	public void post (Event event) {
+		queue.processLater(event);
 	}
 
 	public void stop () {
 		queue.stop();
 	}
 
+	private void processEvent (final Event event) {
+		if (event.isExectueOnAWTEventQueue()) {
+			for (EventListener listener : listeners)
+				processEventOnAWTQueue(listener, event);
+		} else {
+			for (EventListener listener : listeners)
+				listener.onEvent(event);
+		}
+	}
+
+	private void processEventOnAWTQueue (final EventListener listener, final Event event) {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
+				listener.onEvent(event);
+			}
+		});
+	}
 }

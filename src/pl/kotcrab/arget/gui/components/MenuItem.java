@@ -24,9 +24,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
-import pl.kotcrab.arget.gui.MainWindow;
 
 public class MenuItem extends JMenuItem {
 	private MenuEvent event;
@@ -41,7 +41,7 @@ public class MenuItem extends JMenuItem {
 
 		@Override
 		public void actionPerformed (ActionEvent e) {
-			MainWindow.eventBus.post(event);
+			App.eventBus.post(event);
 		}
 	}
 
