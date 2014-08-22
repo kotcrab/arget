@@ -32,10 +32,10 @@ public class FileUitls {
 		}
 	}
 
-	public static boolean isValidFileName (String file) {
-		File f = new File(file);
+	public static boolean isValidFileName (String name) {
 		try {
-			return f.getCanonicalFile().getName().equals(file);
+			if (DesktopUtils.isWindows()) if (name.contains(">") || name.contains("<")) return false;
+			return new File(name).getCanonicalFile().getName().equals(name);
 		} catch (IOException e) {
 			return false;
 		}

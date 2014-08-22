@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.kotcrab.arget</groupId>
 	<artifactId>arget</artifactId>
-	<version>1.4-BETA1</version>
+	<version>1.4-BETA2</version>
 
 	<properties>
 		<jdk.version>1.7</jdk.version>
@@ -66,11 +66,21 @@
 			<version>2.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
 
 		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		
 		<resources>
 			<resource>
 				<directory>src</directory>

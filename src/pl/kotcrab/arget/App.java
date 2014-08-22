@@ -21,14 +21,17 @@ import pl.kotcrab.arget.util.DesktopUtils;
 import com.alee.laf.WebLookAndFeel;
 
 public class App {
+	private static final String TAG = "App";
+
 	public static final boolean DEBUG = false;
 
 	public static final String APP_NAME = "Arget";
 
-	public static final String APP_VERSION = "1.4-BETA1";
+	public static final String APP_VERSION = "1.4-BETA2";
 
 // public static final String APP_DIRECTORY_NAME = "1.3-BETA";
-	private static final String APP_DIRECTORY_NAME = "1.3-SNAPSHOT";
+	public static final String APP_DIRECTORY_NAME = "1.3-SNAPSHOT";
+
 	private static final String SYSTEM_APPDATA_LOCATION = System.getProperty("user.home") + File.separator;
 	public static final String APP_FOLDER = SYSTEM_APPDATA_LOCATION + ".arget-" + App.APP_DIRECTORY_NAME + File.separator;
 
@@ -77,14 +80,14 @@ public class App {
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
 	private static void checkCharset () {
 		if (Charset.defaultCharset().name().equals("UTF-8") == false) {
-			System.err.println("UTF-8 is not default charset, trying to change...");
+			Log.err(TAG, "UTF-8 is not default charset, trying to change...");
 
 			try {
 				System.setProperty("file.encoding", "UTF-8");
 				Field charset = Charset.class.getDeclaredField("defaultCharset");
 				charset.setAccessible(true);
 				charset.set(null, null);
-				System.out.println("Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
+				Log.l(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
 				throw new IllegalStateException(
 					"Failed! UTF-8 charset is not default for this system and attempt to change it failed, cannot continue! Default is: "
