@@ -18,7 +18,7 @@ public class ReceiveFileToFileTask extends ReceiveFileTask {
 
 	private String fileName;
 
-	//TODO fix stupid argument order
+	// TODO fix stupid argument order
 	public ReceiveFileToFileTask (long exceptedSize, LocalSession session, UUID taskId, String fileName) {
 		super(Type.RECEIVE, session, taskId);
 

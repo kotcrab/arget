@@ -201,7 +201,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 			ProfilePublicKeyVerificationResponse resp = (ProfilePublicKeyVerificationResponse)ex;
 			if (randomUUID.equals(resp.decryptedTestData)) {
 
-				//TODO not sure if this should return boolean if already connected and stop this method if so
+				// TODO not sure if this should return boolean if already connected and stop this method if so
 				global.disconnectIfAlreadyConnected(this, profilePublicKey);
 
 				send(new TestMsgResponseOKNotification());

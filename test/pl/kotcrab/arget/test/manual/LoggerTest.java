@@ -26,7 +26,7 @@ public class LoggerTest {
 		Log.l("Normal out test");
 		Log.w("Warning out test");
 		Log.err("Error test");
-		
+
 		ThreadUtils.sleep(10);
 
 		Log.l("some-lib", "Lib normal out test");

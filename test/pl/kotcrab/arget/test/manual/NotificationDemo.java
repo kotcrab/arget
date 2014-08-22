@@ -36,7 +36,7 @@ public class NotificationDemo extends JDialog {
 		getContentPane().add(label, BorderLayout.CENTER);
 
 		setVisible(true);
-		setShape(new RoundRectangle2D.Float(0, 0, 330, 70, 3,3));
+		setShape(new RoundRectangle2D.Float(0, 0, 330, 70, 3, 3));
 	}
 
 	public static void main (String[] args) {

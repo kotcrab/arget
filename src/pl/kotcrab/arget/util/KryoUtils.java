@@ -119,7 +119,7 @@ public class KryoUtils {
 		kryo.register(RemotePanelShowNotification.class);
 		kryo.register(TypingFinishedNotification.class);
 		kryo.register(TypingStartedNotification.class);
-		
+
 		kryo.register(FileAcceptedNotification.class);
 		kryo.register(FileDataBlockReceivedNotification.class);
 		kryo.register(FileDataBlockTransfer.class);

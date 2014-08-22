@@ -141,7 +141,7 @@ public class LocalSessionManager {
 				byte[] data = KryoUtils.writeClassAndObjectToByteArray(senderKryo, ex);
 				server.send(new SessionEncryptedTransfer(ex.id, session.encrypt(data)));
 			}
-			
+
 			return;
 		}
 

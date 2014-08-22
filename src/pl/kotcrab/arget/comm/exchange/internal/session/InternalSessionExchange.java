@@ -10,7 +10,8 @@ import pl.kotcrab.arget.global.session.LocalSessionManager;
 
 /** Classes that extends this abstract class will be serialized and encrypted using local session cipher (server won't be able to
  * tell what type and content it is). After encryption it will be enclosed in {@link SessionEncryptedTransfer} and send to server.
- * (Before sending it will be again seriazlied and encrypted using client-server cipher and enclosed in {@link EncryptedTransfer}) <br><br>
+ * (Before sending it will be again seriazlied and encrypted using client-server cipher and enclosed in {@link EncryptedTransfer}) <br>
+ * <br>
  * 
  * For example: MessageTransfer extends InternalSessionExchange: <br>
  * -put MessageTransfer in {@link LocalSessionManager} processing queue <br>

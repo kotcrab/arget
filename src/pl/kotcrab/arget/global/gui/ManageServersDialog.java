@@ -70,7 +70,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 				}
 			});
 
-			//TODO add confirmation
+			// TODO add confirmation
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed (ActionEvent e) {

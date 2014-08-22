@@ -1,6 +1,7 @@
 
 package pl.kotcrab.arget.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import pl.kotcrab.arget.App;
@@ -13,10 +14,8 @@ public class SoundUtils {
 			InputStream inputStream = App.getResourceAsStream(classpath);
 			AudioStream audioStream = new AudioStream(inputStream);
 			AudioPlayer.player.start(audioStream);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }
