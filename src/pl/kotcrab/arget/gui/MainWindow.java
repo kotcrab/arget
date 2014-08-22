@@ -61,6 +61,7 @@ import pl.kotcrab.arget.gui.dialog.CreateServerDialogFinished;
 import pl.kotcrab.arget.gui.dialog.CreateServerInfoDialog;
 import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
+import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.server.ConnectionStatus;
@@ -68,7 +69,6 @@ import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.GlobalClient;
 import pl.kotcrab.arget.server.ServerInfo;
-import pl.kotcrab.arget.server.session.gui.SessionWindowManager;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
 

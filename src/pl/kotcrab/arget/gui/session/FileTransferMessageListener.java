@@ -17,14 +17,12 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.server.session.gui;
+package pl.kotcrab.arget.gui.session;
 
-import java.io.File;
+import pl.kotcrab.arget.comm.file.FileTransferTask;
 
-import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
+public interface FileTransferMessageListener {
+	public void buttonFileAccepted (FileTransferTask task);
 
-public interface SessionPanelListener {
-	public void send (InternalSessionExchange ex);
-
-	public void sendFile (SessionPanel panel, File file);
+	public void buttonFileRejectedOrCanceled (FileTransferTask task);
 }

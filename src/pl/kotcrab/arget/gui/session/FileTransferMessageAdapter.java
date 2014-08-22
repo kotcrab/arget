@@ -17,12 +17,16 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.server.session.gui;
+package pl.kotcrab.arget.gui.session;
 
 import pl.kotcrab.arget.comm.file.FileTransferTask;
 
-public interface FileTransferMessageListener {
-	public void buttonFileAccepted (FileTransferTask task);
+public class FileTransferMessageAdapter implements FileTransferMessageListener {
+	@Override
+	public void buttonFileAccepted (FileTransferTask task) {
+	}
 
-	public void buttonFileRejectedOrCanceled (FileTransferTask task);
+	@Override
+	public void buttonFileRejectedOrCanceled (FileTransferTask task) {
+	}
 }

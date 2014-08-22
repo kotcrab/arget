@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.server.session.gui;
+package pl.kotcrab.arget.gui.session;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

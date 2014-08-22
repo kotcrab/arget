@@ -32,6 +32,7 @@ import pl.kotcrab.crypto.RSACipher;
 import pl.kotcrab.crypto.RSAEncrypter;
 import pl.kotcrab.crypto.RSASignature;
 
+//TODO stop using cipherinitline, not required when we have kryonet
 public class LocalSession {
 	private static final String KEY_ELEMENT_DELIMITER = "#";
 
