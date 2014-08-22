@@ -63,7 +63,7 @@ public class HomePanel extends CenterPanel {
 				}
 			}
 		} else
-			text += "Not connected or server details not received";
+			text += "Not received server details";
 		text += "</center></html>";
 
 		serverInfoLabel.setText(text);
