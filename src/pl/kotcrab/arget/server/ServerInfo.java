@@ -19,22 +19,17 @@
 
 package pl.kotcrab.arget.server;
 
+import java.util.ArrayList;
+
+//TODO rename to config
 public class ServerInfo {
-	public String name;
-	public String ip;
-	public int port;
+	public String motd = "";
+	public String hostedBy = "";
+	public ArrayList<String> publicMsg = new ArrayList<String>();
 
-	public ServerInfo (String name, String ip, int port) {
-		this.name = name;
-		this.ip = ip;
-		this.port = port;
-	}
-
-	public ServerInfo () {
-	}
-
-	@Override
-	public String toString () {
-		return String.format("%s (%s:%s)", name, ip, port);
-	}
+	public boolean whitelistEnabled = false;
+	public ArrayList<String> whitelistKeys = new ArrayList<String>();
+	public ArrayList<String> banListKeys = new ArrayList<String>();
+	public ArrayList<String> banListIp = new ArrayList<String>();
+	public ArrayList<String> vipKeys = new ArrayList<String>();
 }

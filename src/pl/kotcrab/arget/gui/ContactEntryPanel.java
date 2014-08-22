@@ -85,7 +85,7 @@ public class ContactEntryPanel extends JPanel {
 
 	public void setStatus (ContactStatus status) {
 		if (status == ContactStatus.DISCONNECTED) nameLabel.setIcon(disconnected);
-		if (status == ContactStatus.CONNECTED_GLOBAL) nameLabel.setIcon(connected);
+		if (status == ContactStatus.CONNECTED) nameLabel.setIcon(connected);
 		if (status == ContactStatus.CONNECTED_SESSION) nameLabel.setIcon(session);
 	}
 

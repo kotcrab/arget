@@ -19,15 +19,18 @@
 
 package pl.kotcrab.arget.server.session;
 
-import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
+import java.util.UUID;
+
 import pl.kotcrab.arget.server.ResponseServer;
 
-public class GlobalSessionUpdate {
-	public ResponseServer reciever;
-	public SessionExchange exchange;
+public class ServerSession {
+	public UUID id;
+	public ResponseServer requester;
+	public ResponseServer target;
 
-	public GlobalSessionUpdate (ResponseServer reciver, SessionExchange exchange) {
-		this.reciever = reciver;
-		this.exchange = exchange;
+	public ServerSession (UUID id, ResponseServer requester, ResponseServer target) {
+		this.id = id;
+		this.requester = requester;
+		this.target = target;
 	}
 }

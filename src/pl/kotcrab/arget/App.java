@@ -64,7 +64,7 @@ public class App {
 		init(true);
 	}
 
-	/** Initializes application: sets global UIManager properties, adds Bouncy Castle security provider, creates app data storage
+	/** Initializes application: sets UIManager properties, adds Bouncy Castle security provider, creates app data storage
 	 * folder, and checks if proper charset is set */
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {

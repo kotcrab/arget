@@ -42,12 +42,12 @@ import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.event.SaveProfileEvent;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.profile.Profile;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 
 public class ManageServersDialog extends ESCClosableDialog {
 	private ServerInfoListModel listModel;
-	private JList<ServerInfo> list;
-	private ServerInfo autoconnectInfo;
+	private JList<ServerDescriptor> list;
+	private ServerDescriptor autoconnectInfo;
 	private JLabel autoconnectLabel;
 
 	public ManageServersDialog (JFrame frame, Profile profile) {
@@ -62,7 +62,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 		getContentPane().setLayout(new BorderLayout(0, -6));
 
 		listModel = new ServerInfoListModel();
-		list = new JList<ServerInfo>();
+		list = new JList<ServerDescriptor>();
 		list.setModel(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -114,7 +114,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 
 		createBottomPane(profile);
 
-		for (ServerInfo desc : profile.servers)
+		for (ServerDescriptor desc : profile.servers)
 			listModel.addElement(desc);
 
 		setVisible(true);
@@ -173,7 +173,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 	private void markAsAutoconnectItem () {
 		if (isSomethingSelected() == false) return;
 
-		ServerInfo info = list.getSelectedValue();
+		ServerDescriptor info = list.getSelectedValue();
 
 		if (info.equals(autoconnectInfo))
 			autoconnectInfo = null;
@@ -186,7 +186,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 	private void deleteSelectedItem () {
 		if (isSomethingSelected() == false) return;
 
-		ServerInfo info = list.getSelectedValue();
+		ServerDescriptor info = list.getSelectedValue();
 
 		if (info.equals(autoconnectInfo)) {
 			autoconnectInfo = null;
@@ -212,13 +212,13 @@ public class ManageServersDialog extends ESCClosableDialog {
 			autoconnectLabel.setText("Autoconnect to: " + autoconnectInfo.name);
 	}
 
-	private class ServerInfoListModel extends DefaultListModel<ServerInfo> implements CreateServerDialogFinished {
+	private class ServerInfoListModel extends DefaultListModel<ServerDescriptor> implements CreateServerDialogFinished {
 		public void updateContactsTable () {
 			this.fireContentsChanged(this, 0, getSize() - 1);
 		}
 
-		public ArrayList<ServerInfo> toArrayList () {
-			ArrayList<ServerInfo> list = new ArrayList<ServerInfo>(getSize());
+		public ArrayList<ServerDescriptor> toArrayList () {
+			ArrayList<ServerDescriptor> list = new ArrayList<ServerDescriptor>(getSize());
 
 			for (int i = 0; i < getSize(); i++)
 				list.add(getElementAt(i));
@@ -227,7 +227,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 		}
 
 		@Override
-		public void finished (ServerInfo desc) {
+		public void finished (ServerDescriptor desc) {
 			addElement(desc);
 		}
 	}

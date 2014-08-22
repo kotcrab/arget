@@ -61,14 +61,14 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class GlobalClient extends ProcessingQueue<Exchange> {
+public class ArgetClient extends ProcessingQueue<Exchange> {
 	private enum State {
 		WAIT_FOR_CONFIG, WAIT_FOR_RSA, WAIT_FOR_TEST_DATA, WAIT_FOR_OK_NOTIF, CONNECTED
 	}
 
 	private boolean successfullyInitialized = false;
 
-	private ServerInfo info;
+	private ServerDescriptor info;
 	private Profile profile;
 	private MainWindowCallback guiCallback;
 
@@ -88,8 +88,8 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 
 	private Kryo internalKryo;
 
-	public GlobalClient (ServerInfo info, Profile profile, MainWindowCallback guiCallback, LocalSessionListener listener) {
-		super("GlobalClient");
+	public ArgetClient (ServerDescriptor info, Profile profile, MainWindowCallback guiCallback, LocalSessionListener listener) {
+		super("Client");
 		this.info = info;
 		this.profile = profile;
 		this.guiCallback = guiCallback;
@@ -112,18 +112,18 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 
 	}
 
-	private void initSocket (String globalIp, int port) throws IOException {
-// if (globalIp.startsWith("http")) { //TODO proper support for url adresses
-// InetAddress address = InetAddress.getByName(new URL(globalIp).getHost());
-// globalIp = address.getHostAddress();
+	private void initSocket (String serverIp, int port) throws IOException {
+// if (serverIp.startsWith("http")) { //TODO proper support for url adresses
+// InetAddress address = InetAddress.getByName(new URL(serverIp).getHost());
+// serverIp = address.getHostAddress();
 // }
 
 		client = new Client(200000, 200000);
 		KryoUtils.registerNetClasses(client.getKryo());
 		client.start();
 
-		sender = new ExchangeSender("GlobalClient Sender", client);
-		pinger = new ExchangePinger(sender, "GlobalClient Pinger", new TimeoutListener() {
+		sender = new ExchangeSender("Client Sender", client);
+		pinger = new ExchangePinger(sender, "Client Pinger", new TimeoutListener() {
 			@Override
 			public void timedOut () {
 				disconnect();
@@ -131,7 +131,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 			}
 		});
 
-		client.connect(5000, globalIp, port);
+		client.connect(5000, serverIp, port);
 		client.addListener(new Listener() {
 			@Override
 			public void received (Connection connection, Object object) {
@@ -163,7 +163,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 					if (c.publicProfileKey.equals(key)) {
 						// contact may have status CONNECTED_SESSION, we don't want to reset that after getting keychain update
 						if (lastStatus == ContactStatus.DISCONNECTED)
-							c.status = ContactStatus.CONNECTED_GLOBAL;
+							c.status = ContactStatus.CONNECTED;
 						else
 							c.status = lastStatus;
 
@@ -211,7 +211,7 @@ public class GlobalClient extends ProcessingQueue<Exchange> {
 				ThreadUtils.sleep(1000); // give some time for server to shutdown it's socket and close sessions
 				disconnect();
 			}
-		}, "GlobalClient ExitRequest").start();
+		}, "Client ExitRequest").start();
 
 	}
 

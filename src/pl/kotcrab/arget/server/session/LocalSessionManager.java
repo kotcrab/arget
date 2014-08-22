@@ -39,7 +39,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReadyNotific
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
 import pl.kotcrab.arget.gui.MainWindowCallback;
 import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.GlobalClient;
+import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.util.KryoUtils;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
@@ -49,7 +49,7 @@ import com.esotericsoftware.kryo.Kryo;
 public class LocalSessionManager {
 	private static final String TAG = "SessionManager";
 
-	private GlobalClient server;
+	private ArgetClient server;
 	private MainWindowCallback guiCallback;
 	private LocalSessionListener listener;
 
@@ -61,7 +61,7 @@ public class LocalSessionManager {
 	private Kryo receiverKryo;
 	private Kryo senderKryo;
 
-	public LocalSessionManager (GlobalClient server, MainWindowCallback guiCallback, LocalSessionListener listener) {
+	public LocalSessionManager (ArgetClient server, MainWindowCallback guiCallback, LocalSessionListener listener) {
 		this.server = server;
 		this.guiCallback = guiCallback;
 		this.listener = listener;

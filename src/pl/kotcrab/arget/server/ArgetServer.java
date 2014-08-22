@@ -37,8 +37,8 @@ import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.kryo.StoppableThreadedListener;
-import pl.kotcrab.arget.server.session.GlobalSessionManager;
-import pl.kotcrab.arget.server.session.GlobalSessionUpdate;
+import pl.kotcrab.arget.server.session.ServerSessionManager;
+import pl.kotcrab.arget.server.session.ServerSessionUpdate;
 import pl.kotcrab.arget.util.KryoUtils;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -48,38 +48,38 @@ import com.esotericsoftware.kryonet.Server;
 
 //TODO premium keys, ban list, white list
 //TODO check version
-public class GlobalServer {
-	private static final String TAG = "Global";
+public class ArgetServer {
+	private static final String TAG = "Server";
 	private static final int MAX_CONNECTIONS = 20;
 
 	private File infoFile;
-	private GlobalServerInfo info;
+	private ServerInfo info;
 
 	private IDPool idManager;
 	private List<String> publicKeys;
 
-	private GlobalSessionManager sessionManager;
+	private ServerSessionManager sessionManager;
 
 	private Server server;
 	private StoppableThreadedListener listener;
 
 	private HashMap<Connection, ResponseServer> remotes;
 
-	private GlobalInterface globalInterface;
+	private ServerInterface serverInterface;
 
-	public GlobalServer (int port) {
+	public ArgetServer (int port) {
 		this(port, "default");
 	}
 
-	public GlobalServer (int port, String infoFileName) {
+	public ArgetServer (int port, String infoFileName) {
 		Log.l(TAG, App.APP_NAME + " " + App.APP_VERSION);
-		Log.l(TAG, "Global server started on port: " + port);
+		Log.l(TAG, "Server started on port: " + port);
 
-		GlobalServerInfoIO.init();
+		ServerInfoIO.init();
 
 		if (infoFileName.equals("default")) Log.w(TAG, "Configuration file not specified, using default file");
-		infoFile = new File(GlobalServerInfoIO.getServersInfoDirectory() + infoFileName);
-		info = GlobalServerInfoIO.loadInfo(infoFile);
+		infoFile = new File(ServerInfoIO.getServersInfoDirectory() + infoFileName);
+		info = ServerInfoIO.loadInfo(infoFile);
 		Log.l(TAG, String.format("MOTD: '%s', hosted by: '%s'", info.motd, info.hostedBy));
 
 		try {
@@ -139,7 +139,7 @@ public class GlobalServer {
 						info.motd = newMotd;
 						deliverNewInfo();
 						Log.l(TAG, "New MOTD set to: " + info.motd);
-						GlobalServerInfoIO.saveInfo(infoFile, info);
+						ServerInfoIO.saveInfo(infoFile, info);
 						continue;
 					}
 
@@ -153,7 +153,7 @@ public class GlobalServer {
 						info.hostedBy = newHb;
 						deliverNewInfo();
 						Log.l(TAG, "New 'Hosted-by' set to: " + info.hostedBy);
-						GlobalServerInfoIO.saveInfo(infoFile, info);
+						ServerInfoIO.saveInfo(infoFile, info);
 						continue;
 					}
 
@@ -197,7 +197,7 @@ public class GlobalServer {
 
 							try {
 								info.publicMsg.remove(idToRemove);
-								GlobalServerInfoIO.saveInfo(infoFile, info);
+								ServerInfoIO.saveInfo(infoFile, info);
 								deliverNewInfo();
 								// Log.l(TAG, "Msg removed, remember to call deliver-info to send changes to clients", true);
 							} catch (IndexOutOfBoundsException e) {
@@ -215,7 +215,7 @@ public class GlobalServer {
 							}
 
 							info.publicMsg.add(data);
-							GlobalServerInfoIO.saveInfo(infoFile, info);
+							ServerInfoIO.saveInfo(infoFile, info);
 							deliverNewInfo();
 							// Log.l(TAG, "Msg added, remember to call deliver-info to send changes to clients", true);
 						}
@@ -247,7 +247,7 @@ public class GlobalServer {
 		idManager = new IDPool();
 		publicKeys = Collections.synchronizedList(new ArrayList<String>());
 
-		sessionManager = new GlobalSessionManager(remotes.values());
+		sessionManager = new ServerSessionManager(remotes.values());
 
 		server = new Server(200000, 200000);
 		KryoUtils.registerNetClasses(server.getKryo());
@@ -264,7 +264,7 @@ public class GlobalServer {
 					return;
 				}
 
-				ResponseServer responseServer = new ResponseServer(connection, globalInterface, idManager.getFreeId());
+				ResponseServer responseServer = new ResponseServer(connection, serverInterface, idManager.getFreeId());
 				remotes.put(connection, responseServer);
 			}
 
@@ -290,7 +290,7 @@ public class GlobalServer {
 
 		server.addListener(listener);
 
-		globalInterface = new GlobalInterface() {
+		serverInterface = new ServerInterface() {
 
 			@Override
 			public void addPublicKey (String key) {
@@ -299,7 +299,7 @@ public class GlobalServer {
 			}
 
 			@Override
-			public void sessionUpdate (GlobalSessionUpdate update) {
+			public void sessionUpdate (ServerSessionUpdate update) {
 				sessionManager.processLater(update);
 			}
 
@@ -383,7 +383,7 @@ public class GlobalServer {
 
 }
 
-interface GlobalInterface {
+interface ServerInterface {
 	public void addPublicKey (String key);
 
 	public ArrayList<String> getKeychain ();
@@ -392,7 +392,7 @@ interface GlobalInterface {
 
 	public void disconnect (Connection connection);
 
-	public void sessionUpdate (GlobalSessionUpdate update);
+	public void sessionUpdate (ServerSessionUpdate update);
 
 	public EncryptionMode getEncryptionMode ();
 

@@ -20,5 +20,5 @@
 package pl.kotcrab.arget.server;
 
 public enum ContactStatus {
-	DISCONNECTED, CONNECTED_GLOBAL, CONNECTED_SESSION
+	DISCONNECTED, CONNECTED, CONNECTED_SESSION
 }

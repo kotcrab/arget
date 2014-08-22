@@ -31,7 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.ArrayUtils;
 import pl.kotcrab.arget.util.FastByteArrayOutputStream;
 import pl.kotcrab.arget.util.FileUitls;
@@ -55,7 +55,7 @@ public class ProfileIO {
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		kryo.register(ContactInfo.class);
-		kryo.register(ServerInfo.class);
+		kryo.register(ServerDescriptor.class);
 		kryo.register(ArrayList.class);
 		kryo.register(byte[].class);
 		kryo.register(BigInteger.class);

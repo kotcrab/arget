@@ -66,21 +66,20 @@ import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
-import pl.kotcrab.arget.server.GlobalClient;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ArgetClient;
+import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
 
 //TODO system tray and/or notifications
 //TODO delete contact confirmation not centered
 //TODO event bus
-//TODO organize package pl.kotcrab.arget.global.gui
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
 
 	private Profile profile;
-	private GlobalClient globalClient;
+	private ArgetClient client;
 	private SessionWindowManager sessionWindowManager;
 
 	private JMenu serversMenu;
@@ -238,7 +237,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	private void addServersFromProfile () {
-		for (ServerInfo info : profile.servers)
+		for (ServerDescriptor info : profile.servers)
 			serversMenu.add(new ServerMenuItem(this, info));
 	}
 
@@ -269,32 +268,32 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			break;
 		case DISCONNECTED:
 			textToSet = "Disconnected";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		case ERROR:
 			textToSet = "Error";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		case TIMEDOUT:
 			textToSet = "Connection timed out";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		case SERVER_FULL:
 			textToSet = "Server is full";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		case SERVER_SHUTDOWN:
 			textToSet = "Server shutdown";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		case KICKED:
 			textToSet = "Kicked from server";
-			globalClient = null;
+			client = null;
 			resetContacts();
 			break;
 		default:
@@ -307,7 +306,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	@Override
 	public void dispose () {
-		if (globalClient != null) globalClient.requestDisconnect();
+		if (client != null) client.requestDisconnect();
 		if (sessionWindowManager != null) sessionWindowManager.stop();
 
 		profile.mainWindowBounds = getBounds();
@@ -332,9 +331,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			return;
 		}
 
-		if (contact.status == ContactStatus.CONNECTED_GLOBAL) {
+		if (contact.status == ContactStatus.CONNECTED) {
 			sessionWindowManager.showPanelForContactWhenReady(contact);
-			globalClient.createSession(contact);
+			client.createSession(contact);
 			return;
 		}
 	}
@@ -353,8 +352,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	private void performContactsUpdate () {
-		if (globalClient != null) {
-			globalClient.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
+		if (client != null) {
+			client.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
 			contactsPanel.updateContactsTable();
 		} else
 			contactsPanel.updateContactsTable();
@@ -402,18 +401,18 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	@Override
-	public void connectToServer (ServerInfo info) {
-		if (globalClient == null) {
-			globalClient = new GlobalClient(info, profile, instance, sessionWindowManager);
-			sessionWindowManager.setLocalSessionManager(globalClient.getLocalSessionManager());
+	public void connectToServer (ServerDescriptor info) {
+		if (client == null) {
+			client = new ArgetClient(info, profile, instance, sessionWindowManager);
+			sessionWindowManager.setLocalSessionManager(client.getLocalSessionManager());
 
-			if (globalClient.isSuccessfullyInitialized() == false) {
-				globalClient.requestDisconnect();
-				globalClient = null;
+			if (client.isSuccessfullyInitialized() == false) {
+				client.requestDisconnect();
+				client = null;
 			}
 		} else
 			JOptionPane.showMessageDialog(instance,
-				"Already connected to global server. Disconnect first if you want to change your current server.", "Error",
+				"Already connected to server. Disconnect first if you want to change your current server.", "Error",
 				JOptionPane.ERROR_MESSAGE);
 	}
 
@@ -461,7 +460,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			new CreateServerInfoDialog(instance, new CreateServerDialogFinished() {
 
 				@Override
-				public void finished (ServerInfo info) {
+				public void finished (ServerDescriptor info) {
 					profile.servers.add(info);
 					ProfileIO.saveProfile(profile);
 					rebuildServersList();
@@ -472,10 +471,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			new ManageServersDialog(instance, profile);
 			break;
 		case SERVERS_DISCONNECT:
-			if (globalClient != null) {
-				GlobalClient client = globalClient;
-				globalClient = null;
-				client.requestDisconnect();
+			if (client != null) {
+				ArgetClient oldClient = client;
+				client = null;
+				oldClient.requestDisconnect();
 			} else
 				JOptionPane.showMessageDialog(instance,
 					"You need to be connected to a server to disconnect. Please connect to disconnect.", "Error",
@@ -501,8 +500,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			break;
 		}
 		case CONTACTS_REFRESH:
-			if (globalClient != null) {
-				globalClient.send(new KeychainRequest());
+			if (client != null) {
+				client.send(new KeychainRequest());
 			}
 			break;
 

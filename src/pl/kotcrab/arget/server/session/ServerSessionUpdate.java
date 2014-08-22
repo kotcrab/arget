@@ -17,18 +17,17 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.server;
+package pl.kotcrab.arget.server.session;
 
-import java.util.ArrayList;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
+import pl.kotcrab.arget.server.ResponseServer;
 
-public class GlobalServerInfo {
-	public String motd = "";
-	public String hostedBy = "";
-	public ArrayList<String> publicMsg = new ArrayList<String>();
+public class ServerSessionUpdate {
+	public ResponseServer reciever;
+	public SessionExchange exchange;
 
-	public boolean whitelistEnabled = false;
-	public ArrayList<String> whitelistKeys = new ArrayList<String>();
-	public ArrayList<String> banListKeys = new ArrayList<String>();
-	public ArrayList<String> banListIp = new ArrayList<String>();
-	public ArrayList<String> vipKeys = new ArrayList<String>();
+	public ServerSessionUpdate (ResponseServer reciver, SessionExchange exchange) {
+		this.reciever = reciver;
+		this.exchange = exchange;
+	}
 }

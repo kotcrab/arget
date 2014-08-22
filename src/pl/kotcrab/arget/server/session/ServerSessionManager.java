@@ -37,21 +37,21 @@ import pl.kotcrab.arget.server.ResponseServer;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
 //TODO clean outdated session when creating new ones
-public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
+public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 	private static final String TAG = "SessionManager";
 
 	private Collection<ResponseServer> servers;
-	private List<GlobalSession> sessions;
+	private List<ServerSession> sessions;
 
-	public GlobalSessionManager (Collection<ResponseServer> servers) {
-		super("GlobalSessionManager");
+	public ServerSessionManager (Collection<ResponseServer> servers) {
+		super("ServerSessionManager");
 		this.servers = servers;
 
-		sessions = new ArrayList<GlobalSession>();
+		sessions = new ArrayList<ServerSession>();
 	}
 
 	@Override
-	protected void processQueueElement (GlobalSessionUpdate update) {
+	protected void processQueueElement (ServerSessionUpdate update) {
 
 		SessionExchange ex = update.exchange;
 
@@ -69,7 +69,7 @@ public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
 				return;
 			}
 
-			for (GlobalSession ses : sessions) {
+			for (ServerSession ses : sessions) {
 				if ((ses.requester == target && ses.target == update.reciever)
 					|| (ses.requester == update.reciever && ses.target == target)) {
 					update.reciever.send(new SessionAlreadyExistNotification(request.id));
@@ -79,12 +79,12 @@ public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
 			}
 
 			target.send(new SessionRemoteAcceptRequest(request.id, update.reciever.getProfilePublicKey()));
-			sessions.add(new GlobalSession(request.id, update.reciever, target));
+			sessions.add(new ServerSession(request.id, update.reciever, target));
 			Log.l(TAG, "Created: " + request.id);
 			return;
 		}
 
-		GlobalSession session = getSessionByID(ex);
+		ServerSession session = getSessionByID(ex);
 
 		if (isValidUpdateForSession(session, update)) {
 			if (ex instanceof SessionUnrecoverableBroken) {
@@ -99,22 +99,22 @@ public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
 
 	}
 
-	private void sendToOposite (GlobalSession session, GlobalSessionUpdate update) {
+	private void sendToOposite (ServerSession session, ServerSessionUpdate update) {
 		if (session.requester == update.reciever)
 			session.target.send(update.exchange);
 		else
 			session.requester.send(update.exchange);
 	}
 
-	private GlobalSession getSessionByID (SessionExchange ex) {
-		for (GlobalSession ses : sessions) {
+	private ServerSession getSessionByID (SessionExchange ex) {
+		for (ServerSession ses : sessions) {
 			if (ses.id.compareTo(ex.id) == 0) return ses;
 		}
 
 		return null;
 	}
 
-	private boolean isValidUpdateForSession (GlobalSession session, GlobalSessionUpdate update) {
+	private boolean isValidUpdateForSession (ServerSession session, ServerSessionUpdate update) {
 		UUID id = update.exchange.id;
 
 		if (session == null) {
@@ -132,7 +132,7 @@ public class GlobalSessionManager extends ProcessingQueue<GlobalSessionUpdate> {
 	}
 
 	private boolean isIDInUse (UUID id) {
-		for (GlobalSession s : sessions) {
+		for (ServerSession s : sessions) {
 			if (s.id.compareTo(id) == 0) return true;
 		}
 

@@ -23,7 +23,7 @@ import java.util.UUID;
 
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.server.GlobalClient;
+import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
 
 /** Classes that extends this abstract class will be serialized and encrypted using local session cipher (server won't be able to
@@ -34,8 +34,8 @@ import pl.kotcrab.arget.server.session.LocalSessionManager;
  * For example: MessageTransfer extends InternalSessionExchange: <br>
  * -put MessageTransfer in {@link LocalSessionManager} processing queue <br>
  * -{@link LocalSessionManager} serializes and encrypts it using local session cipher , put it contents in
- * {@link SessionEncryptedTransfer} add it to {@link GlobalClient} sending queue <br>
- * - {@link GlobalClient} using {@link ExchangeSender} serializes and encrypts it using client-server cipher, put it contents in
+ * {@link SessionEncryptedTransfer} add it to {@link ArgetClient} sending queue <br>
+ * - {@link ArgetClient} using {@link ExchangeSender} serializes and encrypts it using client-server cipher, put it contents in
  * {@link EncryptedTransfer} and send it over TCP kryonet connection
  * 
  * @author Pawel Pastuszak */

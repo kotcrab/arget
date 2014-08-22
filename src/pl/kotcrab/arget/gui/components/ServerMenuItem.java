@@ -25,13 +25,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 
 public class ServerMenuItem extends JMenuItem implements ActionListener {
 	private MainWindowCallback callback;
-	private ServerInfo info;
+	private ServerDescriptor info;
 
-	public ServerMenuItem (MainWindowCallback callback, ServerInfo info) {
+	public ServerMenuItem (MainWindowCallback callback, ServerDescriptor info) {
 		super(info.toString());
 		this.callback = callback;
 		this.info = info;

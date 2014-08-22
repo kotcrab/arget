@@ -37,11 +37,11 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import pl.kotcrab.arget.gui.components.DocumentFieldsChangeListener;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 
 public class CreateServerInfoDialog extends ESCClosableDialog {
 
-	private ServerInfo existingDesc;
+	private ServerDescriptor existingDesc;
 	private CreateServerDialogFinished listener;
 
 	private JTextField nameField;
@@ -54,16 +54,16 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 		this(window, null, listener);
 	}
 
-	public CreateServerInfoDialog (Window window, ServerInfo descriptor) {
+	public CreateServerInfoDialog (Window window, ServerDescriptor descriptor) {
 		this(window, descriptor, null);
 	}
 
-	public CreateServerInfoDialog (Window window, ServerInfo existingDesc, CreateServerDialogFinished listener) {
+	public CreateServerInfoDialog (Window window, ServerDescriptor existingDesc, CreateServerDialogFinished listener) {
 		super(window, ModalityType.APPLICATION_MODAL);
 		init(existingDesc, listener);
 	}
 
-	private void init (ServerInfo existingDesc, CreateServerDialogFinished listener) {
+	private void init (ServerDescriptor existingDesc, CreateServerDialogFinished listener) {
 		this.existingDesc = existingDesc;
 		this.listener = listener;
 
@@ -130,7 +130,7 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 				}
 
 				if (listener != null)
-					listener.finished(new ServerInfo(nameField.getText(), ipField.getText(), Integer.parseInt(portField.getText())));
+					listener.finished(new ServerDescriptor(nameField.getText(), ipField.getText(), Integer.parseInt(portField.getText())));
 				dispose();
 			}
 		});

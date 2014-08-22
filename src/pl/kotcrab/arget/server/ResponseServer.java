@@ -40,7 +40,7 @@ import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationReque
 import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationResponse;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
-import pl.kotcrab.arget.server.session.GlobalSessionUpdate;
+import pl.kotcrab.arget.server.session.ServerSessionUpdate;
 import pl.kotcrab.arget.util.KryoUtils;
 import pl.kotcrab.arget.util.ProcessingQueue;
 import pl.kotcrab.arget.util.ThreadUtils;
@@ -67,7 +67,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	private String tag = "Client ";
 
 	private Connection connection;
-	private GlobalInterface global;
+	private ServerInterface server;
 
 	private int id;
 	private String profilePublicKey;
@@ -84,10 +84,10 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 
 	private Kryo internalKryo;
 
-	public ResponseServer (Connection connection, GlobalInterface global, int id) {
+	public ResponseServer (Connection connection, ServerInterface server, int id) {
 		super("ResponseServer ID: " + id);
 
-		this.global = global;
+		this.server = server;
 		this.connection = connection;
 		this.id = id;
 
@@ -125,7 +125,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	private void onConnected () {
-		send(new EncryptionModeTransfer(global.getEncryptionMode()));
+		send(new EncryptionModeTransfer(server.getEncryptionMode()));
 		send(new RSAPublicKeyTransfer(rsaCipher.getPublicKey().getEncoded()));
 	}
 
@@ -137,7 +137,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 			pinger.stop();
 			sender.stop();
 			super.stop();
-			global.disconnect(connection);
+			server.disconnect(connection);
 
 			Log.l(tag, "Disconnected");
 		}
@@ -174,7 +174,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 		if (ex instanceof SymmetricKeysTransfer && state == State.WAIT_FOR_AUTHREQUEST) {
 			SymmetricKeysTransfer auth = (SymmetricKeysTransfer)ex;
 
-			switch (global.getEncryptionMode()) {
+			switch (server.getEncryptionMode()) {
 			case AES: {
 				byte[] key1 = rsaCipher.decrypt(auth.key1);
 				cipher = new SymmetricCipher("AES", key1);
@@ -220,11 +220,11 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 			if (randomUUID.equals(resp.decryptedTestData)) {
 
 				// TODO not sure if this should return boolean if already connected and stop this method if so
-				global.disconnectIfAlreadyConnected(this, profilePublicKey);
+				server.disconnectIfAlreadyConnected(this, profilePublicKey);
 
 				send(new TestMsgResponseOKNotification());
-				send(global.getServerInfoExchange());
-				global.addPublicKey(profilePublicKey);
+				send(server.getServerInfoExchange());
+				server.addPublicKey(profilePublicKey);
 				pinger.start();
 
 				Log.l(tag, "Authorization successful");
@@ -240,8 +240,8 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 		if (state == State.CONNECTED) {
 			pinger.update(ex);
 			if (ex instanceof DisconnectingNotification) stop();
-			if (ex instanceof KeychainRequest) send(new KeychainTransfer(global.getKeychain()));
-			if (ex instanceof SessionExchange) global.sessionUpdate(new GlobalSessionUpdate(this, (SessionExchange)ex));
+			if (ex instanceof KeychainRequest) send(new KeychainTransfer(server.getKeychain()));
+			if (ex instanceof SessionExchange) server.sessionUpdate(new ServerSessionUpdate(this, (SessionExchange)ex));
 		}
 	}
 

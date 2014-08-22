@@ -33,7 +33,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 //TODO don't have to be static class, change to instance maybe?
-public class GlobalServerInfoIO {
+public class ServerInfoIO {
 	private static final String TAG = "ServerConfigIO";
 	private static Kryo kryo;
 
@@ -48,10 +48,10 @@ public class GlobalServerInfoIO {
 		SERVERS_DIRECTORY.mkdirs();
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		kryo.register(GlobalServerInfo.class);
+		kryo.register(ServerInfo.class);
 	}
 
-	public static void saveInfo (File file, GlobalServerInfo info) {
+	public static void saveInfo (File file, ServerInfo info) {
 		try {
 			if (file.exists() == false) file.createNewFile();
 			Output output = new Output(new FileOutputStream(file));
@@ -64,13 +64,13 @@ public class GlobalServerInfoIO {
 		}
 	}
 
-	public static GlobalServerInfo loadInfo (File file) {
-		if (file.exists() == false) return new GlobalServerInfo();
+	public static ServerInfo loadInfo (File file) {
+		if (file.exists() == false) return new ServerInfo();
 
 		try {
 
 			Input input = new Input(new FileInputStream(file));
-			GlobalServerInfo info = kryo.readObject(input, GlobalServerInfo.class);
+			ServerInfo info = kryo.readObject(input, ServerInfo.class);
 			input.close();
 			return info;
 

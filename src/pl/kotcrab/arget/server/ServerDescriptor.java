@@ -17,20 +17,24 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.server.session;
+package pl.kotcrab.arget.server;
 
-import java.util.UUID;
+public class ServerDescriptor {
+	public String name;
+	public String ip;
+	public int port;
 
-import pl.kotcrab.arget.server.ResponseServer;
+	public ServerDescriptor (String name, String ip, int port) {
+		this.name = name;
+		this.ip = ip;
+		this.port = port;
+	}
 
-public class GlobalSession {
-	public UUID id;
-	public ResponseServer requester;
-	public ResponseServer target;
+	public ServerDescriptor () {
+	}
 
-	public GlobalSession (UUID id, ResponseServer requester, ResponseServer target) {
-		this.id = id;
-		this.requester = requester;
-		this.target = target;
+	@Override
+	public String toString () {
+		return String.format("%s (%s:%s)", name, ip, port);
 	}
 }

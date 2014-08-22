@@ -137,7 +137,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		else
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
 
-		panel.getContact().status = ContactStatus.CONNECTED_GLOBAL;
+		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
 		mainWindow.updateContacts();
 	}
@@ -147,7 +147,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		SessionPanel panel = getPanelByUUID(id);
 
 		panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
-		panel.getContact().status = ContactStatus.CONNECTED_GLOBAL;
+		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
 		mainWindow.updateContacts();
 	}

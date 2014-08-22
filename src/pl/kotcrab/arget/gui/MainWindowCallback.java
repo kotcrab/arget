@@ -24,7 +24,7 @@ import java.awt.Component;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 
 //TODO sort this maybe?
 public interface MainWindowCallback {
@@ -46,7 +46,7 @@ public interface MainWindowCallback {
 
 	public void starFlasherAndSoundIfNeeded ();
 
-	public void connectToServer (ServerInfo info);
+	public void connectToServer (ServerDescriptor info);
 
 	public void setServerInfo (ServerInfoTransfer info);
 }

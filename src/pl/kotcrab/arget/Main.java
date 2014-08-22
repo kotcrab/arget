@@ -23,7 +23,7 @@ import java.awt.EventQueue;
 
 import pl.kotcrab.arget.gui.LoginFrame;
 import pl.kotcrab.arget.profile.ProfileGenerator;
-import pl.kotcrab.arget.server.GlobalServer;
+import pl.kotcrab.arget.server.ArgetServer;
 
 public class Main {
 	public static void main (final String[] args) {
@@ -54,12 +54,12 @@ public class Main {
 			return;
 		}
 
-		if (args[0].equals("--global")) {
+		if (args[0].equals("--server")) {
 			App.init(false);
 			if (args.length == 2)
-				new GlobalServer(Integer.parseInt(args[1]));
+				new ArgetServer(Integer.parseInt(args[1]));
 			else
-				new GlobalServer(31415);
+				new ArgetServer(31415);
 			return;
 		}
 

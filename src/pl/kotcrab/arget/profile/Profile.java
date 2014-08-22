@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import javax.crypto.spec.SecretKeySpec;
 
 import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.ServerInfo;
+import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.crypto.RSACipher;
 import pl.kotcrab.crypto.RSAKeySet;
 
@@ -39,11 +39,11 @@ public class Profile {
 	public transient SecretKeySpec profileKeySpec;
 
 	public ArrayList<ContactInfo> contacts;
-	public ArrayList<ServerInfo> servers;
+	public ArrayList<ServerDescriptor> servers;
 
 	// OPTIONS
 	public boolean playSound;
-	public ServerInfo autoconnectInfo;
+	public ServerDescriptor autoconnectInfo;
 	public Rectangle mainWindowBounds;
 
 	public void init (File file, SecretKeySpec keySpec) {
@@ -59,7 +59,7 @@ public class Profile {
 	 * @return itself */
 	Profile generateProfile () {
 		RSACipher rsa = new RSACipher();
-		servers = new ArrayList<ServerInfo>();
+		servers = new ArrayList<ServerDescriptor>();
 		contacts = new ArrayList<ContactInfo>();
 
 		keyset = new RSAKeySet(rsa.getPublicKeySpec(), rsa.getPrivateKeySpec());
