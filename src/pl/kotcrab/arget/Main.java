@@ -46,7 +46,7 @@ public class Main {
 		}
 
 		if (args[0].equals("--profile-gen")) {
-			App.init();
+			App.init(false);
 			ProfileGenerator.genereteViaConsole();
 			return;
 		}
