@@ -65,7 +65,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferFinished
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.kryo.UUIDSerializer;
-import pl.kotcrab.arget.global.EncryptionMode;
+import pl.kotcrab.arget.server.EncryptionMode;
 import pl.kotcrab.crypto.EncryptedData;
 
 import com.esotericsoftware.kryo.Kryo;

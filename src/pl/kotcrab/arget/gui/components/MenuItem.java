@@ -26,7 +26,7 @@ import javax.swing.JMenuItem;
 
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
-import pl.kotcrab.arget.global.gui.MainWindow;
+import pl.kotcrab.arget.gui.MainWindow;
 
 public class MenuItem extends JMenuItem {
 	private MenuEvent event;

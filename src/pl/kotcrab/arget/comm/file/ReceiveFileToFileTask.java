@@ -27,7 +27,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.NotImplementedException;
 
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public class ReceiveFileToFileTask extends ReceiveFileTask {
 	private FileOutputStream out;

@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 	public static final int MAX_SIZE = 2048 * 1024; // 2048 KB = 2 MB

@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public class SendFileTask extends FileTransferTask {
 	private static final int BLOCK_SIZE = 8196;

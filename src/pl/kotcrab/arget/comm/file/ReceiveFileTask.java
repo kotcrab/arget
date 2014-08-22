@@ -21,7 +21,7 @@ package pl.kotcrab.arget.comm.file;
 
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public abstract class ReceiveFileTask extends FileTransferTask {
 

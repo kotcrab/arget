@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import javax.crypto.spec.SecretKeySpec;
 
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.global.ContactInfo;
-import pl.kotcrab.arget.global.ServerInfo;
+import pl.kotcrab.arget.server.ContactInfo;
+import pl.kotcrab.arget.server.ServerInfo;
 import pl.kotcrab.arget.util.ArrayUtils;
 import pl.kotcrab.arget.util.FastByteArrayOutputStream;
 import pl.kotcrab.arget.util.FileUitls;

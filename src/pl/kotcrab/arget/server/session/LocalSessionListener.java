@@ -17,33 +17,22 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server.session;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.UUID;
 
-import java.util.Random;
+import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 
-import org.junit.Test;
+public interface LocalSessionListener {
+	public void sessionCreated (UUID id, String key);
 
-import pl.kotcrab.arget.util.KryoUtils;
+	public void sessionReady (UUID id);
 
-import com.esotericsoftware.kryo.Kryo;
+	public void sessionBroken (SessionExchange ex);
 
-public class KryoUtilsTest {
+	public void sessionClosed (UUID id);
 
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
-	}
+	public void sessionDataRecieved (InternalSessionExchange ex);
 
 }

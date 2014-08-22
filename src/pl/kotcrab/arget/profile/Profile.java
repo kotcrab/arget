@@ -25,8 +25,8 @@ import java.util.ArrayList;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import pl.kotcrab.arget.global.ContactInfo;
-import pl.kotcrab.arget.global.ServerInfo;
+import pl.kotcrab.arget.server.ContactInfo;
+import pl.kotcrab.arget.server.ServerInfo;
 import pl.kotcrab.crypto.RSACipher;
 import pl.kotcrab.crypto.RSAKeySet;
 

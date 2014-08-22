@@ -17,33 +17,37 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server.session.gui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
-import java.util.Random;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-import org.junit.Test;
+import org.imgscalr.Scalr;
 
-import pl.kotcrab.arget.util.KryoUtils;
+public class ImageMessage extends MessageComponent {
 
-import com.esotericsoftware.kryo.Kryo;
+	public ImageMessage (int type, final BufferedImage image, final String fileName) {
+		super(type);
 
-public class KryoUtilsTest {
+		JLabel imageLabel = new JLabel();
+		add(imageLabel);
 
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
+		// TODO optimzie for gif, png, jpg
+		BufferedImage thumbnail = Scalr.resize(image, 150);
+		imageLabel.setIcon(new ImageIcon(thumbnail));
+		// imageLabel.setIcon(new ImageIcon(data));
 
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
+		imageLabel.addMouseListener(new MouseAdapter() {
 
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
+			@Override
+			public void mouseClicked (MouseEvent e) {
+				if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) new ImageDisplayPanel(image, fileName);
+			}
+		});
 	}
 
 }

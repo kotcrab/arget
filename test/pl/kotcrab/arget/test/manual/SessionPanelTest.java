@@ -28,8 +28,8 @@ import javax.swing.border.EmptyBorder;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.comm.Msg;
-import pl.kotcrab.arget.global.session.gui.SessionPanel;
-import pl.kotcrab.arget.global.session.gui.TextMessage;
+import pl.kotcrab.arget.server.session.gui.SessionPanel;
+import pl.kotcrab.arget.server.session.gui.TextMessage;
 
 public class SessionPanelTest extends JFrame {
 

@@ -17,33 +17,20 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server.session;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.UUID;
 
-import java.util.Random;
+import pl.kotcrab.arget.server.ResponseServer;
 
-import org.junit.Test;
+public class GlobalSession {
+	public UUID id;
+	public ResponseServer requester;
+	public ResponseServer target;
 
-import pl.kotcrab.arget.util.KryoUtils;
-
-import com.esotericsoftware.kryo.Kryo;
-
-public class KryoUtilsTest {
-
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
+	public GlobalSession (UUID id, ResponseServer requester, ResponseServer target) {
+		this.id = id;
+		this.requester = requester;
+		this.target = target;
 	}
-
 }

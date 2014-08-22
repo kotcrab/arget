@@ -43,10 +43,10 @@ public class FastByteArrayOutputStreamTest {
 		FastByteArrayOutputStream out = new FastByteArrayOutputStream(100);
 		for (int i = 0; i < writeTimes; i++)
 			out.write(bytes);
-		
+
 		byte[] outBytes = out.getByteArray();
 		byte[] singleBlock = Arrays.copyOf(outBytes, blockSize);
-		
+
 		assertArrayEquals(bytes, singleBlock);
 		assertEquals(out.getBufferSize(), outBytes.length);
 

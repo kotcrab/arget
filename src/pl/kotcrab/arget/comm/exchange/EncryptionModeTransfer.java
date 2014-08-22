@@ -19,7 +19,7 @@
 
 package pl.kotcrab.arget.comm.exchange;
 
-import pl.kotcrab.arget.global.EncryptionMode;
+import pl.kotcrab.arget.server.EncryptionMode;
 
 /** Tells client what {@link EncryptionMode} is used on server
  * @author Pawel Pastuszak */

@@ -21,7 +21,7 @@ package pl.kotcrab.arget.comm.exchange.internal.session;
 
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 /** Provides 'cipher initialization line' - encrypted symmetric cipher keys, encryption is done using public profile RSA key. Then
  * result is signed using requester private key See: {@link LocalSession}.

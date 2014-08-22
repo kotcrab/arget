@@ -21,7 +21,7 @@ package pl.kotcrab.arget.comm.file;
 
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public abstract class FileTransferTask {
 	public static final int BLOCKS_IN_BATCH = 8;

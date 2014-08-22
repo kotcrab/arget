@@ -17,33 +17,18 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
 
-import java.util.Random;
+public class GlobalServerInfo {
+	public String motd = "";
+	public String hostedBy = "";
+	public ArrayList<String> publicMsg = new ArrayList<String>();
 
-import org.junit.Test;
-
-import pl.kotcrab.arget.util.KryoUtils;
-
-import com.esotericsoftware.kryo.Kryo;
-
-public class KryoUtilsTest {
-
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
-	}
-
+	public boolean whitelistEnabled = false;
+	public ArrayList<String> whitelistKeys = new ArrayList<String>();
+	public ArrayList<String> banListKeys = new ArrayList<String>();
+	public ArrayList<String> banListIp = new ArrayList<String>();
+	public ArrayList<String> vipKeys = new ArrayList<String>();
 }

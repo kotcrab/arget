@@ -21,9 +21,9 @@ package pl.kotcrab.arget;
 
 import java.awt.EventQueue;
 
-import pl.kotcrab.arget.global.GlobalServer;
-import pl.kotcrab.arget.global.gui.LoginFrame;
+import pl.kotcrab.arget.gui.LoginFrame;
 import pl.kotcrab.arget.profile.ProfileGenerator;
+import pl.kotcrab.arget.server.GlobalServer;
 
 public class Main {
 	public static void main (final String[] args) {

@@ -17,33 +17,21 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server.session.gui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
-import java.util.Random;
+import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.comm.Msg;
 
-import org.junit.Test;
+public class TypingMessage extends MessageComponent {
+	public TypingMessage () {
+		super(Msg.LEFT);
 
-import pl.kotcrab.arget.util.KryoUtils;
-
-import com.esotericsoftware.kryo.Kryo;
-
-public class KryoUtilsTest {
-
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
+		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
+		image.setBorder(new EmptyBorder(3, 1, 0, 0));
+		add(image);
 	}
-
 }

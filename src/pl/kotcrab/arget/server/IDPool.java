@@ -17,33 +17,42 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.Random;
+public class IDPool {
+	private List<Integer> freeIDs = Collections.synchronizedList(new ArrayList<Integer>(30));
 
-import org.junit.Test;
+	private int IDCounter = 0;
 
-import pl.kotcrab.arget.util.KryoUtils;
-
-import com.esotericsoftware.kryo.Kryo;
-
-public class KryoUtilsTest {
-
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
+	public IDPool () {
+		genertesIDs();
 	}
 
+	private void genertesIDs () {
+		int targetIDCounter = IDCounter + 30;
+		for (; IDCounter < targetIDCounter; IDCounter++) {
+			freeIDs.add(IDCounter);
+		}
+	}
+
+	public void freeID (int id) {
+		if (freeIDs.contains(id))
+			return;
+		else
+			freeIDs.add(id);
+
+		Collections.sort(freeIDs);
+	}
+
+	public int getFreeId () {
+		if (freeIDs.size() == 0) genertesIDs(); // we ran out of free id's, generate more!
+
+		int id = freeIDs.get(0);
+		freeIDs.remove(0);
+		return id;
+	}
 }

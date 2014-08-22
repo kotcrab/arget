@@ -17,33 +17,24 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public class ServerInfo {
+	public String name;
+	public String ip;
+	public int port;
 
-import java.util.Random;
-
-import org.junit.Test;
-
-import pl.kotcrab.arget.util.KryoUtils;
-
-import com.esotericsoftware.kryo.Kryo;
-
-public class KryoUtilsTest {
-
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
-
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
-
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
+	public ServerInfo (String name, String ip, int port) {
+		this.name = name;
+		this.ip = ip;
+		this.port = port;
 	}
 
+	public ServerInfo () {
+	}
+
+	@Override
+	public String toString () {
+		return String.format("%s (%s:%s)", name, ip, port);
+	}
 }

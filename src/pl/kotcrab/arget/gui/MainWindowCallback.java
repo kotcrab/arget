@@ -17,33 +17,36 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.test.util;
+package pl.kotcrab.arget.gui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.awt.Component;
 
-import java.util.Random;
+import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
+import pl.kotcrab.arget.server.ConnectionStatus;
+import pl.kotcrab.arget.server.ContactInfo;
+import pl.kotcrab.arget.server.ServerInfo;
 
-import org.junit.Test;
+//TODO sort this maybe?
+public interface MainWindowCallback {
+	public void setConnectionStatus (ConnectionStatus status);
 
-import pl.kotcrab.arget.util.KryoUtils;
+	public void setConnectionStatus (ConnectionStatus status, String msg);
 
-import com.esotericsoftware.kryo.Kryo;
+	public void startChat (ContactInfo contact);
 
-public class KryoUtilsTest {
+	public void updateContacts ();
 
-	@Test
-	public void testSeriazliationToByteArray () {
-		Kryo kryo = new Kryo();
+	public boolean isKeyInContacts (String key);
 
-		int input = new Random().nextInt();
-		byte[] ser = KryoUtils.writeClassAndObjectToByteArray(kryo, input);
-		assertEquals(input, KryoUtils.readClassAndObjectFromByteArray(kryo, ser));
+	public ContactInfo getContactsByKey (String key);
 
-		String testString = "Test string";
-		byte[] serString = KryoUtils.writeClassAndObjectToByteArray(kryo, testString);
-		String outString = (String)KryoUtils.readClassAndObjectFromByteArray(kryo, serString);
-		assertTrue(outString.equals(testString));
-	}
+	public void setCenterScreenTo (CenterPanel panel);
 
+	public Component getCenterScreen ();
+
+	public void starFlasherAndSoundIfNeeded ();
+
+	public void connectToServer (ServerInfo info);
+
+	public void setServerInfo (ServerInfoTransfer info);
 }
