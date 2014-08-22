@@ -1,6 +1,7 @@
+
 package pl.kotcrab.arget.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 

@@ -1,7 +1,6 @@
 
 package pl.kotcrab.arget.test.manual;
 
-import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.LoggerListener;
 import pl.kotcrab.arget.util.ThreadUtils;
@@ -11,8 +10,6 @@ public class LoggerTest {
 	private static boolean errOk;
 
 	public static void main (final String[] args) {
-		App.init();
-
 		Log.setListener(new LoggerListener() {
 
 			@Override
@@ -29,8 +26,8 @@ public class LoggerTest {
 		Log.l("Normal out test");
 		Log.w("Warning out test");
 		Log.err("Error test");
-
-		ThreadUtils.sleep(1000);
+		
+		ThreadUtils.sleep(10);
 
 		Log.l("some-lib", "Lib normal out test");
 		Log.w("some-lib", "Lib warning out test");

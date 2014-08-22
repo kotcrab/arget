@@ -50,8 +50,6 @@ public class App {
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
 
-			Log.init();
-
 			com.esotericsoftware.minlog.Log.NONE();
 			// com.esotericsoftware.minlog.Log.DEBUG();
 

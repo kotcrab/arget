@@ -1,15 +1,12 @@
 
 package pl.kotcrab.arget;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /** Log utility, log events are redirected to listener and printed to standard output
  * @author Pawel Pastuszak */
-//TODO stop stealing streams
+// TODO remove silent
 public class Log {
 	private static final String TAG = "Log";
 	private static final boolean DEBUG = App.DEBUG;
@@ -18,93 +15,44 @@ public class Log {
 
 	private static LoggerListener listener;
 
-	private static PrintStream standardError;
-	private static PrintStream standardOutput;
-
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
-
-	private static final char NO_NEWLINE_CONTROL_CHARACTER = '|';
-
-	public static void init () {
-		standardError = System.err;
-
-		System.setErr(new PrintStream(new OutputStream() {
-			private StringBuilder line = new StringBuilder();
-
-			@Override
-			public void write (int b) throws IOException {
-				if (b == '\n' || b == NO_NEWLINE_CONTROL_CHARACTER) {
-					String s = line.toString();
-					line.setLength(0);
-					s = getTimestamp() + s;
-					if (listener != null) listener.err(s);
-
-					if (b == '\n') standardError.println(s);
-					if (b == NO_NEWLINE_CONTROL_CHARACTER) standardError.print(s);
-				} else if (b != '\r') {
-					line.append((char)b);
-				}
-			}
-		}));
-
-		standardOutput = System.out;
-
-		System.setOut(new PrintStream(new OutputStream() {
-			private StringBuilder line = new StringBuilder();
-
-			@Override
-			public void write (int b) throws IOException {
-				if (b == '\n' || b == NO_NEWLINE_CONTROL_CHARACTER) {
-					String s = line.toString();
-					line.setLength(0);
-					s = getTimestamp() + s;
-					if (listener != null) listener.log(s);
-
-					if (b == '\n') standardOutput.println(s);
-					if (b == NO_NEWLINE_CONTROL_CHARACTER) standardOutput.print(s);
-				} else if (b != '\r') {
-					line.append((char)b);
-				}
-			}
-		}));
-	}
 
 	// ============STANDARD LOGGING============
 
 	// TODO check call hierarchy and add tags
 
 	public static void l (String msg) {
-		if (silentMode == false) System.out.println(msg);
+		if (silentMode == false) println(msg);
 	}
 
 	public static void w (String msg) {
-		System.out.println("WARNING: " + msg);
+		println("WARNING: " + msg);
 	}
 
 	public static void debug (String msg) {
-		if (DEBUG) System.out.println("DEBUG: " + msg);
+		if (DEBUG) println("DEBUG: " + msg);
 	}
 
 	public static void err (String msg) {
-		System.err.println("ERROR: " + msg);
+		printlnErr("ERROR: " + msg);
 	}
 
 	// ============LOGGING WITHOUT NEW LINE============
 
 	public static void lNnl (String msg) {
-		if (silentMode == false) System.out.print(msg + NO_NEWLINE_CONTROL_CHARACTER);
+		if (silentMode == false) print(msg);
 	}
 
 	public static void wNnl (String msg) {
-		System.out.print("WARNING: " + msg + NO_NEWLINE_CONTROL_CHARACTER);
+		print("WARNING: " + msg);
 	}
 
 	public static void debugNnl (String msg) {
-		if (DEBUG) System.out.print("DEBUG: " + msg + NO_NEWLINE_CONTROL_CHARACTER);
+		if (DEBUG) print("DEBUG: " + msg);
 	}
 
 	public static void eNnl (String msg) {
-		System.err.print("ERROR: " + msg + NO_NEWLINE_CONTROL_CHARACTER);
+		printErr("ERROR: " + msg);
 	}
 
 	// ============LOGGING WITH TAG============
@@ -114,19 +62,45 @@ public class Log {
 	}
 
 	public static void l (String tag, String msg, boolean silentOverride) {
-		if (silentMode == false || silentOverride) System.out.println("[" + tag + "] " + msg);
+		if (silentMode == false || silentOverride) println("[" + tag + "] " + msg);
 	}
 
 	public static void w (String tag, String msg) {
-		System.out.println("[" + tag + "] " + "WARNING: " + msg);
+		println("[" + tag + "] " + "WARNING: " + msg);
 	}
 
 	public static void debug (String tag, String msg) {
-		if (DEBUG) System.out.println("[" + tag + "] " + "DEBUG: " + msg);
+		if (DEBUG) println("[" + tag + "] " + "DEBUG: " + msg);
 	}
 
 	public static void err (String tag, String msg) {
-		System.err.println("[" + tag + "] " + "ERROR: " + msg);
+		printlnErr("[" + tag + "] " + "ERROR: " + msg);
+	}
+
+	// ==========================================
+
+	private static void print (String msg) {
+		msg = getTimestamp() + msg;
+		if (listener != null) listener.log(msg);
+		System.out.print(msg);
+	}
+
+	private static void println (String msg) {
+		msg = getTimestamp() + msg;
+		if (listener != null) listener.log(msg);
+		System.out.println(msg);
+	}
+
+	private static void printErr (String msg) {
+		msg = getTimestamp() + msg;
+		if (listener != null) listener.err(msg);
+		System.err.print(msg);
+	}
+
+	private static void printlnErr (String msg) {
+		msg = getTimestamp() + msg;
+		if (listener != null) listener.err(msg);
+		System.err.println(msg);
 	}
 
 	public static void setListener (LoggerListener listener) {
