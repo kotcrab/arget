@@ -28,13 +28,13 @@ public class Timer {
 		this.threadName = threadName;
 	}
 
-	public void schedule (final TimerListener task, final long delay) {
+	public void schedule (final TimerListener task, final long delayMillis) {
 		if (thread == null) {
 			thread = new Thread(new Runnable() {
 
 				@Override
 				public void run () {
-					ThreadUtils.sleep(delay);
+					ThreadUtils.sleep(delayMillis);
 					if (thread != null) {
 						task.doTask();
 					}

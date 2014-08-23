@@ -22,6 +22,7 @@ package pl.kotcrab.arget.util;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.GraphicsDevice.WindowTranslucency;
 
 public class SwingUtils {
 	public static boolean isRectangleDisplayableOnScreen (Rectangle rect) {
@@ -45,5 +46,12 @@ public class SwingUtils {
 
 	public static GraphicsDevice[] getScreenDevices () {
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+	}
+
+	public static boolean isPerpixelTransparencySupported () {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		return gd.isWindowTranslucencySupported(WindowTranslucency.PERPIXEL_TRANSLUCENT);
+
 	}
 }

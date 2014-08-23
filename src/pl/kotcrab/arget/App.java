@@ -34,8 +34,10 @@ import javax.swing.ImageIcon;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import pl.kotcrab.arget.event.EventBus;
+import pl.kotcrab.arget.gui.notification.NotificationService;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.util.DesktopUtils;
+import pl.kotcrab.arget.util.SwingUtils;
 
 import com.alee.laf.WebLookAndFeel;
 
@@ -59,23 +61,31 @@ public class App {
 	private static boolean appInitialized;
 
 	public static EventBus eventBus;
+	private static NotificationService notificationService;
 
 	public static void init () {
 		init(true);
 	}
 
-	/** Initializes application: sets UIManager properties, adds Bouncy Castle security provider, creates app data storage
-	 * folder, and checks if proper charset is set */
+	/** Initializes application: sets UIManager properties, adds Bouncy Castle security provider, creates app data storage folder,
+	 * and checks if proper charset is set */
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
 			checkCharset();
 			Security.addProvider(new BouncyCastleProvider());
 
 			eventBus = new EventBus();
+			notificationService = new NotificationService();
+
 			com.esotericsoftware.minlog.Log.NONE();
 			// com.esotericsoftware.minlog.Log.DEBUG();
 
 			if (initGui) {
+				if (SwingUtils.isPerpixelTransparencySupported() == false) {
+					System.err.println("Per-pixel transparency not supported");
+					System.exit(-1);
+				}
+
 				if (WebLookAndFeel.install() == false) throw new IllegalStateException("Failed to install WebLookAndFell");
 			}
 
