@@ -25,6 +25,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -39,10 +40,10 @@ import pl.kotcrab.arget.util.TimerListener;
 
 //TODO add txt length check
 public class NotificationView extends JDialog {
+	private NotifcationListener listener;
+	private JLabel iconLabel;
 	private JLabel titleLabel;
 	private JLabel textLabel;
-
-	private NotifcationListener listener;
 
 	public NotificationView (NotifcationListener listener) {
 		this.listener = listener;
@@ -53,16 +54,16 @@ public class NotificationView extends JDialog {
 		setOpacity(0.7f);
 		setAlwaysOnTop(true);
 		setFocusable(false);
-		setFocusableWindowState(false); //stops notification from stealling focus
+		setFocusableWindowState(false); // stops notification from stealing focus when appearing
 		setShape(new RoundRectangle2D.Float(0, 0, 330, 70, 3, 3));
-		
+
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown (ComponentEvent e) {
 				onShow();
 			}
 		});
-		
+
 		JPanel panel = new JPanel(new MigLayout("", "[][grow][330px,grow]", "[][grow]"));
 		panel.setBorder(new EmptyBorder(-2, -7, 0, 0));
 		panel.setBackground(new Color(0f, 0f, 0f, 1f));
@@ -78,7 +79,8 @@ public class NotificationView extends JDialog {
 		textLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		textLabel.setForeground(Color.WHITE);
 
-		panel.add(new JLabel(new ImageIcon(NotificationView.class.getResource("/data/iconsmall.png"))), "cell 1 0,aligny top");
+		iconLabel = new JLabel();
+		panel.add(iconLabel, "cell 1 0,aligny top");
 		panel.add(titleLabel, "cell 2 0");
 		panel.add(textLabel, "cell 2 1,aligny top");
 
@@ -97,7 +99,8 @@ public class NotificationView extends JDialog {
 		}, 3000);
 	}
 
-	public void setTexts (String title, String text) {
+	public void setData (Icon image, String title, String text) {
+		iconLabel.setIcon(image);
 		titleLabel.setText(title);
 		textLabel.setText("<html>" + text + "</html>");
 

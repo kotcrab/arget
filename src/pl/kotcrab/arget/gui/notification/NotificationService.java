@@ -3,6 +3,11 @@ package pl.kotcrab.arget.gui.notification;
 
 import java.awt.Rectangle;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.imgscalr.Scalr;
+
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
@@ -10,15 +15,17 @@ import pl.kotcrab.arget.util.SwingUtils;
 
 public class NotificationService implements EventListener, NotifcationListener {
 	private static final int MAX_NOTIFICATIONS = 3;
+
 	private NotificationView[] views;
+	private Icon defaultIcon;
 
 	public NotificationService () {
 		views = new NotificationView[MAX_NOTIFICATIONS];
-
+		defaultIcon = new ImageIcon(App.getResource("/data/iconsmall.png"));
 		App.eventBus.register(this);
 	}
 
-	public void showNotification (String title, String text) {
+	public void showNotification (Icon icon, String title, String text) {
 		NotificationView view = null;
 
 		for (int i = 0; i < MAX_NOTIFICATIONS; i++) {
@@ -35,14 +42,14 @@ public class NotificationService implements EventListener, NotifcationListener {
 		}
 
 		if (view != null) {
-			setNotification(view, title, text);
+			setNotification(view, icon, title, text);
 		} else {
 			// TODO find oldest notif and replace it
 		}
 	}
 
-	private void setNotification (NotificationView view, String title, String text) {
-		view.setTexts(title, text);
+	private void setNotification (NotificationView view, Icon icon, String title, String text) {
+		view.setData(icon, title, text);
 		view.setVisible(true);
 		setPositons();
 	}
@@ -66,8 +73,14 @@ public class NotificationService implements EventListener, NotifcationListener {
 	public void onEvent (Event event) {
 		if (event instanceof ShowNotificationEvent) {
 			ShowNotificationEvent notif = (ShowNotificationEvent)event;
-
-			showNotification(notif.title, notif.text);
+			
+			Icon icon;
+			if(notif.image == null)
+				icon = defaultIcon;
+			else
+				icon = new ImageIcon(Scalr.resize(notif.image, 20, 20));
+				
+			showNotification(icon, notif.title, notif.text);
 		}
 	}
 

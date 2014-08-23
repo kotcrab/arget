@@ -20,6 +20,7 @@
 package pl.kotcrab.arget;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,7 +141,7 @@ public class App {
 		return App.class.getResourceAsStream(path);
 	}
 
-	public static Image loadImage (String path) {
+	public static BufferedImage loadImage (String path) {
 		try {
 			return ImageIO.read(getResource(path));
 		} catch (IOException e) {

@@ -1,3 +1,4 @@
 [1.4-beta2]
++Notifications
 *EventBus won't crash if exception occurs
 *Fixed LoginFrame size on Linux systems
