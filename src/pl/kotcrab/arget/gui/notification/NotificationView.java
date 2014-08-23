@@ -76,17 +76,7 @@ public class NotificationView extends JDialog {
 		// int ym = size.y + size.height - getHeight();
 		setLocation(xm - 35, 35);
 
-		JPanel panel = new JPanel(new MigLayout("", "[][grow][330px,grow]", "[][grow]")) {
-			@Override
-			public void paintComponent (Graphics g) {
-				// super.paintComponent(g);
-				Graphics2D g2 = (Graphics2D)g;
-				Paint gp = new GradientPaint(0, 0, new Color(0f, 0f, 0f, 1f), 0, 200, new Color(0f, 0f, 0f, 0.7f));
-				g2.setPaint(gp);
-				g2.fillRect(0, 0, getWidth(), getHeight());
-			}
-		};
-		;
+		JPanel panel = new JPanel(new MigLayout("", "[][grow][330px,grow]", "[][grow]"));
 		panel.setBorder(new EmptyBorder(-2, -7, 0, 0));
 		panel.setBackground(new Color(0f, 0f, 0f, 1f));
 
@@ -112,7 +102,7 @@ public class NotificationView extends JDialog {
 	}
 
 	private void onShow () {
-		Timer timer = new Timer("NotificationDisaperTimer");
+		Timer timer = new Timer("Notification Disappear Timer");
 		timer.schedule(new TimerListener() {
 
 			@Override
