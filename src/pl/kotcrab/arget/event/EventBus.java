@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 import pl.kotcrab.arget.util.ProcessingQueue;
 
-//TODO add executors?
 public class EventBus {
 	private ArrayList<EventListener> listeners;
 	private ProcessingQueue<Event> queue;
@@ -59,12 +58,16 @@ public class EventBus {
 	}
 
 	private void processEvent (final Event event) {
-		if (event.isExectueOnAWTEventQueue()) {
-			for (EventListener listener : listeners)
-				processEventOnAWTQueue(listener, event);
-		} else {
-			for (EventListener listener : listeners)
-				listener.onEvent(event);
+		try {
+			if (event.isExectueOnAWTEventQueue()) {
+				for (EventListener listener : listeners)
+					processEventOnAWTQueue(listener, event);
+			} else {
+				for (EventListener listener : listeners)
+					listener.onEvent(event);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
