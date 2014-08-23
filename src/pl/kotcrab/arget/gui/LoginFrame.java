@@ -68,7 +68,7 @@ public class LoginFrame extends JFrame {
 		setTitle(App.APP_NAME + " " + App.APP_VERSION + " - Login");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 408, 193);
+		setBounds(100, 100, 0, 0);
 		setIconImage(App.loadImage("/data/icon.png"));
 
 		JPanel mainPanel = new JPanel(new MigLayout("", "[][87.00][grow]", "[][][][]"));
@@ -141,6 +141,7 @@ public class LoginFrame extends JFrame {
 			}
 		});
 
+		pack();
 		setVisible(true);
 
 	}
