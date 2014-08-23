@@ -21,11 +21,6 @@ package pl.kotcrab.arget.gui.notification;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -39,10 +34,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
-import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
+//TODO add txt length check
 public class NotificationView extends JDialog {
 	private JLabel titleLabel;
 	private JLabel textLabel;
@@ -59,37 +54,28 @@ public class NotificationView extends JDialog {
 		setAlwaysOnTop(true);
 		setFocusable(false);
 		setFocusableWindowState(false); //stops notification from stealling focus
+		setShape(new RoundRectangle2D.Float(0, 0, 330, 70, 3, 3));
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown (ComponentEvent e) {
 				onShow();
 			}
-
-			@Override
-			public void componentHidden (ComponentEvent e) {
-			}
 		});
 		
-		Rectangle size = SwingUtils.getPrimaryMonitorBounds();
-		int xm = size.x + size.width - getWidth();
-		// int ym = size.y + size.height - getHeight();
-		setLocation(xm - 35, 35);
-
 		JPanel panel = new JPanel(new MigLayout("", "[][grow][330px,grow]", "[][grow]"));
 		panel.setBorder(new EmptyBorder(-2, -7, 0, 0));
 		panel.setBackground(new Color(0f, 0f, 0f, 1f));
-
 		getContentPane().add(panel);
 
-		titleLabel = new JLabel("Notification", SwingConstants.CENTER);
+		titleLabel = new JLabel("Title", SwingConstants.CENTER);
 		titleLabel.setBorder(new EmptyBorder(-5, 0, 0, 0));
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		titleLabel.setForeground(Color.WHITE);
 
 		textLabel = new JLabel("Text");
+		textLabel.setBorder(new EmptyBorder(-4, 1, 0, 0));
 		textLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textLabel.setBorder(new EmptyBorder(0, 1, 0, 0));
 		textLabel.setForeground(Color.WHITE);
 
 		panel.add(new JLabel(new ImageIcon(NotificationView.class.getResource("/data/iconsmall.png"))), "cell 1 0,aligny top");
@@ -97,8 +83,6 @@ public class NotificationView extends JDialog {
 		panel.add(textLabel, "cell 2 1,aligny top");
 
 		setVisible(true);
-		setShape(new RoundRectangle2D.Float(0, 0, 330, 70, 3, 3));
-
 	}
 
 	private void onShow () {
