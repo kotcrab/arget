@@ -90,6 +90,7 @@ public class App {
 			Settings.init();
 			ProfileIO.init();
 
+			appInitialized = true;
 		} else
 			throw new IllegalStateException("App has been already initialized!");
 	}
@@ -115,6 +116,10 @@ public class App {
 
 	public static boolean isGuiAvailable () {
 		return guiAvailable;
+	}
+
+	public static boolean isAppInitialized () {
+		return appInitialized;
 	}
 
 	public static URL getResource (String path) {
