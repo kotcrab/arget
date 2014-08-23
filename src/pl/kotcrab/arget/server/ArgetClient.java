@@ -106,7 +106,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		} catch (IOException e) {
 			guiCallback.setConnectionStatus(ConnectionStatus.ERROR, e.getMessage());
 
-			// we don't have to print stack trace if this just was unable to connect error
+			// we don't have to print stack trace if this just was "unable to connect" error
 			if (e.getMessage().contains("Unable to connect") == false) e.printStackTrace();
 		}
 
