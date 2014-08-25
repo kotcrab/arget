@@ -38,8 +38,8 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptReques
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteReadyNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ArgetClient;
+import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.util.KryoUtils;
 import pl.kotcrab.arget.util.ProcessingQueue;
 

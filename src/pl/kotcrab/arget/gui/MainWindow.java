@@ -65,14 +65,13 @@ import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
+import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
-import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
-import pl.kotcrab.arget.util.ThreadUtils;
 
 //TODO system tray and/or notifications
 //TODO delete contact confirmation not centered

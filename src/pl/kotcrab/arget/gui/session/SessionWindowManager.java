@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.alee.utils.FileUtils;
-
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;

@@ -20,9 +20,9 @@
 package pl.kotcrab.arget.util;
 
 import java.awt.GraphicsDevice;
+import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.awt.GraphicsDevice.WindowTranslucency;
 
 public class SwingUtils {
 	public static boolean isRectangleDisplayableOnScreen (Rectangle rect) {

@@ -26,7 +26,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
