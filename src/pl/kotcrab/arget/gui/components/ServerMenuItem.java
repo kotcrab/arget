@@ -35,6 +35,7 @@ public class ServerMenuItem extends JMenuItem implements ActionListener {
 		super(info.toString());
 		this.callback = callback;
 		this.info = info;
+		addActionListener(this);
 	}
 
 	@Override
