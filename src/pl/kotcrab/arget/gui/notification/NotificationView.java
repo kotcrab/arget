@@ -74,8 +74,8 @@ public class NotificationView extends JDialog {
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		titleLabel.setForeground(Color.WHITE);
 
-		textLabel = new JLabel("Text");
-		textLabel.setBorder(new EmptyBorder(-4, 1, 0, 0));
+		textLabel = new JLabel("Text offline");
+		textLabel.setBorder(new EmptyBorder(-3, 1, 0, 0));
 		textLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		textLabel.setForeground(Color.WHITE);
 
@@ -95,6 +95,7 @@ public class NotificationView extends JDialog {
 			public void doTask () {
 				setVisible(false);
 				listener.refrshNotifcations();
+				dispose();
 			}
 		}, 3000);
 	}
