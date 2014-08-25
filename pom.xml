@@ -11,82 +11,67 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
 			<version>4.1.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>platform</artifactId>
 			<version>3.5.2</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.miglayout</groupId>
 			<artifactId>miglayout</artifactId>
 			<version>3.7.4</version>
 		</dependency>
-
-		<dependency>
-			<groupId>pl.kotcrab.crypto</groupId>
-			<artifactId>simple-crypto</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
-		</dependency>
-
 		<dependency>
 			<groupId>de.sciss</groupId>
 			<artifactId>weblaf</artifactId>
 			<version>1.27</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.esotericsoftware.kryo</groupId>
 			<artifactId>kryo</artifactId>
 			<version>2.24.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryonet</artifactId>
 			<version>2.22.0-RC1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.imgscalr</groupId>
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-
-
+		<dependency>
+			<groupId>pl.kotcrab.crypto</groupId>
+			<artifactId>simple-crypto</artifactId>
+			<version>0.0.5-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -104,8 +89,8 @@
 		</resources>
 
 		<plugins>
-
-			<plugin>
+		
+			<plugin> <!-- Comipler -->
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
@@ -113,7 +98,8 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
+
+			<plugin> <!-- Jar package -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
@@ -128,7 +114,7 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
+			<plugin> <!-- Copies dependencies -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.1</version>
@@ -148,7 +134,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			
 		</plugins>
 
 	</build>
