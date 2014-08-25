@@ -21,19 +21,15 @@ package pl.kotcrab.arget.comm.exchange.internal.session.file;
 
 import java.util.UUID;
 
-public class FileTransferToMemoryRequest extends FileTransferExchange {
-	public String fileName;
-	public long fileSize;
+
+public class FileTransferToMemoryRequest extends FileTransferRequest {
 
 	@Deprecated
 	public FileTransferToMemoryRequest () {
-		super(null, null);
+		super(null, null, null, 0);
 	}
 
 	public FileTransferToMemoryRequest (UUID sessionId, UUID taskId, String fileName, long fileSize) {
-		super(sessionId, taskId);
-		this.fileName = fileName;
-		this.fileSize = fileSize;
+		super(sessionId, taskId, fileName, fileSize);
 	}
-
 }
