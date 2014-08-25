@@ -283,7 +283,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case TIMEDOUT:
-			post(new ShowNotificationEvent(5, "Offline", "Connection timed out"));
+			post(new ShowNotificationEvent(5, "Disconnected", "Connection timed out"));
 			textToSet = "Connection timed out";
 			client = null;
 			resetContacts();
@@ -294,13 +294,13 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case SERVER_SHUTDOWN:
-			post(new ShowNotificationEvent(5, "Offline", "Server shutdown"));
+			post(new ShowNotificationEvent(5, "Disconnected", "Server shutdown"));
 			textToSet = "Server shutdown";
 			client = null;
 			resetContacts();
 			break;
 		case KICKED:
-			post(new ShowNotificationEvent(5, "Offline", "Kicked from server"));
+			post(new ShowNotificationEvent(5, "Disconnected", "Kicked from server"));
 			textToSet = "Kicked from server";
 			client = null;
 			resetContacts();
