@@ -45,9 +45,9 @@ public class ContactEntryPanel extends JPanel {
 	private JLabel newMsgIndicatorLabel;
 
 	static {
-		connected = new ImageIcon(App.getResource("/data/connected.png"));
-		disconnected = new ImageIcon(App.getResource("/data/disconnected.png"));
-		session = new ImageIcon(App.getResource("/data/session.png"));
+		connected = new ImageIcon(App.getResource("/data/contact/connected.png"));
+		disconnected = new ImageIcon(App.getResource("/data/contact/disconnected.png"));
+		session = new ImageIcon(App.getResource("/data/contact/session.png"));
 		dot = new ImageIcon(App.getResource("/data/dot.png"));
 	}
 
