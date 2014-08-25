@@ -67,6 +67,8 @@ public class ArgetServer {
 
 	private ServerInterface serverInterface;
 
+	private boolean shuttindDown = false;
+
 	public ArgetServer (int port) {
 		this(port, "default");
 	}
@@ -364,12 +366,14 @@ public class ArgetServer {
 	}
 
 	private void sendKeychainToAllClients () {
-		for (ResponseServer server : remotes.values())
-			server.send(new KeychainTransfer(new ArrayList<String>(publicKeys)));
-
+		if (shuttindDown == false) {
+			for (ResponseServer server : remotes.values())
+				server.send(new KeychainTransfer(new ArrayList<String>(publicKeys)));
+		}
 	}
 
 	private void stop () {
+		shuttindDown = true;
 		Log.l(TAG, "Shutting down server and connections...");
 
 		server.sendToAllTCP(new UnsecuredEventNotification(Type.SERVER_SHUTTING_DOWN));
