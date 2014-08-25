@@ -133,6 +133,10 @@ public class App {
 		return appInitialized;
 	}
 
+	public static NotificationService getNotificationService () {
+		return notificationService;
+	}
+
 	public static URL getResource (String path) {
 		return App.class.getResource(path);
 	}

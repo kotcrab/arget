@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
@@ -45,6 +46,7 @@ import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.gui.MainWindowCallback;
+import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
@@ -169,6 +171,9 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 						break;
 					}
+
+					if (c.status == ContactStatus.DISCONNECTED && lastStatus == ContactStatus.CONNECTED_SESSION)
+						App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now offline"));
 				}
 			}
 		}

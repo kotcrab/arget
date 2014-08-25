@@ -60,6 +60,8 @@ import pl.kotcrab.arget.gui.dialog.CreateServerDialogFinished;
 import pl.kotcrab.arget.gui.dialog.CreateServerInfoDialog;
 import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
+import pl.kotcrab.arget.gui.notification.NotificationControler;
+import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
@@ -70,11 +72,13 @@ import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.ThreadUtils;
 
 //TODO system tray and/or notifications
 //TODO delete contact confirmation not centered
 //TODO event bus
-public class MainWindow extends JFrame implements MainWindowCallback, EventListener {
+//TODO add right click menu on text input area
+public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
 
@@ -102,6 +106,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		iconFlasher = new IconFlasher(this, App.loadImage("/data/icon.png"), App.loadImage("/data/iconunread.png"));
 
 		App.eventBus.register(this);
+		App.getNotificationService().setControler(this);
 
 		createAndShowGUI();
 	}
@@ -267,6 +272,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			textToSet = "Connecting...";
 			break;
 		case DISCONNECTED:
+			//post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
 			textToSet = "Disconnected";
 			client = null;
 			resetContacts();
@@ -277,6 +283,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case TIMEDOUT:
+			post(new ShowNotificationEvent(5, "Offline", "Connection timed out"));
 			textToSet = "Connection timed out";
 			client = null;
 			resetContacts();
@@ -287,11 +294,13 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case SERVER_SHUTDOWN:
+			post(new ShowNotificationEvent(5, "Offline", "Server shutdown"));
 			textToSet = "Server shutdown";
 			client = null;
 			resetContacts();
 			break;
 		case KICKED:
+			post(new ShowNotificationEvent(5, "Offline", "Kicked from server"));
 			textToSet = "Kicked from server";
 			client = null;
 			resetContacts();
@@ -302,6 +311,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		if (msg != null) textToSet += ": " + msg;
 		statusLabel.setText(textToSet);
+	}
+
+	private void post (Event event) {
+		App.eventBus.post(event);
 	}
 
 	@Override
@@ -520,6 +533,11 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			Log.err(TAG, "Unknown menu event type: " + event.type);
 			break;
 		}
+	}
+
+	@Override
+	public boolean shouldDisplayNotification () {
+		return !isFocused();
 	}
 
 }

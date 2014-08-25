@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.alee.utils.FileUtils;
+
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
@@ -39,13 +42,18 @@ import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotif
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferExchange;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferRequest;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
+import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferManager;
 import pl.kotcrab.arget.gui.MainWindowCallback;
+import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.session.LocalSession;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
+import pl.kotcrab.arget.util.FileUitls;
 
 public class SessionWindowManager implements LocalSessionListener {
 	private LocalSessionManager sessionManager;
@@ -159,6 +167,13 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (ex instanceof MessageTransfer) {
 			MessageTransfer msg = (MessageTransfer)ex;
 
+			String msgNotif;
+			if (msg.msg.length() > 80)
+				msgNotif = msg.msg.substring(0, 80) + "...";
+			else
+				msgNotif = msg.msg;
+
+			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, msgNotif));
 			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
@@ -167,6 +182,16 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (ex instanceof TypingFinishedNotification) panel.hideTyping();
 		if (ex instanceof RemotePanelShowNotification) panel.setRemoteCenterPanel(true);
 		if (ex instanceof RemotePanelHideNotification) panel.setRemoteCenterPanel(false);
+
+		if (ex instanceof FileTransferToMemoryRequest)
+			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "Image transfer in progress..."));
+
+		if (ex instanceof FileTransferToFileRequest) {
+			FileTransferRequest req = (FileTransferRequest)ex;
+			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "File transfer request: " + req.fileName
+				+ ", size: " + FileUitls.readableFileSize(req.fileSize)));
+		}
+
 		if (ex instanceof FileTransferExchange)
 			fileTransfer.update(sessionManager.getSessionByUUID(panel.getUUID()), (FileTransferExchange)ex);
 	}

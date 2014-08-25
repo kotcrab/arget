@@ -16,6 +16,7 @@ import pl.kotcrab.arget.util.SwingUtils;
 public class NotificationService implements EventListener, NotifcationListener {
 	private static final int MAX_NOTIFICATIONS = 3;
 
+	private NotificationControler controler;
 	private NotificationView[] views;
 	private Icon defaultIcon;
 
@@ -23,28 +24,32 @@ public class NotificationService implements EventListener, NotifcationListener {
 		views = new NotificationView[MAX_NOTIFICATIONS];
 		defaultIcon = new ImageIcon(App.getResource("/data/iconsmall.png"));
 		App.eventBus.register(this);
+
+		controler = new DefaultNotificationControler();
 	}
 
 	public void showNotification (Icon icon, String title, String text) {
-		NotificationView view = null;
+		if (controler.shouldDisplayNotification()) {
+			NotificationView view = null;
 
-		for (int i = 0; i < MAX_NOTIFICATIONS; i++) {
-			if (views[i] == null) {
-				views[i] = new NotificationView(this);
-				view = views[i];
-				break;
+			for (int i = 0; i < MAX_NOTIFICATIONS; i++) {
+				if (views[i] == null) {
+					views[i] = new NotificationView(this);
+					view = views[i];
+					break;
+				}
+
+				if (views[i].isVisible() == false) {
+					view = views[i];
+					break;
+				}
 			}
 
-			if (views[i].isVisible() == false) {
-				view = views[i];
-				break;
+			if (view != null) {
+				setNotification(view, icon, title, text);
+			} else {
+				// TODO find oldest notif and replace it
 			}
-		}
-
-		if (view != null) {
-			setNotification(view, icon, title, text);
-		} else {
-			// TODO find oldest notif and replace it
 		}
 	}
 
@@ -52,6 +57,10 @@ public class NotificationService implements EventListener, NotifcationListener {
 		view.setData(icon, title, text);
 		view.setVisible(true);
 		setPositons();
+	}
+
+	public void setControler (NotificationControler controler) {
+		this.controler = controler;
 	}
 
 	private void setPositons () {
@@ -73,13 +82,13 @@ public class NotificationService implements EventListener, NotifcationListener {
 	public void onEvent (Event event) {
 		if (event instanceof ShowNotificationEvent) {
 			ShowNotificationEvent notif = (ShowNotificationEvent)event;
-			
+
 			Icon icon;
-			if(notif.image == null)
+			if (notif.image == null)
 				icon = defaultIcon;
 			else
 				icon = new ImageIcon(Scalr.resize(notif.image, 20, 20));
-				
+
 			showNotification(icon, notif.title, notif.text);
 		}
 	}
