@@ -45,13 +45,10 @@ import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 
 public class ContactsPanel extends JPanel {
-	private JPanel instance;
 	private Profile profile;
 	private JTable table;
 
 	public ContactsPanel (final Profile profile, MainWindowCallback callback) {
-		instance = this;
-
 		this.profile = profile;
 
 		setLayout(new BorderLayout());
