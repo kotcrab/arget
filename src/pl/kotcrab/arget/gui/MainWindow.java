@@ -77,7 +77,6 @@ import pl.kotcrab.arget.util.SwingUtils;
 //TODO delete contact confirmation not centered
 //TODO event bus
 //TODO add right click menu on text input area
-//TODO contact list text 2px up
 //TODO notification icon 4px down
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";

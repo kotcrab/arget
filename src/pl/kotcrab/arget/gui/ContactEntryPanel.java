@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.server.ContactInfo;
@@ -40,9 +41,10 @@ public class ContactEntryPanel extends JPanel {
 	private static ImageIcon session;
 	private static ImageIcon dot;
 
-	private JLabel nameLabel;
+	private JLabel iconLabel;
 	private ContactInfo contact;
-	private JLabel newMsgIndicatorLabel;
+	private JLabel indicatorLabel;
+	private JLabel nameLabel;
 
 	static {
 		connected = new ImageIcon(App.getResource("/data/contact/connected.png"));
@@ -54,14 +56,19 @@ public class ContactEntryPanel extends JPanel {
 	public ContactEntryPanel (final JTable table, final MainWindowCallback guiCallback) {
 		setLayout(new BorderLayout(0, 0));
 
-		nameLabel = new JLabel();
-		nameLabel.setIcon(disconnected);
+		iconLabel = new JLabel();
+		iconLabel.setBorder(new EmptyBorder(0, 0, 0, 2));
+		iconLabel.setIcon(disconnected);
 
-		newMsgIndicatorLabel = new JLabel(" "); // space will do as right padding
-		newMsgIndicatorLabel.setIcon(null);
+		nameLabel = new JLabel("name");
+		nameLabel.setBorder(new EmptyBorder(0, 0, 2, 0));
+		
+		indicatorLabel = new JLabel(" "); // space will do as right padding
+		indicatorLabel.setIcon(null);
 
-		add(nameLabel, BorderLayout.WEST);
-		add(newMsgIndicatorLabel, BorderLayout.EAST);
+		add(nameLabel, BorderLayout.CENTER);
+		add(iconLabel, BorderLayout.WEST);
+		add(indicatorLabel, BorderLayout.EAST);
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -84,16 +91,16 @@ public class ContactEntryPanel extends JPanel {
 	}
 
 	public void setStatus (ContactStatus status) {
-		if (status == ContactStatus.DISCONNECTED) nameLabel.setIcon(disconnected);
-		if (status == ContactStatus.CONNECTED) nameLabel.setIcon(connected);
-		if (status == ContactStatus.CONNECTED_SESSION) nameLabel.setIcon(session);
+		if (status == ContactStatus.DISCONNECTED) iconLabel.setIcon(disconnected);
+		if (status == ContactStatus.CONNECTED) iconLabel.setIcon(connected);
+		if (status == ContactStatus.CONNECTED_SESSION) iconLabel.setIcon(session);
 	}
 
 	public void setUnreadMessages (boolean unread) {
 		if (unread)
-			newMsgIndicatorLabel.setIcon(dot);
+			indicatorLabel.setIcon(dot);
 		else
-			newMsgIndicatorLabel.setIcon(null);
+			indicatorLabel.setIcon(null);
 	}
 
 	public void setContactName (String name) {
