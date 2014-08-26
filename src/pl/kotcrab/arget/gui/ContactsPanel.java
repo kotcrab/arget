@@ -44,12 +44,12 @@ import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 
-public class ContactsTab extends JPanel {
+public class ContactsPanel extends JPanel {
 	private JPanel instance;
 	private Profile profile;
 	private JTable table;
 
-	public ContactsTab (final Profile profile, MainWindowCallback callback) {
+	public ContactsPanel (final Profile profile, MainWindowCallback callback) {
 		instance = this;
 
 		this.profile = profile;
@@ -58,8 +58,8 @@ public class ContactsTab extends JPanel {
 
 		table = new JTable(new ContactsTableModel(profile.contacts));
 
-		table.setDefaultRenderer(ContactInfo.class, new ContactCell(table, callback));
-		table.setDefaultEditor(ContactInfo.class, new ContactCell(table, callback));
+		table.setDefaultRenderer(ContactInfo.class, new ContactsTableEditor(table, callback));
+		table.setDefaultEditor(ContactInfo.class, new ContactsTableEditor(table, callback));
 		table.setShowGrid(false);
 		table.setTableHeader(null);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

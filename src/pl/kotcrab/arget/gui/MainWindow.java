@@ -91,7 +91,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private JLabel statusLabel;
 	private JSplitPane splitPane;
 
-	private ContactsTab contactsPanel;
+	private ContactsPanel contactsPanel;
 	private HomePanel homePanel;
 	private CenterPanel logPanel;
 
@@ -136,7 +136,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		createMenuBars();
 
-		contactsPanel = new ContactsTab(profile, this);
+		contactsPanel = new ContactsPanel(profile, this);
 
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));

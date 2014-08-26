@@ -28,11 +28,11 @@ import javax.swing.table.TableCellRenderer;
 
 import pl.kotcrab.arget.server.ContactInfo;
 
-public class ContactCell extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {
+public class ContactsTableEditor extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {
 
 	private ContactEntryPanel panel;
 
-	public ContactCell (JTable table, MainWindowCallback guiCallback) {
+	public ContactsTableEditor (JTable table, MainWindowCallback guiCallback) {
 		panel = new ContactEntryPanel(table, guiCallback);
 	}
 
