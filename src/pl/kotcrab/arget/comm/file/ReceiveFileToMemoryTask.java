@@ -1,3 +1,21 @@
+/*******************************************************************************
+    Copyright 2014 Pawel Pastuszak
+ 
+    This file is part of Arget.
+
+    Arget is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Arget is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Arget.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 package pl.kotcrab.arget.comm.file;
 
@@ -5,7 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import pl.kotcrab.arget.global.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSession;
 
 public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 	public static final int MAX_SIZE = 2048 * 1024; // 2048 KB = 2 MB
@@ -17,7 +35,7 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 
 	private String fileName;
 
-	//TODO fix stupid argument order
+	// TODO fix stupid argument order
 	public ReceiveFileToMemoryTask (long exceptedSize, LocalSession session, UUID taskId, String fileName) {
 		super(Type.RECEIVE, session, taskId);
 

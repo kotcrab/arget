@@ -1,0 +1,5 @@
+[1.4-beta2]
+-IdleTimeCounter
+-Notifications
+-EventBus won't crash if exception occurs
+-Fixed LoginFrame size on Linux systems

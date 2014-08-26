@@ -1,3 +1,21 @@
+/*******************************************************************************
+    Copyright 2014 Pawel Pastuszak
+ 
+    This file is part of Arget.
+
+    Arget is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Arget is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Arget.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 package pl.kotcrab.arget.comm.file;
 
@@ -22,22 +40,20 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferFinished
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Status;
-import pl.kotcrab.arget.global.gui.MainWindow;
-import pl.kotcrab.arget.global.session.LocalSession;
-import pl.kotcrab.arget.global.session.LocalSessionManager;
-import pl.kotcrab.arget.global.session.gui.FileTransferMessage;
-import pl.kotcrab.arget.global.session.gui.FileTransferMessageAdapter;
-import pl.kotcrab.arget.global.session.gui.FileTransferMessageListener;
-import pl.kotcrab.arget.global.session.gui.ImageMessage;
-import pl.kotcrab.arget.global.session.gui.SessionWindowManager;
+import pl.kotcrab.arget.gui.MainWindow;
+import pl.kotcrab.arget.gui.session.FileTransferMessage;
+import pl.kotcrab.arget.gui.session.FileTransferMessageAdapter;
+import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
+import pl.kotcrab.arget.gui.session.ImageMessage;
+import pl.kotcrab.arget.gui.session.SessionWindowManager;
+import pl.kotcrab.arget.server.session.LocalSession;
+import pl.kotcrab.arget.server.session.LocalSessionManager;
 import pl.kotcrab.arget.util.FileUitls;
 import pl.kotcrab.arget.util.ImageUitls;
 import pl.kotcrab.arget.util.ThreadUtils;
 
-//TODO przewrsjki przesylanie gdy koniec sessji
-//TODO gdy osoba ktora przesyla anuluje u celu pokazuje sie komunikat done zamist canceled
+//TODO abort send on session ends
 //TODO remove illegal character from filename, for example : is allowed on linux, disallowed on windows
-//TODO huge cpu usage if sender cancels file
 public class FileTransferManager {
 	private static final String TAG = "FileTransfer";
 

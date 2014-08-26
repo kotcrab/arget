@@ -1,3 +1,21 @@
+/*******************************************************************************
+    Copyright 2014 Pawel Pastuszak
+ 
+    This file is part of Arget.
+
+    Arget is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Arget is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Arget.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 package pl.kotcrab.arget.profile;
 
@@ -12,6 +30,7 @@ import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.crypto.CryptoUtils;
 
+//TODO add name check before generating in GUI
 public class ProfileGenerator {
 	private static final String FINISHED_MSG = "Profile generated in your user folder, name of the file is: '%s'. \nIf you want you can move this file to external location. "
 		+ "Then when you launch " + App.APP_NAME + " you can use 'Load External' to load profile from non-standard location.";
@@ -44,7 +63,7 @@ public class ProfileGenerator {
 	public static void genereteViaConsole () {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println(App.APP_VERSION + " " + App.APP_VERSION + " Profile Generator");
+			Log.l(App.APP_VERSION + " " + App.APP_VERSION + " Profile Generator");
 
 			String name;
 			do {
@@ -60,9 +79,9 @@ public class ProfileGenerator {
 			char[] password = readPassword(br);
 
 			if (password.length == 0)
-				System.out.println("Generate unencrypted profile: '" + name + "'? " + CONTINUE_OR_CANCEL_MSG);
+				Log.l("Generate unencrypted profile: '" + name + "'? " + CONTINUE_OR_CANCEL_MSG);
 			else
-				System.out.println("Generate encrypted profile: '" + name + "'? " + CONTINUE_OR_CANCEL_MSG);
+				Log.l("Generate encrypted profile: '" + name + "'? " + CONTINUE_OR_CANCEL_MSG);
 
 			br.readLine();
 
@@ -71,7 +90,7 @@ public class ProfileGenerator {
 
 			CryptoUtils.fillZeros(password);
 
-			System.out.println(getFinishMsg(name));
+			Log.l(getFinishMsg(name));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +100,7 @@ public class ProfileGenerator {
 		if (ProfileIO.isValidProfileName(name))
 			return true;
 		else
-			System.out.println(String.format(INVALID_PROFILE_NAME_MSG, name));
+			Log.l(String.format(INVALID_PROFILE_NAME_MSG, name));
 
 		return false;
 	}

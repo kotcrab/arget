@@ -1,3 +1,21 @@
+/*******************************************************************************
+    Copyright 2014 Pawel Pastuszak
+ 
+    This file is part of Arget.
+
+    Arget is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Arget is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Arget.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 package pl.kotcrab.arget.util;
 
@@ -10,13 +28,13 @@ public class Timer {
 		this.threadName = threadName;
 	}
 
-	public void schedule (final TimerListener task, final long delay) {
+	public void schedule (final TimerListener task, final long delayMillis) {
 		if (thread == null) {
 			thread = new Thread(new Runnable() {
 
 				@Override
 				public void run () {
-					ThreadUtils.sleep(delay);
+					ThreadUtils.sleep(delayMillis);
 					if (thread != null) {
 						task.doTask();
 					}
@@ -24,7 +42,6 @@ public class Timer {
 			}, threadName);
 			thread.start();
 		}
-		// throw new IllegalStateException("Other task is already scheduled.");
 	}
 
 	public void cancel () {
