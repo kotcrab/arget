@@ -33,7 +33,7 @@ public class ShowNotificationEvent implements Event {
 		this.title = title;
 		this.text = text;
 	}
-	
+
 	public ShowNotificationEvent (int displayTimeSeconds, String title, String text) {
 		this.displayTime = displayTimeSeconds * 1000;
 		this.title = title;

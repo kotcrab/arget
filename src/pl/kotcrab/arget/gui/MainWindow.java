@@ -273,7 +273,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			textToSet = "Connecting...";
 			break;
 		case DISCONNECTED:
-			//post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
+			// post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
 			textToSet = "Disconnected";
 			client = null;
 			resetContacts();

@@ -33,7 +33,7 @@ public abstract class IdleTimeCounter {
 	public static IdleTimeCounter getIdleTimeCounter () {
 		if (DesktopUtils.isWindows()) return new WindowsIdleTimeCounter();
 		if (DesktopUtils.isUnix()) return new X11LinuxIdleTimeCounter();
-		
+
 		if (DesktopUtils.isMac()) {
 			Log.w(TAG, "Using untested MacOSX idle time counter");
 			return new MacOSXIdleTimeCounter();
