@@ -3,6 +3,7 @@
 -Fixed online/offline notification
 -Native icon flasher (implementation only)
 -New About dialog
+-ErrorStatusPanel in MainWindow
 
 [1.4-beta2]
 -New contact status icons
