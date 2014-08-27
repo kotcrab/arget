@@ -62,7 +62,7 @@ public class ContactEntryPanel extends JPanel {
 
 		nameLabel = new JLabel("name");
 		nameLabel.setBorder(new EmptyBorder(0, 0, 2, 0));
-		
+
 		indicatorLabel = new JLabel(" "); // space will do as right padding
 		indicatorLabel.setIcon(null);
 

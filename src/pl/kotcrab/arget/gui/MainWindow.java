@@ -75,6 +75,7 @@ import pl.kotcrab.arget.util.SwingUtils;
 
 //TODO event bus
 //TODO add right click menu on text input area
+//TODO add version verification
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;

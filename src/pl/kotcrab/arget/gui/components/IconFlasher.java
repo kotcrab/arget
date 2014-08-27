@@ -57,7 +57,6 @@ public class IconFlasher {
 	}
 
 	public void start () {
-
 		if (running == false) {
 			running = true;
 			timer.start();

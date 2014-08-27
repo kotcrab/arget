@@ -87,13 +87,13 @@ public class ContactsPanel extends JPanel {
 					ContactInfo contact = (ContactInfo)table.getValueAt(table.getSelectedRow(), 0);
 
 					if (contact.status == ContactStatus.CONNECTED_SESSION) {
-						JOptionPane.showMessageDialog(MainWindow.instance, "This contact cannot be deleted because session is open.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(MainWindow.instance, "This contact cannot be deleted because session is open.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 
-					int result = JOptionPane.showConfirmDialog(MainWindow.instance, "Are you sure you want to delete '" + contact.name + "'?",
-						"Warning", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(MainWindow.instance, "Are you sure you want to delete '" + contact.name
+						+ "'?", "Warning", JOptionPane.YES_NO_OPTION);
 
 					if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) return;
 
