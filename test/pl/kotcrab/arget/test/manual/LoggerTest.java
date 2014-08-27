@@ -39,6 +39,11 @@ public class LoggerTest {
 			public void err (String msg) {
 				errOk = true;
 			}
+
+			@Override
+			public void exception (String stacktrace) {
+				
+			}
 		});
 
 		Log.l("Normal out test");

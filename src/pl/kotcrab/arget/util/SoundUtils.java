@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.Log;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
@@ -33,7 +34,7 @@ public class SoundUtils {
 			AudioStream audioStream = new AudioStream(inputStream);
 			AudioPlayer.player.start(audioStream);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 }

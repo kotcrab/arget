@@ -53,7 +53,7 @@ public class ProfileGenerator {
 					JOptionPane.showMessageDialog(null, getFinishShortMsg(name));
 					if (listener != null) listener.ok(name, null);
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.exception(e);
 				}
 			}
 
@@ -92,7 +92,7 @@ public class ProfileGenerator {
 
 			Log.l(getFinishMsg(name));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 

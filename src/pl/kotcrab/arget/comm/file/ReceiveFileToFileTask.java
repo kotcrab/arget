@@ -27,6 +27,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.NotImplementedException;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.server.session.LocalSession;
 
 public class ReceiveFileToFileTask extends ReceiveFileTask {
@@ -56,7 +57,7 @@ public class ReceiveFileToFileTask extends ReceiveFileTask {
 			target.createNewFile();
 			out = new FileOutputStream(target);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class ReceiveFileToFileTask extends ReceiveFileTask {
 				currentSize += block.length;
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.exception(e);
 			}
 		}
 
@@ -82,7 +83,7 @@ public class ReceiveFileToFileTask extends ReceiveFileTask {
 		try {
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 

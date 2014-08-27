@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
@@ -109,7 +110,8 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			guiCallback.setConnectionStatus(ConnectionStatus.ERROR, e.getMessage());
 
 			// we don't have to print stack trace if this just was "unable to connect" error
-			if (e.getMessage().contains("Unable to connect") == false) e.printStackTrace();
+			if (e.getMessage().contains("Unable to connect") == false) Log.exception(e);
+
 		}
 
 	}

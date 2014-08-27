@@ -51,6 +51,12 @@ public class LoggerPanel extends CenterPanel {
 			public void err (String msg) {
 				appendToLog("ERROR: " + msg);
 			}
+
+			@Override
+			public void exception (String stacktrace) {
+				appendToLog("EXCEPTION: " + stacktrace);
+				
+			}
 		});
 	}
 

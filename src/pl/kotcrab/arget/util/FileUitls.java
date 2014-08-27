@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 
+import pl.kotcrab.arget.Log;
+
 public class FileUitls {
 	private static final String[] units = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
 
@@ -45,7 +47,7 @@ public class FileUitls {
 				return false;
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 			return false;
 		}
 	}

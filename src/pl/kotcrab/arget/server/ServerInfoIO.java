@@ -60,7 +60,7 @@ public class ServerInfoIO {
 			// Log.l(TAG, "Configuration saved");
 		} catch (IOException e) {
 			Log.err(TAG, "IO Error while saving configuration, your changes will be lost if you shutdown server.");
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class ServerInfoIO {
 
 		} catch (IOException e) {
 			Log.err(TAG, "IO Error while loading configuration from file: " + file + ". Cannot continue.");
-			e.printStackTrace();
+			Log.exception(e);
 			System.exit(-1);
 		}
 

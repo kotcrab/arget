@@ -148,7 +148,7 @@ public class App {
 		try {
 			return ImageIO.read(getResource(path));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		return null;

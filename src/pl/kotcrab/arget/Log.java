@@ -22,6 +22,8 @@ package pl.kotcrab.arget;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 /** Log utility, log events are redirected to listener and printed to standard output
  * @author Pawel Pastuszak */
 // TODO remove silent
@@ -34,6 +36,11 @@ public class Log {
 	private static LoggerListener listener;
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
+
+	public static void exception (Exception ex) {
+		ex.printStackTrace();
+		if (listener != null) listener.exception(ExceptionUtils.getStackTrace(ex));
+	}
 
 	// ============STANDARD LOGGING============
 

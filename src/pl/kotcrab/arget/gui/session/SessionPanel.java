@@ -49,6 +49,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
@@ -97,7 +98,7 @@ public class SessionPanel extends CenterPanel {
 				listener.sendFile(instance, file);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.exception(e);
 			}
 		}
 	};

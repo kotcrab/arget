@@ -30,12 +30,14 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
 
+import pl.kotcrab.arget.Log;
+
 public class ImageUitls {
 	public static BufferedImage read (File file) {
 		try {
 			return ImageIO.read(file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		return null;
@@ -46,7 +48,7 @@ public class ImageUitls {
 			InputStream in = new ByteArrayInputStream(data);
 			return ImageIO.read(in);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		return null;
@@ -56,7 +58,7 @@ public class ImageUitls {
 		try {
 			ImageIO.write(image, FilenameUtils.getExtension(output.getAbsolutePath()), output);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 }

@@ -26,6 +26,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import pl.kotcrab.arget.Log;
+
 public class DesktopUtils {
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
@@ -38,7 +40,7 @@ public class DesktopUtils {
 		} catch (URISyntaxException e) {
 			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 			return false;
 		}
 	}
@@ -49,7 +51,7 @@ public class DesktopUtils {
 			String path = URLDecoder.decode(url.getFile(), "UTF-8");
 			return path.substring(0, path.lastIndexOf('/')); // remove jar name from path
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		return null;
