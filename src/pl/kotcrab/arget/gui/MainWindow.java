@@ -20,6 +20,7 @@
 package pl.kotcrab.arget.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -32,10 +33,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -76,6 +80,7 @@ import pl.kotcrab.arget.util.SwingUtils;
 //TODO event bus
 //TODO add right click menu on text input area
 //TODO add version verification
+//TODO clear server details on disconnect
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
@@ -150,7 +155,22 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		homePanel = new HomePanel(profile.fileName);
 		logPanel = new LoggerPanel();
 
-		splitPane.setLeftComponent(contactsPanel);
+		JPanel statusPanel = new JPanel(new BorderLayout());
+		statusPanel.setMinimumSize(new Dimension(150, 10));
+		statusPanel.setBorder(new MatteBorder(1, 0, 0, 0, (Color)Color.LIGHT_GRAY));
+		statusPanel.setBackground(Color.WHITE);
+		statusPanel.setVisible(false);
+
+		JLabel lblwarningError = new JLabel("<html><center>WARNING: 1 error hapend, please check log</center></html>",
+			SwingConstants.CENTER);
+		lblwarningError.setBorder(new EmptyBorder(2, 2, 2, 2));
+		statusPanel.add(lblwarningError);
+
+		JPanel leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(contactsPanel, BorderLayout.CENTER);
+		leftPanel.add(statusPanel, BorderLayout.SOUTH);
+		// splitPane.setLeftComponent(contactsPanel);
+		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
 		setCenterScreenTo(homePanel);
 
