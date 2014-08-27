@@ -32,6 +32,8 @@ public abstract class IdleTimeCounter {
 
 	public static IdleTimeCounter getIdleTimeCounter () {
 		if (DesktopUtils.isWindows()) return new WindowsIdleTimeCounter();
+		
+		//TODO is X11 available
 		if (DesktopUtils.isUnix()) return new X11LinuxIdleTimeCounter();
 
 		if (DesktopUtils.isMac()) {

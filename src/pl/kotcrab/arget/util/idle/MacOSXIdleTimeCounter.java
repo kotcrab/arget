@@ -23,7 +23,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 
 //TODO this is untested, i'm not able to test it (someone give me mac maybe?)
-public class MacOSXIdleTimeCounter extends IdleTimeCounter {
+class MacOSXIdleTimeCounter extends IdleTimeCounter {
 	public interface ApplicationServices extends Library {
 
 		ApplicationServices INSTANCE = (ApplicationServices)Native.loadLibrary("ApplicationServices", ApplicationServices.class);

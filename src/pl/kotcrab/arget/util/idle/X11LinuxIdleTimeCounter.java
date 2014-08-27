@@ -34,7 +34,7 @@ import com.sun.jna.platform.unix.X11.Window;
 /** Instances of this class provide the computer idle time on a Linux system with X11.
  * 
  * @author Laurent Cohen */
-public class X11LinuxIdleTimeCounter extends IdleTimeCounter {
+class X11LinuxIdleTimeCounter extends IdleTimeCounter {
 	/** Structure providing info on the XScreensaver. */
 	public class XScreenSaverInfo extends Structure {
 		/** screen saver window */
