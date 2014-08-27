@@ -25,8 +25,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.LoggerListener;
+import pl.kotcrab.arget.event.LoggerPanelEvent;
+import pl.kotcrab.arget.event.LoggerPanelEvent.Type;
 
 public class LoggerPanel extends CenterPanel {
 	private JTextArea textArea;
@@ -35,6 +38,7 @@ public class LoggerPanel extends CenterPanel {
 		setLayout(new BorderLayout(0, 0));
 
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(null);
 		add(scrollPane);
 
 		textArea = new JTextArea();
@@ -45,24 +49,25 @@ public class LoggerPanel extends CenterPanel {
 			@Override
 			public void log (String msg) {
 				appendToLog(msg);
+
+				if (msg.contains("WARNING")) App.eventBus.post(new LoggerPanelEvent(Type.WARNING));
 			}
 
 			@Override
 			public void err (String msg) {
-				appendToLog("ERROR: " + msg);
+				appendToLog(msg);
+
+				App.eventBus.post(new LoggerPanelEvent(Type.ERROR));
 			}
 
 			@Override
 			public void exception (String stacktrace) {
 				appendToLog("EXCEPTION: " + stacktrace);
-				
+
+				App.eventBus.post(new LoggerPanelEvent(Type.EXCEPTION));
+
 			}
 		});
-	}
-
-	@Override
-	public String getTitle () {
-		return "Log";
 	}
 
 	private void appendToLog (String msg) {
@@ -70,7 +75,11 @@ public class LoggerPanel extends CenterPanel {
 			textArea.getDocument().insertString(textArea.getDocument().getLength(), msg + "\n", null);
 		} catch (BadLocationException e) {
 		}
+	}
 
+	@Override
+	public String getTitle () {
+		return "Log";
 	}
 
 }

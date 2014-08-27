@@ -20,7 +20,6 @@
 package pl.kotcrab.arget.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -36,10 +35,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -93,6 +90,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private JLabel statusLabel;
 	private JSplitPane splitPane;
 
+	private ErrorStatusPanel errorStatusPanel;
+	
 	private ContactsPanel contactsPanel;
 	private HomePanel homePanel;
 	private CenterPanel logPanel;
@@ -155,20 +154,11 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		homePanel = new HomePanel(profile.fileName);
 		logPanel = new LoggerPanel();
 
-		JPanel statusPanel = new JPanel(new BorderLayout());
-		statusPanel.setMinimumSize(new Dimension(150, 10));
-		statusPanel.setBorder(new MatteBorder(1, 0, 0, 0, (Color)Color.LIGHT_GRAY));
-		statusPanel.setBackground(Color.WHITE);
-		statusPanel.setVisible(false);
-
-		JLabel lblwarningError = new JLabel("<html><center>WARNING: 1 error hapend, please check log</center></html>",
-			SwingConstants.CENTER);
-		lblwarningError.setBorder(new EmptyBorder(2, 2, 2, 2));
-		statusPanel.add(lblwarningError);
-
+		errorStatusPanel = new ErrorStatusPanel();
+		
 		JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(contactsPanel, BorderLayout.CENTER);
-		leftPanel.add(statusPanel, BorderLayout.SOUTH);
+		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);
 		// splitPane.setLeftComponent(contactsPanel);
 		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
@@ -540,6 +530,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			setCenterScreenTo(homePanel);
 			break;
 		case VIEW_SHOW_LOG:
+			errorStatusPanel.clear();
 			setCenterScreenTo(logPanel);
 			break;
 
