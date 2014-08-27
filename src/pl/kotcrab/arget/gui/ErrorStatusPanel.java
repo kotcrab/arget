@@ -54,7 +54,7 @@ public class ErrorStatusPanel extends JPanel implements EventListener {
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JLabel infoLabel = getJLabel("Please check log <br>(View -> Show Log)");
+		JLabel infoLabel = getJLabel("Please check log! <br>(View -> Show Log)");
 		warningLabel = getJLabel(warningCounter + WARNING_MSG);
 		errorLabel = getJLabel(errorCounter + ERROR_MSG);
 		exceptionLabel = getJLabel(exceptionCounter + EXCEPTION_MSG);
