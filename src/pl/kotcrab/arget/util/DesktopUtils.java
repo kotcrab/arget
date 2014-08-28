@@ -29,7 +29,7 @@ import java.net.URLDecoder;
 import pl.kotcrab.arget.Log;
 
 public class DesktopUtils {
-	private static String OS = System.getProperty("os.name").toLowerCase();
+	public static final String OS = System.getProperty("os.name").toLowerCase();
 
 	public static boolean openWebsite (URL url) {
 		try {

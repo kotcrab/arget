@@ -24,6 +24,8 @@ import javax.swing.JFrame;
 import pl.kotcrab.arget.util.DesktopUtils;
 
 public abstract class IconFlasher {
+	private static IconFlasher SHARED_INSTANCE;
+
 	protected JFrame frameWindow;
 
 	public IconFlasher (JFrame frameWindow) {
@@ -32,9 +34,18 @@ public abstract class IconFlasher {
 
 	public abstract void flashIcon ();
 
-	public static IconFlasher getIdleTimeCounter (JFrame frameWindow) {
-		if (DesktopUtils.isWindows()) return new WindowsIconFlasher(frameWindow);
+	public static IconFlasher getIconFlasher (JFrame frameWindow) {
+		if (SHARED_INSTANCE == null) setSharedInstance(frameWindow);
 
-		return new DefaultIconFlasher(frameWindow);
+		return SHARED_INSTANCE;
+	}
+
+	private static void setSharedInstance (JFrame frameWindow) {
+		if (DesktopUtils.isWindows()) SHARED_INSTANCE = new WindowsIconFlasher(frameWindow);
+
+		// TODO is X11 available
+		if (DesktopUtils.isUnix()) SHARED_INSTANCE = new X11IconFlasher(frameWindow);
+
+		if (SHARED_INSTANCE == null) SHARED_INSTANCE = new DefaultIconFlasher(frameWindow);
 	}
 }
