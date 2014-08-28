@@ -51,7 +51,6 @@ import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
 import pl.kotcrab.arget.event.SaveProfileEvent;
 import pl.kotcrab.arget.gui.components.BottomSplitPaneBorder;
-import pl.kotcrab.arget.gui.components.IconFlasher;
 import pl.kotcrab.arget.gui.components.MenuItem;
 import pl.kotcrab.arget.gui.components.ServerMenuItem;
 import pl.kotcrab.arget.gui.dialog.AboutDialog;
@@ -73,6 +72,7 @@ import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
 //TODO event bus
 //TODO add right click menu on text input area
@@ -105,12 +105,12 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		this.profile = profile;
 
-		iconFlasher = new IconFlasher(this, App.loadImage("/data/icon.png"), App.loadImage("/data/iconunread.png"));
-
 		App.eventBus.register(this);
 		App.getNotificationService().setControler(this);
 
 		createAndShowGUI();
+		
+		iconFlasher = IconFlasher.getIconFlasher(this);
 	}
 
 	private boolean checkAndSetInstance () {
@@ -129,7 +129,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setBounds(100, 100, 800, 700);
 		setMinimumSize(new Dimension(500, 250));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
+		setIconImage(App.loadImage("/data/icon.png"));
+		
 		sessionWindowManager = new SessionWindowManager(this);
 
 		if (profile.mainWindowBounds != null && SwingUtils.isRectangleDisplayableOnScreen(profile.mainWindowBounds))
@@ -167,8 +168,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		addWindowFocusListener(new WindowAdapter() {
 			@Override
 			public void windowGainedFocus (WindowEvent e) {
-				iconFlasher.stop();
-
 				instance.validate();
 				instance.revalidate();
 				instance.repaint();
@@ -440,7 +439,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void starFlasherAndSoundIfNeeded () {
 		if (isFocused() == false) {
-			iconFlasher.start();
+			iconFlasher.flashIcon();
 			SoundUtils.playSound("/data/notification.wav");
 		}
 	}
