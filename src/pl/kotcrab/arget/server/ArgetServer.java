@@ -361,7 +361,6 @@ public class ArgetServer {
 			idManager.freeID(respServer.getId());
 			sessionManager.closeSessionsForServer(respServer);
 		}
-		
 
 		sendKeychainToAllClients();
 	}
