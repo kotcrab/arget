@@ -78,6 +78,7 @@ public abstract class ProcessingQueue<E> {
 					try {
 						processQueueElement(queue.take());
 					} catch (InterruptedException e) {
+						Log.interruptedEx(e);
 					} catch (Exception e) {
 						Log.exception(e);
 					}
@@ -100,7 +101,8 @@ public abstract class ProcessingQueue<E> {
 	public void processLater (E element) {
 		try {
 			queue.put(element);
-		} catch (InterruptedException e) { // if queue was stopped, no need to print stack trace
+		} catch (InterruptedException e) { // if queue was stopped
+			Log.interruptedEx(e);
 		}
 	}
 
