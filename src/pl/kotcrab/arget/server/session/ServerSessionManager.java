@@ -56,7 +56,6 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 
 	@Override
 	protected void processQueueElement (ServerSessionUpdate update) {
-		System.out.println(update);
 		if (update instanceof ServerSessionInternalCloseRequest) {
 			ResponseServer server = update.receiver;
 
@@ -166,12 +165,15 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 		return null;
 	}
 
-	public void closeSessionsForServer (ResponseServer respServer) {
-		ServerSessionInternalCloseRequest req = new ServerSessionInternalCloseRequest(respServer);
-		processLater(req); // FIXME WHY DO I HAVE TO CALL THIS 2 TIMES IN ORDER TO PROCESS IT?
-		processLater(req); // THIS IS SO STUPID
-
-// processQueueElement(new ServerSessionInternalCloseRequest(respServer));
+	public void closeSessionsForServer (final ResponseServer respServer) {
+		// because this method was called from interrupted thread, queue for this session manager would throw InterutptedException
+		// and not process our request, but if we call it from different thread everything will be fine
+		new Thread(new Runnable() {
+			@Override
+			public void run () {
+				processLater(new ServerSessionInternalCloseRequest(respServer));
+			}
+		}).start();
 	}
 
 	private void closeInvalidSession (Iterator<ServerSession> it, ServerSession session, ResponseServer targetToSendNotif) {
