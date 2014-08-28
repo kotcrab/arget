@@ -359,8 +359,9 @@ public class ArgetServer {
 			respServer.stop();
 			publicKeys.remove(respServer.getProfilePublicKey());
 			idManager.freeID(respServer.getId());
-
+			sessionManager.closeSessionsForServer(respServer);
 		}
+		
 
 		sendKeychainToAllClients();
 	}

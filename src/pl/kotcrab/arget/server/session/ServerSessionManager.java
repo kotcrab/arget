@@ -21,11 +21,13 @@ package pl.kotcrab.arget.server.session;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
@@ -33,6 +35,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidReciever;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
+import pl.kotcrab.arget.server.ArgetServer;
 import pl.kotcrab.arget.server.ResponseServer;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
@@ -52,6 +55,20 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 
 	@Override
 	protected void processQueueElement (ServerSessionUpdate update) {
+		if (update instanceof ServerSessionInternalCloseRequest) {
+
+			ResponseServer server = update.reciever;
+
+			Iterator<ServerSession> itr = sessions.iterator();
+			while (itr.hasNext()) {
+				ServerSession session = itr.next();
+
+				if (session.requester == server) closeInvalidSession(itr, session, session.target);
+				if (session.target == server) closeInvalidSession(itr, session, session.requester);
+			}
+
+			return;
+		}
 
 		SessionExchange ex = update.exchange;
 
@@ -146,4 +163,25 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 
 		return null;
 	}
+
+	private void closeInvalidSession (Iterator<ServerSession> it, ServerSession session, ResponseServer targetToSendNotif) {
+		Log.l(TAG, "Closed no longer valid session: " + session.id);
+		session.target.send(new SessionCloseNotification(session.id));
+		it.remove();
+	}
+
+	public void closeSessionsForServer (ResponseServer respServer) {
+		processLater(new ServerSessionInternalCloseRequest(respServer));
+	}
+
+	/** This is special update that is inserted into {@link ServerSessionManager} queue by {@link ArgetServer}. It tells
+	 * {@link ServerSessionManager} to close all session associated with provided {@link ResponseServer}
+	 * @author Pawel Pastuszak */
+	private class ServerSessionInternalCloseRequest extends ServerSessionUpdate {
+
+		public ServerSessionInternalCloseRequest (ResponseServer respServer) {
+			super(respServer, null);
+		}
+	}
+
 }
