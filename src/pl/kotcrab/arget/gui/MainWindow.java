@@ -109,7 +109,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		App.getNotificationService().setControler(this);
 
 		createAndShowGUI();
-		
+
 		iconFlasher = IconFlasher.getIconFlasher(this);
 	}
 
@@ -130,7 +130,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setMinimumSize(new Dimension(500, 250));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setIconImage(App.loadImage("/data/icon.png"));
-		
+
 		sessionWindowManager = new SessionWindowManager(this);
 
 		if (profile.mainWindowBounds != null && SwingUtils.isRectangleDisplayableOnScreen(profile.mainWindowBounds))

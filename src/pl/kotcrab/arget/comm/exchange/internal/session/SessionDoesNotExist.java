@@ -23,7 +23,7 @@ import java.util.UUID;
 
 /** Send by server when it received update for session that does not exist.
  * @author Pawel Pastuszak */
-public class SessionDoesNotExist extends SessionExchange implements SessionUnrecoverableBroken{
+public class SessionDoesNotExist extends SessionExchange implements SessionUnrecoverableBroken {
 
 	@Deprecated
 	public SessionDoesNotExist () {

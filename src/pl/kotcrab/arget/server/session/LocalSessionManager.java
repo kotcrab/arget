@@ -179,7 +179,7 @@ public class LocalSessionManager {
 		}
 
 		Log.w(TAG, "Could not found session by UUID: " + id);
-		
+
 		return null;
 	}
 

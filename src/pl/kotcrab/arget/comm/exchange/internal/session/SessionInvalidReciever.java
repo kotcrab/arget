@@ -24,7 +24,7 @@ import java.util.UUID;
 /** Send by server when it received update from illegal remote. Client that send update does not belong to session associated with
  * this update.
  * @author Pawel Pastuszak */
-public class SessionInvalidReciever extends SessionExchange implements SessionUnrecoverableBroken{
+public class SessionInvalidReciever extends SessionExchange implements SessionUnrecoverableBroken {
 
 	@Deprecated
 	public SessionInvalidReciever () {
