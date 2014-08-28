@@ -21,6 +21,8 @@ package pl.kotcrab.arget.util.iconflasher;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,14 +55,14 @@ public class X11IconFlasher extends IconFlasher {
 		window = new Window(frameId);
 
 		timer = new Timer("IconFlasher", true);
-		timerTask = new FlashTimerTask();
 
-		frameWindow.addFocusListener(new FocusAdapter() {
+		frameWindow.addWindowFocusListener(new WindowAdapter() {
 			@Override
-			public void focusGained (FocusEvent e) {
+			public void windowGainedFocus (WindowEvent e) {
 				stop();
 			}
 		});
+
 	}
 
 	private static final long _NET_WM_STATE_REMOVE = 0L;
@@ -74,14 +76,18 @@ public class X11IconFlasher extends IconFlasher {
 	public void flashIcon () {
 		if (frameWindow.isFocused() == false && running == false) {
 			running = true;
+			timer.purge();
+			timerTask = new FlashTimerTask();
 			timer.scheduleAtFixedRate(timerTask, 0, 3000);
 		}
 	}
 
 	private void stop () {
-		timerTask.cancel();
-		running = false;
-		sendMessage(_NET_WM_STATE_REMOVE, _NET_WM_STATE_DEMANDS_ATTENTION);
+		if (running) {
+			timerTask.cancel();
+			running = false;
+			sendMessage(_NET_WM_STATE_REMOVE, _NET_WM_STATE_DEMANDS_ATTENTION);
+		}
 	}
 
 	private class FlashTimerTask extends TimerTask {

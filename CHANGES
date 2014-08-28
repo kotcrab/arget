@@ -1,4 +1,5 @@
 [1.4-beta4]
+Fixed X11 icon flasher
 
 [1.4-beta3]
 -Proper InterruptedException handling
