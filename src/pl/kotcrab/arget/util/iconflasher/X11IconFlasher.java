@@ -72,8 +72,6 @@ public class X11IconFlasher extends IconFlasher {
 
 	@Override
 	public void flashIcon () {
-		X11 x = X11.INSTANCE;
-
 		if (frameWindow.isFocused() == false && running == false) {
 			running = true;
 			timer.scheduleAtFixedRate(timerTask, 0, 3000);
