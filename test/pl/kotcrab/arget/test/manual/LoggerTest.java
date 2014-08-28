@@ -42,7 +42,7 @@ public class LoggerTest {
 
 			@Override
 			public void exception (String stacktrace) {
-				
+
 			}
 		});
 

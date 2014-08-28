@@ -37,7 +37,7 @@ public class WindowsIconFlasher extends IconFlasher {
 
 	public WindowsIconFlasher (JFrame frameWindow) {
 		super(frameWindow);
-		
+
 		HWND hwnd = new HWND();
 		hwnd.setPointer(Native.getComponentPointer(frameWindow));
 

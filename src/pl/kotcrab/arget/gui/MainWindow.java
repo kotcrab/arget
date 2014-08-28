@@ -91,7 +91,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private JSplitPane splitPane;
 
 	private ErrorStatusPanel errorStatusPanel;
-	
+
 	private ContactsPanel contactsPanel;
 	private HomePanel homePanel;
 	private CenterPanel logPanel;
@@ -155,7 +155,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		logPanel = new LoggerPanel();
 
 		errorStatusPanel = new ErrorStatusPanel();
-		
+
 		JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(contactsPanel, BorderLayout.CENTER);
 		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);

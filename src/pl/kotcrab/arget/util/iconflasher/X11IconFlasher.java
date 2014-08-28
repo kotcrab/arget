@@ -47,7 +47,7 @@ public class X11IconFlasher extends IconFlasher {
 
 	private static final long _NET_WM_STATE_REMOVE = 0L;
 	private static final long _NET_WM_STATE_ADD = 1L;
-	//private static final long _NET_WM_STATE_TOGGLE = 2L;
+	// private static final long _NET_WM_STATE_TOGGLE = 2L;
 
 	private static final String _NET_WM_STATE = "_NET_WM_STATE";
 	private static final String _NET_WM_STATE_DEMANDS_ATTENTION = "_NET_WM_STATE_DEMANDS_ATTENTION";

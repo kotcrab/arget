@@ -72,7 +72,7 @@ public class AboutDialog extends ESCClosableDialog {
 				dispose();
 			}
 		});
-		
+
 		viewLicenseButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {

@@ -25,6 +25,6 @@ public interface LoggerListener {
 	public void log (String msg);
 
 	public void err (String msg);
-	
+
 	public void exception (String stacktrace);
 }
