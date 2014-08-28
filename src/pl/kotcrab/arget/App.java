@@ -46,7 +46,7 @@ public class App {
 
 	private static final String TAG = "App";
 	public static final String APP_NAME = "Arget";
-	public static final String APP_VERSION = "1.4-BETA3";
+	public static final String APP_VERSION = "1.4-BETA4";
 
 // public static final String APP_DIRECTORY_NAME = "1.3-BETA";
 	public static final String APP_DIRECTORY_NAME = "1.3-SNAPSHOT";

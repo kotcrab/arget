@@ -1,4 +1,7 @@
+[1.4-beta4]
+
 [1.4-beta3]
+-Proper InterruptedException handling
 -Fixed: ArgetServer will now close all invalid sessions when client disconnects
 -Delete contacts dialog spawn position fixed
 -Fixed online/offline notification
