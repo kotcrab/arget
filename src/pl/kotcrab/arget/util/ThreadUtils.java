@@ -27,6 +27,7 @@ public class ThreadUtils {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
+			//Log.interruptedEx(e); //one place that we can completely safely ignore this
 		}
 	}
 }
