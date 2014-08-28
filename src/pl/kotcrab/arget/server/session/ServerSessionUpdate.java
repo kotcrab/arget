@@ -23,11 +23,11 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.server.ResponseServer;
 
 public class ServerSessionUpdate {
-	public ResponseServer reciever;
+	public ResponseServer receiver;
 	public SessionExchange exchange;
 
 	public ServerSessionUpdate (ResponseServer reciver, SessionExchange exchange) {
-		this.reciever = reciver;
+		this.receiver = reciver;
 		this.exchange = exchange;
 	}
 }

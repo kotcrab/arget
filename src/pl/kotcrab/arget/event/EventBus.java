@@ -22,6 +22,7 @@ package pl.kotcrab.arget.event;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
 public class EventBus {
@@ -67,7 +68,7 @@ public class EventBus {
 					listener.onEvent(event);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 

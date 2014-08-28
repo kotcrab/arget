@@ -87,7 +87,7 @@ public class ArgetServer {
 		try {
 			init(port);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 			System.exit(-1); // TODO command line parser, shutdown
 		}
 
@@ -102,7 +102,7 @@ public class ArgetServer {
 				try {
 					readAndEval();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.exception(e);
 				}
 			}
 
@@ -359,7 +359,7 @@ public class ArgetServer {
 			respServer.stop();
 			publicKeys.remove(respServer.getProfilePublicKey());
 			idManager.freeID(respServer.getId());
-
+			sessionManager.closeSessionsForServer(respServer);
 		}
 
 		sendKeychainToAllClients();

@@ -130,7 +130,8 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 				}
 
 				if (listener != null)
-					listener.finished(new ServerDescriptor(nameField.getText(), ipField.getText(), Integer.parseInt(portField.getText())));
+					listener.finished(new ServerDescriptor(nameField.getText(), ipField.getText(), Integer.parseInt(portField
+						.getText())));
 				dispose();
 			}
 		});

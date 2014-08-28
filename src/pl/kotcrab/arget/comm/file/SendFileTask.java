@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.server.session.LocalSession;
 
 public class SendFileTask extends FileTransferTask {
@@ -53,7 +54,7 @@ public class SendFileTask extends FileTransferTask {
 		try {
 			in = new FileInputStream(fileToSend);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 		super.begin(); // THIS IS IMPORTANT (begin is called not from file
 		// sender thread super.begin changes status to
@@ -89,7 +90,7 @@ public class SendFileTask extends FileTransferTask {
 
 			} catch (IOException e) {
 				// TODO file transfer failed
-				e.printStackTrace();
+				Log.exception(e);
 			}
 		} else
 			throw new IllegalStateException("Task is not started or already finished!");
@@ -104,8 +105,8 @@ public class SendFileTask extends FileTransferTask {
 				return new byte[BLOCK_SIZE];
 			else
 				return new byte[in.available()];
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			Log.exception(e);
 		}
 
 		return null;
@@ -118,7 +119,7 @@ public class SendFileTask extends FileTransferTask {
 		try {
 			in.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 

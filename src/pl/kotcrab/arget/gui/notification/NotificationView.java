@@ -79,6 +79,8 @@ public class NotificationView extends JDialog {
 		textLabel.setForeground(Color.WHITE);
 
 		iconLabel = new JLabel();
+		iconLabel.setBorder(new EmptyBorder(2, 0, 0, 0));
+
 		panel.add(iconLabel, "cell 1 0,aligny top");
 		panel.add(titleLabel, "cell 2 0");
 		panel.add(textLabel, "cell 2 1,aligny top");

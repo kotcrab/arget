@@ -108,7 +108,6 @@ public class LocalSessionManager {
 		LocalSession session = getSessionByUUID(ex.id);
 
 		if (session == null) {
-			Log.w(TAG, "Could not found session by UUID: " + ex.id);
 			return;
 		}
 
@@ -178,6 +177,8 @@ public class LocalSessionManager {
 		for (LocalSession s : sessions) {
 			if (s.id.compareTo(id) == 0) return s;
 		}
+
+		Log.w(TAG, "Could not found session by UUID: " + id);
 
 		return null;
 	}

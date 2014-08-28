@@ -21,6 +21,8 @@ package pl.kotcrab.arget.util;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+import pl.kotcrab.arget.Log;
+
 /** Blocking queue that allows processing objects of any type, one by one. Element are processed in different thread. This queue
  * orders elements FIFO. Uses {@link ArrayBlockingQueue}. When no longer needed {@link ProcessingQueue#stop()} must be called to
  * shutdown processing thread.
@@ -76,8 +78,9 @@ public abstract class ProcessingQueue<E> {
 					try {
 						processQueueElement(queue.take());
 					} catch (InterruptedException e) {
+						Log.interruptedEx(e);
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.exception(e);
 					}
 				}
 			}
@@ -98,7 +101,8 @@ public abstract class ProcessingQueue<E> {
 	public void processLater (E element) {
 		try {
 			queue.put(element);
-		} catch (InterruptedException e) { // if queue was stopped, no need to print stack trace
+		} catch (InterruptedException e) { // if queue was stopped
+			Log.interruptedEx(e);
 		}
 	}
 

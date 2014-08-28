@@ -17,31 +17,35 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.util.idle;
+package pl.kotcrab.arget.util.iconflasher;
 
-import pl.kotcrab.arget.Log;
+import javax.swing.JFrame;
+
 import pl.kotcrab.arget.util.DesktopUtils;
 
-public abstract class IdleTimeCounter {
-	private static final String TAG = "IdleTimeCounter";
+public abstract class IconFlasher {
+	private static IconFlasher SHARED_INSTANCE;
 
-	/** Get the System Idle Time from the OS.
-	 * 
-	 * @return The System Idle Time in milliseconds. */
-	public abstract long getSystemIdleTime ();
+	protected JFrame frameWindow;
 
-	public static IdleTimeCounter getIdleTimeCounter () {
-		if (DesktopUtils.isWindows()) return new WindowsIdleTimeCounter();
+	public IconFlasher (JFrame frameWindow) {
+		this.frameWindow = frameWindow;
+	}
+
+	public abstract void flashIcon ();
+
+	public static IconFlasher getIconFlasher (JFrame frameWindow) {
+		if (SHARED_INSTANCE == null) setSharedInstance(frameWindow);
+
+		return SHARED_INSTANCE;
+	}
+
+	private static void setSharedInstance (JFrame frameWindow) {
+		if (DesktopUtils.isWindows()) SHARED_INSTANCE = new WindowsIconFlasher(frameWindow);
 
 		// TODO is X11 available
-		if (DesktopUtils.isUnix()) return new X11LinuxIdleTimeCounter();
+		if (DesktopUtils.isUnix()) SHARED_INSTANCE = new X11IconFlasher(frameWindow);
 
-		if (DesktopUtils.isMac()) {
-			Log.w(TAG, "Using untested MacOSX idle time counter");
-			return new MacOSXIdleTimeCounter();
-		}
-
-		Log.w(TAG, "Idle time counter for this platform not found, all idle time related features are disabled");
-		return new DefaultIdleTimeCounter();
+		if (SHARED_INSTANCE == null) SHARED_INSTANCE = new DefaultIconFlasher(frameWindow);
 	}
 }

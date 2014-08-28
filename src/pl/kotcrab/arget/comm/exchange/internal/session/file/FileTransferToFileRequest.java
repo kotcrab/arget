@@ -21,7 +21,6 @@ package pl.kotcrab.arget.comm.exchange.internal.session.file;
 
 import java.util.UUID;
 
-
 public class FileTransferToFileRequest extends FileTransferRequest {
 
 	@Deprecated

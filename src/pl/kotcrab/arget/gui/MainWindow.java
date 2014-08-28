@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.WindowConstants;
@@ -50,7 +51,6 @@ import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
 import pl.kotcrab.arget.event.SaveProfileEvent;
 import pl.kotcrab.arget.gui.components.BottomSplitPaneBorder;
-import pl.kotcrab.arget.gui.components.IconFlasher;
 import pl.kotcrab.arget.gui.components.MenuItem;
 import pl.kotcrab.arget.gui.components.ServerMenuItem;
 import pl.kotcrab.arget.gui.dialog.AboutDialog;
@@ -72,13 +72,12 @@ import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
-//TODO system tray and/or notifications
-//TODO delete contact confirmation not centered
 //TODO event bus
 //TODO add right click menu on text input area
-//TODO contact list text 2px up
-//TODO notification icon 4px down
+//TODO add version verification
+//TODO clear server details on disconnect
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
@@ -91,7 +90,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private JLabel statusLabel;
 	private JSplitPane splitPane;
 
-	private ContactsTab contactsPanel;
+	private ErrorStatusPanel errorStatusPanel;
+
+	private ContactsPanel contactsPanel;
 	private HomePanel homePanel;
 	private CenterPanel logPanel;
 
@@ -104,12 +105,12 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		this.profile = profile;
 
-		iconFlasher = new IconFlasher(this, App.loadImage("/data/icon.png"), App.loadImage("/data/iconunread.png"));
-
 		App.eventBus.register(this);
 		App.getNotificationService().setControler(this);
 
 		createAndShowGUI();
+
+		iconFlasher = IconFlasher.getIconFlasher(this);
 	}
 
 	private boolean checkAndSetInstance () {
@@ -128,6 +129,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setBounds(100, 100, 800, 700);
 		setMinimumSize(new Dimension(500, 250));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setIconImage(App.loadImage("/data/icon.png"));
 
 		sessionWindowManager = new SessionWindowManager(this);
 
@@ -136,7 +138,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		createMenuBars();
 
-		contactsPanel = new ContactsTab(profile, this);
+		contactsPanel = new ContactsPanel(profile, this);
 
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));
@@ -153,15 +155,19 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		homePanel = new HomePanel(profile.fileName);
 		logPanel = new LoggerPanel();
 
-		splitPane.setLeftComponent(contactsPanel);
+		errorStatusPanel = new ErrorStatusPanel();
+
+		JPanel leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(contactsPanel, BorderLayout.CENTER);
+		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);
+		// splitPane.setLeftComponent(contactsPanel);
+		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
 		setCenterScreenTo(homePanel);
 
 		addWindowFocusListener(new WindowAdapter() {
 			@Override
 			public void windowGainedFocus (WindowEvent e) {
-				iconFlasher.stop();
-
 				instance.validate();
 				instance.revalidate();
 				instance.repaint();
@@ -273,7 +279,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			textToSet = "Connecting...";
 			break;
 		case DISCONNECTED:
-			//post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
+			// post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
 			textToSet = "Disconnected";
 			client = null;
 			resetContacts();
@@ -433,7 +439,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void starFlasherAndSoundIfNeeded () {
 		if (isFocused() == false) {
-			iconFlasher.start();
+			iconFlasher.flashIcon();
 			SoundUtils.playSound("/data/notification.wav");
 		}
 	}
@@ -523,6 +529,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			setCenterScreenTo(homePanel);
 			break;
 		case VIEW_SHOW_LOG:
+			errorStatusPanel.clear();
 			setCenterScreenTo(logPanel);
 			break;
 

@@ -29,7 +29,11 @@ public class AppTest {
 
 	@Test
 	public void testPaths () {
+		// this test check that valid configuration is used for release version, that means:
+		// storage directory is set to non SNAPSHOT location
+		// debug mode is disabled
 		assertFalse(App.APP_DIRECTORY_NAME.contains("SNAPSHOT"));
+		assertFalse(App.DEBUG);
 	}
 
 }

@@ -1,5 +1,18 @@
+[1.4-beta4]
+
+[1.4-beta3]
+-Proper InterruptedException handling
+-Fixed: ArgetServer will now close all invalid sessions when client disconnects
+-Delete contacts dialog spawn position fixed
+-Fixed online/offline notification
+-Native icon flasher for Windows and Linux X11
+-New About dialog
+-ErrorStatusPanel in MainWindow
+
 [1.4-beta2]
--IdleTimeCounter
+-New contact status icons
+-Tool for checking missing license headers
+-IdleTimeCounter (implementation only)
 -Notifications
 -EventBus won't crash if exception occurs
 -Fixed LoginFrame size on Linux systems

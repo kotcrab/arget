@@ -44,22 +44,19 @@ import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 
-public class ContactsTab extends JPanel {
-	private JPanel instance;
+public class ContactsPanel extends JPanel {
 	private Profile profile;
 	private JTable table;
 
-	public ContactsTab (final Profile profile, MainWindowCallback callback) {
-		instance = this;
-
+	public ContactsPanel (final Profile profile, MainWindowCallback callback) {
 		this.profile = profile;
 
 		setLayout(new BorderLayout());
 
 		table = new JTable(new ContactsTableModel(profile.contacts));
 
-		table.setDefaultRenderer(ContactInfo.class, new ContactCell(table, callback));
-		table.setDefaultEditor(ContactInfo.class, new ContactCell(table, callback));
+		table.setDefaultRenderer(ContactInfo.class, new ContactsTableEditor(table, callback));
+		table.setDefaultEditor(ContactInfo.class, new ContactsTableEditor(table, callback));
 		table.setShowGrid(false);
 		table.setTableHeader(null);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -90,13 +87,13 @@ public class ContactsTab extends JPanel {
 					ContactInfo contact = (ContactInfo)table.getValueAt(table.getSelectedRow(), 0);
 
 					if (contact.status == ContactStatus.CONNECTED_SESSION) {
-						JOptionPane.showMessageDialog(instance, "This contact cannot be deleted because session is open.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(MainWindow.instance, "This contact cannot be deleted because session is open.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 
-					int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete '" + contact.name + "'?",
-						"Warning", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(MainWindow.instance, "Are you sure you want to delete '" + contact.name
+						+ "'?", "Warning", JOptionPane.YES_NO_OPTION);
 
 					if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) return;
 

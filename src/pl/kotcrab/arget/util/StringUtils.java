@@ -17,31 +17,25 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.util.idle;
+package pl.kotcrab.arget.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.util.DesktopUtils;
 
-public abstract class IdleTimeCounter {
-	private static final String TAG = "IdleTimeCounter";
+public class StringUtils {
 
-	/** Get the System Idle Time from the OS.
-	 * 
-	 * @return The System Idle Time in milliseconds. */
-	public abstract long getSystemIdleTime ();
-
-	public static IdleTimeCounter getIdleTimeCounter () {
-		if (DesktopUtils.isWindows()) return new WindowsIdleTimeCounter();
-
-		// TODO is X11 available
-		if (DesktopUtils.isUnix()) return new X11LinuxIdleTimeCounter();
-
-		if (DesktopUtils.isMac()) {
-			Log.w(TAG, "Using untested MacOSX idle time counter");
-			return new MacOSXIdleTimeCounter();
+	public static String toString (InputStream stream) {
+		try {
+			return IOUtils.toString(stream);
+		} catch (IOException e) {
+			Log.exception(e);
 		}
 
-		Log.w(TAG, "Idle time counter for this platform not found, all idle time related features are disabled");
-		return new DefaultIdleTimeCounter();
+		return "";
 	}
+
 }

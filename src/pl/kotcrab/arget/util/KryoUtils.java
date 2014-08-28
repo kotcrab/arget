@@ -44,6 +44,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherKeysTrsanfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionDoesNotExist;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionEncryptedTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
@@ -116,6 +117,7 @@ public class KryoUtils {
 		kryo.register(SessionCipherInitError.class);
 		kryo.register(SessionCloseNotification.class);
 		kryo.register(SessionCreateRequest.class);
+		kryo.register(SessionDoesNotExist.class);
 		kryo.register(SessionEncryptedTransfer.class);
 		kryo.register(SessionExchange.class);
 		kryo.register(SessionInvalidIDNotification.class);

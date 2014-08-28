@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
@@ -109,7 +110,8 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			guiCallback.setConnectionStatus(ConnectionStatus.ERROR, e.getMessage());
 
 			// we don't have to print stack trace if this just was "unable to connect" error
-			if (e.getMessage().contains("Unable to connect") == false) e.printStackTrace();
+			if (e.getMessage().contains("Unable to connect") == false) Log.exception(e);
+
 		}
 
 	}
@@ -169,11 +171,15 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 						else
 							c.status = lastStatus;
 
+						if (c.status == ContactStatus.DISCONNECTED && lastStatus == ContactStatus.CONNECTED_SESSION)
+							App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now offline"));
+
+						if (c.status == ContactStatus.CONNECTED && lastStatus == ContactStatus.DISCONNECTED)
+							App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now online"));
+
 						break;
 					}
 
-					if (c.status == ContactStatus.DISCONNECTED && lastStatus == ContactStatus.CONNECTED_SESSION)
-						App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now offline"));
 				}
 			}
 		}

@@ -82,7 +82,7 @@ public class SessionPanelTest extends JFrame {
 				"Linki: http://mashable.com/2014/08/14/watch-surgery-on-the-oculus-rift-but-maybe-do-it-after-lunch/?utm_cid=mash-com-G+-main-link"));
 
 		panel.addMessage(new TextMessage(Msg.LEFT, "Obrazki w okienku rozmowy i przesy�anie plik�w"));
-// panel.addMessage(new ImageMessage(Msg.LEFT, ImageUitls.read(new File("avatar.jpg")), ""));
+		// panel.addMessage(new ImageMessage(Msg.LEFT, ImageUitls.read(new File("avatar.jpg")), ""));
 
 		// panel.addMessage(new FileTransferMessage(new SendFileTask(null, new File("test.txt"), false)));
 		// panel.addMessage(new TextMessage(Msg.SYSTEM, "Combined test: _abc *abc* a_"));
@@ -95,7 +95,7 @@ public class SessionPanelTest extends JFrame {
 // @Override
 // public void run () {
 // ThreadUtils.sleep(1000);
-// panel.addMessage(new TextMessage(Msg.SYSTEM_ERROR, "Lorem ipsum dolor sit amet"));
+// panel.addMessage(new TextMessage(Msg.ERROR, "Lorem ipsum dolor sit amet"));
 // ThreadUtils.sleep(3000);
 // panel.hideTyping();
 // }

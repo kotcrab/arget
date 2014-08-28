@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import javax.crypto.spec.SecretKeySpec;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.ArrayUtils;
@@ -124,7 +125,7 @@ public class ProfileIO {
 		try {
 			saveProfile(profile, profile.file.getName(), profile.profileKeySpec);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 	}
 
@@ -185,7 +186,7 @@ public class ProfileIO {
 			input.close();
 			return wrapper;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		throw new IllegalStateException("Could not load ProfileWrapper for path: " + path);

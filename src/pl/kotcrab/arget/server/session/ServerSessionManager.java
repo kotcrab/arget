@@ -21,18 +21,22 @@ package pl.kotcrab.arget.server.session;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCreateRequest;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionDoesNotExist;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidReciever;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRemoteAcceptRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionUnrecoverableBroken;
+import pl.kotcrab.arget.server.ArgetServer;
 import pl.kotcrab.arget.server.ResponseServer;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
@@ -52,6 +56,19 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 
 	@Override
 	protected void processQueueElement (ServerSessionUpdate update) {
+		if (update instanceof ServerSessionInternalCloseRequest) {
+			ResponseServer server = update.receiver;
+
+			Iterator<ServerSession> itr = sessions.iterator();
+			while (itr.hasNext()) {
+				ServerSession session = itr.next();
+
+				if (session.requester == server) closeInvalidSession(itr, session, session.target);
+				if (session.target == server) closeInvalidSession(itr, session, session.requester);
+			}
+
+			return;
+		}
 
 		SessionExchange ex = update.exchange;
 
@@ -59,27 +76,27 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 			SessionCreateRequest request = (SessionCreateRequest)ex;
 
 			if (isIDInUse(request.id)) {
-				update.reciever.send(new SessionInvalidIDNotification(request.id));
+				update.receiver.send(new SessionInvalidIDNotification(request.id));
 				return;
 			}
 
 			ResponseServer target = getServerForKey(request.targetKey);
 			if (target == null) {
-				update.reciever.send(new SessionTargetKeyNotFound(request.id));
+				update.receiver.send(new SessionTargetKeyNotFound(request.id));
 				return;
 			}
 
 			for (ServerSession ses : sessions) {
-				if ((ses.requester == target && ses.target == update.reciever)
-					|| (ses.requester == update.reciever && ses.target == target)) {
-					update.reciever.send(new SessionAlreadyExistNotification(request.id));
+				if ((ses.requester == target && ses.target == update.receiver)
+					|| (ses.requester == update.receiver && ses.target == target)) {
+					update.receiver.send(new SessionAlreadyExistNotification(request.id));
 					return;
 				}
 
 			}
 
-			target.send(new SessionRemoteAcceptRequest(request.id, update.reciever.getProfilePublicKey()));
-			sessions.add(new ServerSession(request.id, update.reciever, target));
+			target.send(new SessionRemoteAcceptRequest(request.id, update.receiver.getProfilePublicKey()));
+			sessions.add(new ServerSession(request.id, update.receiver, target));
 			Log.l(TAG, "Created: " + request.id);
 			return;
 		}
@@ -100,7 +117,7 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 	}
 
 	private void sendToOposite (ServerSession session, ServerSessionUpdate update) {
-		if (session.requester == update.reciever)
+		if (session.requester == update.receiver)
 			session.target.send(update.exchange);
 		else
 			session.requester.send(update.exchange);
@@ -118,15 +135,16 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 		UUID id = update.exchange.id;
 
 		if (session == null) {
-			Log.w(TAG, "Could not found session by UUID: " + id + " Receiver ID: " + update.reciever.getId());
+			Log.w(TAG, "Could not found session by UUID: " + id + " Receiver ID: " + update.receiver.getId());
+			update.receiver.send(new SessionDoesNotExist(id));
 			return false;
 		}
 
-		if (session.requester == update.reciever || session.target == update.reciever)
+		if (session.requester == update.receiver || session.target == update.receiver)
 			return true;
 		else {
-			update.reciever.send(new SessionInvalidReciever(id));
-			Log.w(TAG, "Not valid update for session UUID: " + id + " Receiver ID: " + update.reciever.getId());
+			update.receiver.send(new SessionInvalidReciever(id));
+			Log.w(TAG, "Not valid update for session UUID: " + id + " Receiver ID: " + update.receiver.getId());
 			return false;
 		}
 	}
@@ -146,4 +164,32 @@ public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 
 		return null;
 	}
+
+	public void closeSessionsForServer (final ResponseServer respServer) {
+		// because this method was called from interrupted thread, queue for this session manager would throw InterutptedException
+		// and not process our request, but if we call it from different thread everything will be fine
+		new Thread(new Runnable() {
+			@Override
+			public void run () {
+				processLater(new ServerSessionInternalCloseRequest(respServer));
+			}
+		}).start();
+	}
+
+	private void closeInvalidSession (Iterator<ServerSession> it, ServerSession session, ResponseServer targetToSendNotif) {
+		Log.l(TAG, "Closed no longer valid session: " + session.id);
+		targetToSendNotif.send(new SessionCloseNotification(session.id));
+		it.remove();
+	}
+
+	/** This is special update that is inserted into {@link ServerSessionManager} queue by {@link ArgetServer}. It tells
+	 * {@link ServerSessionManager} to close all session associated with provided {@link ResponseServer}
+	 * @author Pawel Pastuszak */
+	private class ServerSessionInternalCloseRequest extends ServerSessionUpdate {
+
+		public ServerSessionInternalCloseRequest (ResponseServer respServer) {
+			super(respServer, null);
+		}
+	}
+
 }

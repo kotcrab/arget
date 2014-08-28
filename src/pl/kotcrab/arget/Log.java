@@ -22,18 +22,34 @@ package pl.kotcrab.arget;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 /** Log utility, log events are redirected to listener and printed to standard output
  * @author Pawel Pastuszak */
 // TODO remove silent
+// TODO create default listener and don't use if(listener == null)
 public class Log {
 	private static final String TAG = "Log";
 	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean LOG_INTERRUPTED = DEBUG;
 
 	private static boolean silentMode = false;
 
 	private static LoggerListener listener;
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
+
+	public static void exception (Exception e) {
+		e.printStackTrace();
+		if (listener != null) listener.exception(ExceptionUtils.getStackTrace(e));
+	}
+
+	public static void interruptedEx (InterruptedException e) {
+		if (LOG_INTERRUPTED) {
+			e.printStackTrace();
+			if (listener != null) listener.exception(ExceptionUtils.getStackTrace(e));
+		}
+	}
 
 	// ============STANDARD LOGGING============
 

@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.server.session.LocalSession;
 
 public class ReceiveFileToMemoryTask extends ReceiveFileTask {
@@ -64,7 +65,7 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 			if (currentSize > MAX_SIZE) throw new IllegalArgumentException("Too many data received, maximum is: " + MAX_SIZE);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 	}
@@ -76,7 +77,7 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 		try {
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 		super.finish();
 	}
