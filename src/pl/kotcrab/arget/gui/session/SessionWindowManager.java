@@ -30,8 +30,10 @@ import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCloseNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionDoesNotExist;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidIDNotification;
+import pl.kotcrab.arget.comm.exchange.internal.session.SessionInvalidReciever;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionRejectedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionTargetKeyNotFound;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
@@ -140,6 +142,10 @@ public class SessionWindowManager implements LocalSessionListener {
 				"Server could not found key for this contact (contact not connected or internal error)"));
 		else if (ex instanceof SessionAlreadyExistNotification)
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session already exist on server"));
+		else if (ex instanceof SessionInvalidReciever)
+			panel.addMessage(new TextMessage(Msg.ERROR, "Server said that this client does not belong to this session"));
+		else if (ex instanceof SessionDoesNotExist)
+			panel.addMessage(new TextMessage(Msg.SYSTEM, "This session does not exist on the server, session closed."));
 		else
 			panel.addMessage(new TextMessage(Msg.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
 

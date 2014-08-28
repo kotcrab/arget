@@ -51,6 +51,7 @@ import javax.swing.border.LineBorder;
 
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.Msg;
+import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
@@ -62,6 +63,7 @@ import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
 //TODO you can't send msg with tab only, tab + spaces, and mark down signs only: _ and *
+//TODO better scroll (scroll lock option?)
 public class SessionPanel extends CenterPanel {
 	private SessionPanel instance;
 
@@ -83,6 +85,8 @@ public class SessionPanel extends CenterPanel {
 
 	private boolean mouseOnScrollbar = false;
 
+	private boolean sessionValid;
+
 	private DropTarget dropTarget = new DropTarget() {
 		@Override
 		public synchronized void drop (DropTargetDropEvent evt) {
@@ -103,10 +107,10 @@ public class SessionPanel extends CenterPanel {
 		}
 	};
 
-	public SessionPanel (ContactInfo contact, final UUID id, final SessionPanelListener listener) {
+	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
-		this.id = id;
+		this.id = sessionId;
 		this.listener = listener;
 
 		typingTimer = new Timer("TypingTimer");
@@ -153,10 +157,6 @@ public class SessionPanel extends CenterPanel {
 
 		inputTextArea = new JTextArea();
 
-// JPanel inputTextAreaPanel = new JPanel(new BorderLayout());
-// inputTextAreaPanel.add(inputTextArea, BorderLayout.CENTER);
-// inputTextAreaPanel.setBackground(new Color(229, 229, 229));
-
 		add(inputTextArea, BorderLayout.SOUTH);
 
 		typingComponent = new TypingMessage();
@@ -177,7 +177,7 @@ public class SessionPanel extends CenterPanel {
 							msg = removeSlashes(msg);
 
 							addMessage(new TextMessage(Msg.RIGHT, msg, isRemoteCenterPanel()));
-							listener.send(new MessageTransfer(id, msg));
+							send(new MessageTransfer(id, msg));
 						}
 					}
 
@@ -185,7 +185,7 @@ public class SessionPanel extends CenterPanel {
 					revalidate();
 					repaint();
 
-					listener.send(new TypingFinishedNotification(id));
+					send(new TypingFinishedNotification(id));
 					typing = false;
 					typingTimer.cancel();
 
@@ -195,7 +195,7 @@ public class SessionPanel extends CenterPanel {
 
 				// TODO ignore others character, accept only letters, upper case letters, symbol, numbers
 				if (typing == false) {
-					listener.send(new TypingStartedNotification(id));
+					send(new TypingStartedNotification(id));
 					typing = true;
 				}
 
@@ -234,7 +234,7 @@ public class SessionPanel extends CenterPanel {
 
 					@Override
 					public void doTask () {
-						listener.send(new TypingFinishedNotification(id));
+						send(new TypingFinishedNotification(id));
 						typing = false;
 					}
 
@@ -243,6 +243,10 @@ public class SessionPanel extends CenterPanel {
 		});
 
 		inputTextArea.setDropTarget(dropTarget);
+	}
+
+	private void send (InternalSessionExchange ex) {
+		if (sessionValid) listener.send(ex);
 	}
 
 	public void setUUID (UUID id) {
@@ -254,12 +258,14 @@ public class SessionPanel extends CenterPanel {
 	}
 
 	public void disableInput () {
+		sessionValid = false;
 		inputTextArea.setBackground(UIManager.getColor("TextField.disabledBackground"));
 		inputTextArea.setText("");
 		inputTextArea.setEnabled(false);
 	}
 
 	public void enableInput () {
+		sessionValid = true;
 		inputTextArea.setBackground(Color.WHITE);
 		inputTextArea.setEnabled(true);
 	}
@@ -327,12 +333,12 @@ public class SessionPanel extends CenterPanel {
 
 	@Override
 	public void onShow () {
-		listener.send(new RemotePanelShowNotification(id));
+		send(new RemotePanelShowNotification(id));
 	}
 
 	@Override
 	public void onHide () {
-		listener.send(new RemotePanelHideNotification(id));
+		send(new RemotePanelHideNotification(id));
 	}
 
 	@Override

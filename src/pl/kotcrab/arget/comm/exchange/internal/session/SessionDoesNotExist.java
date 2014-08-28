@@ -21,17 +21,16 @@ package pl.kotcrab.arget.comm.exchange.internal.session;
 
 import java.util.UUID;
 
-/** Send by server when it received update from illegal remote. Client that send update does not belong to session associated with
- * this update.
+/** Send by server when it received update for session that does not exist.
  * @author Pawel Pastuszak */
-public class SessionInvalidReciever extends SessionExchange implements SessionUnrecoverableBroken{
+public class SessionDoesNotExist extends SessionExchange implements SessionUnrecoverableBroken{
 
 	@Deprecated
-	public SessionInvalidReciever () {
+	public SessionDoesNotExist () {
 		super(null);
 	}
 
-	public SessionInvalidReciever (UUID id) {
+	public SessionDoesNotExist (UUID id) {
 		super(id);
 	}
 

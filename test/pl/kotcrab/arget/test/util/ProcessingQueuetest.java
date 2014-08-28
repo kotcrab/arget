@@ -27,7 +27,7 @@ import org.junit.Test;
 import pl.kotcrab.arget.util.ProcessingQueue;
 import pl.kotcrab.arget.util.ThreadUtils;
 
-public class ProcessingQueuetest {
+public class ProcessingQueueTest {
 
 	@Test
 	public void testProcessingQueue () {
