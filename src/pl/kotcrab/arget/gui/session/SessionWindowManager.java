@@ -47,7 +47,6 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRe
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferManager;
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.session.LocalSession;
@@ -177,7 +176,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			else
 				msgNotif = msg.msg;
 
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, msgNotif));
+			App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
 			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
@@ -188,12 +187,12 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (ex instanceof RemotePanelHideNotification) panel.setRemoteCenterPanel(false);
 
 		if (ex instanceof FileTransferToMemoryRequest)
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "Image transfer in progress..."));
+			App.notificationService.showMessageNotification(panel.getContact().name, "Image transfer in progress...");
 
 		if (ex instanceof FileTransferToFileRequest) {
 			FileTransferRequest req = (FileTransferRequest)ex;
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "File transfer request: " + req.fileName
-				+ ", size: " + FileUitls.readableFileSize(req.fileSize)));
+			App.notificationService.showMessageNotification(panel.getContact().name, "File transfer request: " + req.fileName
+				+ ", size: " + FileUitls.readableFileSize(req.fileSize));
 		}
 
 		if (ex instanceof FileTransferExchange)

@@ -22,7 +22,6 @@ package pl.kotcrab.arget.gui;
 import java.awt.Component;
 
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
-import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ServerDescriptor;
 

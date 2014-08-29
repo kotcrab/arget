@@ -28,7 +28,9 @@ import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.event.ConnectionStatusEvent;
 import pl.kotcrab.arget.event.ContactStatusEvent;
 import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.event.EventListener;
+import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.util.SwingUtils;
@@ -50,19 +52,33 @@ public class NotificationService implements EventListener, NotifcationListener {
 		controler = new DefaultNotificationControler();
 	}
 
-	public void showNotification (Icon icon, String title, String text) {
-		showNotification(icon, title, text, defautlTime);
+	public void setControler (NotificationControler controler) {
+		this.controler = controler;
 	}
 
-	public void showNotification (String title, String text, int timeSec) {
+	/** This function displays notification with provided title and text but it is provided ONLY for {@link SessionWindowManager} to
+	 * display message notification. Other components should use {@link EventBus} available in {@link App} class.
+	 * {@link SessionWindowManager} uses this method because it's safer to directly provide message text, if we used event system
+	 * here, any registered event listener could read the message continents.
+	 * @param title
+	 * @param text */
+	public void showMessageNotification (String title, String text) {
+		showNotification(title, text);
+	}
+
+	// private void showNotification (Icon icon, String title, String text) {
+	// showNotification(icon, title, text, defautlTime);
+	// }
+
+	private void showNotification (String title, String text, int timeSec) {
 		showNotification(defaultIcon, title, text, timeSec);
 	}
 
-	public void showNotification (String title, String text) {
+	private void showNotification (String title, String text) {
 		showNotification(defaultIcon, title, text, defautlTime);
 	}
 
-	public void showNotification (Icon icon, String title, String text, int timeSec) {
+	private void showNotification (Icon icon, String title, String text, int timeSec) {
 		if (controler.shouldDisplayNotification()) {
 			NotificationView view = null;
 
@@ -91,10 +107,6 @@ public class NotificationService implements EventListener, NotifcationListener {
 		view.setData(icon, title, text, timeSec);
 		view.setVisible(true);
 		setPositons();
-	}
-
-	public void setControler (NotificationControler controler) {
-		this.controler = controler;
 	}
 
 	private void setPositons () {
@@ -130,18 +142,6 @@ public class NotificationService implements EventListener, NotifcationListener {
 			if (e.status == ConnectionStatus.SERVER_SHUTDOWN) showNotification("Disconnected", "Connection timed out", 5);
 			if (e.status == ConnectionStatus.KICKED) showNotification("Disconnected", "Kicked from server", 5);
 		}
-
-//		if (event instanceof ShowNotificationEvent) {
-//			ShowNotificationEvent notif = (ShowNotificationEvent)event;
-//
-//			Icon icon;
-//			if (notif.image == null)
-//				icon = defaultIcon;
-//			else
-//				icon = new ImageIcon(Scalr.resize(notif.image, 20, 20));
-//
-//			showNotification(icon, notif.title, notif.text, notif.displayTime);
-//		}
 	}
 
 	@Override
