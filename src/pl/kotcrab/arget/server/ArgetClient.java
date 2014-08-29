@@ -46,7 +46,7 @@ import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRespo
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
-import pl.kotcrab.arget.event.ContactStatusChangeEvent;
+import pl.kotcrab.arget.event.ContactStatusEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
@@ -176,7 +176,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 				}
 
-				App.eventBus.post(new ContactStatusChangeEvent(c, lastStatus));
+				App.eventBus.post(new ContactStatusEvent(c, lastStatus));
 			}
 		}
 	}
