@@ -29,6 +29,13 @@ public class ContactInfo {
 	public ContactInfo () {
 	}
 
+	public ContactInfo (ContactInfo c) {
+		this.name = c.name;
+		this.publicProfileKey = c.publicProfileKey;
+		this.status = c.status;
+		this.unreadMessages = c.unreadMessages;
+	}
+
 	public ContactInfo (String name, String publicProfileKey) {
 		this(name, publicProfileKey, ContactStatus.DISCONNECTED);
 	}
