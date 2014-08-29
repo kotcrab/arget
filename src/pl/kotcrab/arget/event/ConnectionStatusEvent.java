@@ -19,17 +19,19 @@
 
 package pl.kotcrab.arget.event;
 
-import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.ContactStatus;
+import pl.kotcrab.arget.server.ConnectionStatus;
 
-public class ContactStatusEvent implements Event {
-	public ContactInfo contact;
-	public ContactStatus previousStatus;
-	
-	public ContactStatusEvent (ContactInfo contact, ContactStatus previousStatus) {
-		//we are using copy constructor because we don't want to something mess with our contact data
-		this.contact = new ContactInfo(contact); 
-		this.previousStatus = previousStatus;
+public class ConnectionStatusEvent implements Event {
+	public ConnectionStatus status;
+	public String msg;
+
+	public ConnectionStatusEvent (ConnectionStatus status) {
+		this.status = status;
+	}
+
+	public ConnectionStatusEvent (ConnectionStatus status, String msg) {
+		this.status = status;
+		this.msg = msg;
 	}
 
 	@Override
