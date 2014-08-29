@@ -161,24 +161,24 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			List<ContactInfo> contacts = profile.contacts;
 
 			for (ContactInfo c : contacts) {
-				ContactStatus lastStatus = c.status;
+				ContactStatus previousStatus = c.status;
 				c.status = ContactStatus.DISCONNECTED;
 
 				for (String key : lastKeychain) {
 
 					if (c.publicProfileKey.equals(key)) {
 						// contact may have status CONNECTED_SESSION, we don't want to reset that after getting keychain update
-						if (lastStatus == ContactStatus.DISCONNECTED)
+						if (previousStatus == ContactStatus.DISCONNECTED)
 							c.status = ContactStatus.CONNECTED;
 						else
-							c.status = lastStatus;
+							c.status = previousStatus;
 
 						break;
 					}
 
 				}
 
-				App.eventBus.post(new ContactStatusEvent(c, lastStatus));
+				App.eventBus.post(new ContactStatusEvent(c, previousStatus));
 			}
 		}
 	}
