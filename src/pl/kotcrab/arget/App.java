@@ -61,7 +61,7 @@ public class App {
 	private static boolean appInitialized;
 
 	public static EventBus eventBus;
-	private static NotificationService notificationService;
+	public static NotificationService notificationService;
 
 	public static void init () {
 		init(true);
@@ -130,10 +130,6 @@ public class App {
 
 	public static boolean isAppInitialized () {
 		return appInitialized;
-	}
-
-	public static NotificationService getNotificationService () {
-		return notificationService;
 	}
 
 	public static URL getResource (String path) {

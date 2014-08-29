@@ -107,7 +107,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		this.profile = profile;
 
 		App.eventBus.register(this);
-		App.getNotificationService().setControler(this);
+		App.notificationService.setControler(this);
 
 		createAndShowGUI();
 
