@@ -27,8 +27,10 @@ import javax.swing.ImageIcon;
 import org.imgscalr.Scalr;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.event.ContactStatusChangeEvent;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
+import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.util.SwingUtils;
 
 public class NotificationService implements EventListener, NotifcationListener {
@@ -98,6 +100,16 @@ public class NotificationService implements EventListener, NotifcationListener {
 
 	@Override
 	public void onEvent (Event event) {
+		if (event instanceof ContactStatusChangeEvent) {
+			ContactStatusChangeEvent e = (ContactStatusChangeEvent)event;
+
+			if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus != ContactStatus.DISCONNECTED)
+				showNotification(defaultIcon, e.contact.name, e.contact.name + " is now offline");
+
+			if (e.contact.status == ContactStatus.CONNECTED && e.previousStatus == ContactStatus.DISCONNECTED)
+				showNotification(defaultIcon, e.contact.name, e.contact.name + " is now online");
+		}
+
 		if (event instanceof ShowNotificationEvent) {
 			ShowNotificationEvent notif = (ShowNotificationEvent)event;
 

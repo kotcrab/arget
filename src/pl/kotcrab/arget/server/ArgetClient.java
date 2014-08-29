@@ -46,8 +46,8 @@ import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRespo
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
+import pl.kotcrab.arget.event.ContactStatusChangeEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
@@ -176,11 +176,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 				}
 
-				if (c.status == ContactStatus.DISCONNECTED && lastStatus != ContactStatus.DISCONNECTED)
-					App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now offline"));
-
-				if (c.status == ContactStatus.CONNECTED && lastStatus == ContactStatus.DISCONNECTED)
-					App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now online"));
+				App.eventBus.post(new ContactStatusChangeEvent(c, lastStatus));
 			}
 		}
 	}
