@@ -137,8 +137,11 @@ public class NotificationService implements EventListener, NotifcationListener {
 					showNotification(e.contact.name, e.contact.name + " is now online");
 
 			if (options.notifUserOffline)
-				if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus != ContactStatus.DISCONNECTED)
+				if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus == ContactStatus.CONNECTED)
+				{
+					System.out.println(e.previousStatus);
 					showNotification(e.contact.name, e.contact.name + " is now offline");
+				}
 
 		}
 
