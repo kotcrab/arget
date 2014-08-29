@@ -19,13 +19,22 @@
 
 package pl.kotcrab.arget.gui.notification;
 
+import pl.kotcrab.arget.profile.ProfileOptions;
+
 public interface NotificationControler {
 	public boolean shouldDisplayNotification ();
+
+	public ProfileOptions getOptions ();
 }
 
 class DefaultNotificationControler implements NotificationControler {
 	@Override
 	public boolean shouldDisplayNotification () {
 		return true;
+	}
+
+	@Override
+	public ProfileOptions getOptions () {
+		return new ProfileOptions();
 	}
 }

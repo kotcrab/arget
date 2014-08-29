@@ -66,6 +66,7 @@ import pl.kotcrab.arget.gui.notification.NotificationControler;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
+import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
@@ -160,7 +161,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(contactsPanel, BorderLayout.CENTER);
 		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);
-		
+
 		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
 		setCenterScreenTo(homePanel);
@@ -431,7 +432,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	public void starFlasherAndSoundIfNeeded () {
 		if (isFocused() == false) {
 			iconFlasher.flashIcon();
-			SoundUtils.playSound("/data/notification.wav");
+
+			if (profile.options.mainPlaySoundNewMsg) SoundUtils.playSound("/data/notification.wav");
 		}
 	}
 
@@ -541,6 +543,11 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public boolean shouldDisplayNotification () {
 		return !isFocused();
+	}
+
+	@Override
+	public ProfileOptions getOptions () {
+		return profile.options;
 	}
 
 }

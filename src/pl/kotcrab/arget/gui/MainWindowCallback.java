@@ -22,6 +22,7 @@ package pl.kotcrab.arget.gui;
 import java.awt.Component;
 
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
+import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ServerDescriptor;
 
@@ -44,4 +45,6 @@ public interface MainWindowCallback {
 	public void connectToServer (ServerDescriptor info);
 
 	public void setServerInfo (ServerInfoTransfer info);
+	
+	public ProfileOptions getOptions();
 }

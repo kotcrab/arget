@@ -176,7 +176,9 @@ public class SessionWindowManager implements LocalSessionListener {
 			else
 				msgNotif = msg.msg;
 
-			App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
+			if (mainWindow.getOptions().notifNewMsg)
+				App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
+			
 			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
@@ -186,10 +188,10 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (ex instanceof RemotePanelShowNotification) panel.setRemoteCenterPanel(true);
 		if (ex instanceof RemotePanelHideNotification) panel.setRemoteCenterPanel(false);
 
-		if (ex instanceof FileTransferToMemoryRequest)
+		if (mainWindow.getOptions().notifImageFileTrasnfer && ex instanceof FileTransferToMemoryRequest)
 			App.notificationService.showMessageNotification(panel.getContact().name, "Image transfer in progress...");
 
-		if (ex instanceof FileTransferToFileRequest) {
+		if (mainWindow.getOptions().notifFileTrasnfer && ex instanceof FileTransferToFileRequest) {
 			FileTransferRequest req = (FileTransferRequest)ex;
 			App.notificationService.showMessageNotification(panel.getContact().name, "File transfer request: " + req.fileName
 				+ ", size: " + FileUitls.readableFileSize(req.fileSize));

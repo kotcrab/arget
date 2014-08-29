@@ -31,6 +31,7 @@ import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
+import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.util.SwingUtils;
@@ -126,21 +127,28 @@ public class NotificationService implements EventListener, NotifcationListener {
 
 	@Override
 	public void onEvent (Event event) {
+		ProfileOptions options = controler.getOptions();
+
 		if (event instanceof ContactStatusEvent) {
 			ContactStatusEvent e = (ContactStatusEvent)event;
 
-			if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus != ContactStatus.DISCONNECTED)
-				showNotification(e.contact.name, e.contact.name + " is now offline");
+			if (options.notifUserOnline)
+				if (e.contact.status == ContactStatus.CONNECTED && e.previousStatus == ContactStatus.DISCONNECTED)
+					showNotification(e.contact.name, e.contact.name + " is now online");
 
-			if (e.contact.status == ContactStatus.CONNECTED && e.previousStatus == ContactStatus.DISCONNECTED)
-				showNotification(e.contact.name, e.contact.name + " is now online");
+			if (options.notifUserOffline)
+				if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus != ContactStatus.DISCONNECTED)
+					showNotification(e.contact.name, e.contact.name + " is now offline");
+
 		}
 
-		if (event instanceof ConnectionStatusEvent) {
-			ConnectionStatusEvent e = (ConnectionStatusEvent)event;
-			if (e.status == ConnectionStatus.TIMEDOUT) showNotification("Disconnected", "Connection timed out", 5);
-			if (e.status == ConnectionStatus.SERVER_SHUTDOWN) showNotification("Disconnected", "Connection timed out", 5);
-			if (e.status == ConnectionStatus.KICKED) showNotification("Disconnected", "Kicked from server", 5);
+		if (options.notifConnectionLost) {
+			if (event instanceof ConnectionStatusEvent) {
+				ConnectionStatusEvent e = (ConnectionStatusEvent)event;
+				if (e.status == ConnectionStatus.TIMEDOUT) showNotification("Disconnected", "Connection timed out", 5);
+				if (e.status == ConnectionStatus.SERVER_SHUTDOWN) showNotification("Disconnected", "Connection timed out", 5);
+				if (e.status == ConnectionStatus.KICKED) showNotification("Disconnected", "Kicked from server", 5);
+			}
 		}
 	}
 
