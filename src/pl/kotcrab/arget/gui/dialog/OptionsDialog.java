@@ -132,7 +132,7 @@ public class OptionsDialog extends ESCClosableDialog {
 				}
 			}
 		};
-		
+
 		addDocumentListener();
 
 		setVisible(true);
@@ -226,12 +226,12 @@ public class OptionsDialog extends ESCClosableDialog {
 			});
 		}
 	}
-	
+
 	private void addDocumentListener () {
 		portTextfield.getDocument().addDocumentListener(documentListener);
-		adressTextfield.getDocument().addDocumentListener(documentListener);		
+		adressTextfield.getDocument().addDocumentListener(documentListener);
 	}
-	
+
 	private void setNewsPanel () {
 		if (csDownalodNews.isSelected()) {
 			adressTextfield.setEnabled(true);
@@ -240,6 +240,6 @@ public class OptionsDialog extends ESCClosableDialog {
 			adressTextfield.setEnabled(false);
 			portTextfield.setEnabled(false);
 
-		}					
+		}
 	}
 }

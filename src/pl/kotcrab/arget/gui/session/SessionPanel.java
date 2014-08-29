@@ -297,7 +297,7 @@ public class SessionPanel extends CenterPanel {
 		innerPanel.removeAll();
 		refreshPanel();
 	}
-	
+
 	private void refreshPanel () {
 		EventQueue.invokeLater(new Runnable() {
 

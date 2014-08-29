@@ -46,9 +46,8 @@ public class Profile {
 	public ServerDescriptor autoconnectInfo;
 	public Rectangle mainWindowBounds;
 
-	@Deprecated
-	public Profile () { //no-arg constructor for kryo
-		//for backward compatibility
+	public Profile () { // no-arg constructor for kryo
+		// for backward compatibility
 		if (options == null) options = new ProfileOptions();
 	}
 
@@ -71,7 +70,7 @@ public class Profile {
 		keyset = new RSAKeySet(rsa.getPublicKeySpec(), rsa.getPrivateKeySpec());
 
 		options = new ProfileOptions();
-		
+
 		autoconnectInfo = null;
 		mainWindowBounds = null;
 
