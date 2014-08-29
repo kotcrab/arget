@@ -27,7 +27,7 @@ public class MenuEvent implements Event {
 	}
 
 	@Override
-	public boolean isExectueOnAWTEventQueue () {
+	public boolean isExectueOnEDT () {
 		return true;
 	}
 }

@@ -31,7 +31,7 @@ public class LoggerPanelEvent implements Event {
 	}
 
 	@Override
-	public boolean isExectueOnAWTEventQueue () {
+	public boolean isExectueOnEDT () {
 		return true;
 	}
 }

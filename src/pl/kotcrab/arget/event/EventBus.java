@@ -60,7 +60,7 @@ public class EventBus {
 
 	private void processEvent (final Event event) {
 		try {
-			if (event.isExectueOnAWTEventQueue()) {
+			if (event.isExectueOnEDT()) {
 				for (EventListener listener : listeners)
 					processEventOnAWTQueue(listener, event);
 			} else {

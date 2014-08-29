@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 
 import pl.kotcrab.arget.event.Event;
 
+@Deprecated
 public class ShowNotificationEvent implements Event {
 	public int displayTime = 3000;
 	public BufferedImage image;
@@ -47,7 +48,7 @@ public class ShowNotificationEvent implements Event {
 	}
 
 	@Override
-	public boolean isExectueOnAWTEventQueue () {
+	public boolean isExectueOnEDT () {
 		return true;
 	}
 
