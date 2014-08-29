@@ -293,20 +293,20 @@ public class SessionPanel extends CenterPanel {
 
 	}
 
+	public void clear () {
+		innerPanel.removeAll();
+		refreshPanel();
+	}
+	
 	private void refreshPanel () {
 		EventQueue.invokeLater(new Runnable() {
 
 			@Override
-			public void run () { // TODO wiadomosci sie nie pokazujo (maybe fixed)
+			public void run () {
 				innerPanel.validate();
-				innerPanel.revalidate();
 				innerPanel.repaint();
 			}
 		});
-	}
-
-	public void clear () {
-		innerPanel.removeAll();
 	}
 
 	public ContactInfo getContact () {

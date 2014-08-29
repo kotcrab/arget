@@ -32,7 +32,6 @@ public class LeftRightLayout implements LayoutManager {
 
 	@Override
 	public void layoutContainer (Container parent) {
-
 		Insets insets = parent.getInsets();
 		int maxWidth = parent.getWidth() - (insets.left + insets.right);
 		int previousHeight = 0;
