@@ -40,7 +40,7 @@ public class NotificationService implements EventListener, NotifcationListener {
 
 	public NotificationService () {
 		views = new NotificationView[MAX_NOTIFICATIONS];
-		defaultIcon = new ImageIcon(App.getResource("/data/iconsmall.png"));
+		defaultIcon = new ImageIcon(App.getResource("/data/icon/icon_small.png"));
 		App.eventBus.register(this);
 
 		controler = new DefaultNotificationControler();

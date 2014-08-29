@@ -130,7 +130,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setBounds(100, 100, 800, 700);
 		setMinimumSize(new Dimension(500, 250));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setIconImage(App.loadImage("/data/icon.png"));
+		setIconImage(App.loadImage("/data/data/icon.png"));
 
 		sessionWindowManager = new SessionWindowManager(this);
 
