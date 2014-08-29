@@ -24,12 +24,12 @@ import java.awt.Rectangle;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.imgscalr.Scalr;
-
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.event.ConnectionStatusEvent;
 import pl.kotcrab.arget.event.ContactStatusEvent;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
+import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.util.SwingUtils;
 
@@ -38,7 +38,9 @@ public class NotificationService implements EventListener, NotifcationListener {
 
 	private NotificationControler controler;
 	private NotificationView[] views;
+
 	private Icon defaultIcon;
+	private int defautlTime = 3;
 
 	public NotificationService () {
 		views = new NotificationView[MAX_NOTIFICATIONS];
@@ -49,6 +51,18 @@ public class NotificationService implements EventListener, NotifcationListener {
 	}
 
 	public void showNotification (Icon icon, String title, String text) {
+		showNotification(icon, title, text, defautlTime);
+	}
+
+	public void showNotification (String title, String text, int timeSec) {
+		showNotification(defaultIcon, title, text, timeSec);
+	}
+
+	public void showNotification (String title, String text) {
+		showNotification(defaultIcon, title, text, defautlTime);
+	}
+
+	public void showNotification (Icon icon, String title, String text, int timeSec) {
 		if (controler.shouldDisplayNotification()) {
 			NotificationView view = null;
 
@@ -66,15 +80,15 @@ public class NotificationService implements EventListener, NotifcationListener {
 			}
 
 			if (view != null) {
-				setNotification(view, icon, title, text);
+				setNotification(view, icon, title, text, timeSec);
 			} else {
 				// TODO find oldest notif and replace it
 			}
 		}
 	}
 
-	private void setNotification (NotificationView view, Icon icon, String title, String text) {
-		view.setData(icon, title, text);
+	private void setNotification (NotificationView view, Icon icon, String title, String text, int timeSec) {
+		view.setData(icon, title, text, timeSec);
 		view.setVisible(true);
 		setPositons();
 	}
@@ -104,23 +118,30 @@ public class NotificationService implements EventListener, NotifcationListener {
 			ContactStatusEvent e = (ContactStatusEvent)event;
 
 			if (e.contact.status == ContactStatus.DISCONNECTED && e.previousStatus != ContactStatus.DISCONNECTED)
-				showNotification(defaultIcon, e.contact.name, e.contact.name + " is now offline");
+				showNotification(e.contact.name, e.contact.name + " is now offline");
 
 			if (e.contact.status == ContactStatus.CONNECTED && e.previousStatus == ContactStatus.DISCONNECTED)
-				showNotification(defaultIcon, e.contact.name, e.contact.name + " is now online");
+				showNotification(e.contact.name, e.contact.name + " is now online");
 		}
 
-		if (event instanceof ShowNotificationEvent) {
-			ShowNotificationEvent notif = (ShowNotificationEvent)event;
-
-			Icon icon;
-			if (notif.image == null)
-				icon = defaultIcon;
-			else
-				icon = new ImageIcon(Scalr.resize(notif.image, 20, 20));
-
-			showNotification(icon, notif.title, notif.text);
+		if (event instanceof ConnectionStatusEvent) {
+			ConnectionStatusEvent e = (ConnectionStatusEvent)event;
+			if (e.status == ConnectionStatus.TIMEDOUT) showNotification("Disconnected", "Connection timed out", 5);
+			if (e.status == ConnectionStatus.SERVER_SHUTDOWN) showNotification("Disconnected", "Connection timed out", 5);
+			if (e.status == ConnectionStatus.KICKED) showNotification("Disconnected", "Kicked from server", 5);
 		}
+
+//		if (event instanceof ShowNotificationEvent) {
+//			ShowNotificationEvent notif = (ShowNotificationEvent)event;
+//
+//			Icon icon;
+//			if (notif.image == null)
+//				icon = defaultIcon;
+//			else
+//				icon = new ImageIcon(Scalr.resize(notif.image, 20, 20));
+//
+//			showNotification(icon, notif.title, notif.text, notif.displayTime);
+//		}
 	}
 
 	@Override

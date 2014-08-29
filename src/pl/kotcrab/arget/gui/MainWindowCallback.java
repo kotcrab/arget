@@ -28,10 +28,6 @@ import pl.kotcrab.arget.server.ServerDescriptor;
 
 //TODO sort this maybe?
 public interface MainWindowCallback {
-	public void setConnectionStatus (ConnectionStatus status);
-
-	public void setConnectionStatus (ConnectionStatus status, String msg);
-
 	public void startChat (ContactInfo contact);
 
 	public void updateContacts ();

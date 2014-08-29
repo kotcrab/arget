@@ -45,6 +45,7 @@ import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.Settings;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
+import pl.kotcrab.arget.event.ConnectionStatusEvent;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.event.MenuEvent;
@@ -62,7 +63,6 @@ import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
 import pl.kotcrab.arget.gui.dialog.OptionsDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
@@ -143,7 +143,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));
-		setConnectionStatus(ConnectionStatus.DISCONNECTED);
 		getContentPane().add(statusLabel, BorderLayout.SOUTH);
 
 		splitPane = new JSplitPane();
@@ -161,7 +160,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(contactsPanel, BorderLayout.CENTER);
 		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);
-		// splitPane.setLeftComponent(contactsPanel);
+		
 		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
 		setCenterScreenTo(homePanel);
@@ -182,6 +181,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			}
 
 		});
+
+		// manually use event to set initial state of gui
+		setConnectionStatus(new ConnectionStatusEvent(ConnectionStatus.DISCONNECTED));
 
 		setVisible(true);
 
@@ -265,16 +267,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	}
 
-	@Override
-	public void setConnectionStatus (ConnectionStatus status) {
-		setConnectionStatus(status, null);
-	}
-
-	@Override
-	public void setConnectionStatus (ConnectionStatus status, String msg) {
+	public void setConnectionStatus (ConnectionStatusEvent e) {
 		String textToSet = null;
 
-		switch (status) {
+		switch (e.status) {
 		case CONNECTED:
 			textToSet = "Connected";
 			break;
@@ -282,7 +278,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			textToSet = "Connecting...";
 			break;
 		case DISCONNECTED:
-			// post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
 			textToSet = "Disconnected";
 			client = null;
 			resetContacts();
@@ -293,7 +288,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case TIMEDOUT:
-			post(new ShowNotificationEvent(5, "Disconnected", "Connection timed out"));
 			textToSet = "Connection timed out";
 			client = null;
 			resetContacts();
@@ -304,13 +298,11 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			resetContacts();
 			break;
 		case SERVER_SHUTDOWN:
-			post(new ShowNotificationEvent(5, "Disconnected", "Server shutdown"));
 			textToSet = "Server shutdown";
 			client = null;
 			resetContacts();
 			break;
 		case KICKED:
-			post(new ShowNotificationEvent(5, "Disconnected", "Kicked from server"));
 			textToSet = "Kicked from server";
 			client = null;
 			resetContacts();
@@ -319,12 +311,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			break;
 		}
 
-		if (msg != null) textToSet += ": " + msg;
+		if (e.msg != null) textToSet += ": " + e.msg;
 		statusLabel.setText(textToSet);
-	}
-
-	private void post (Event event) {
-		App.eventBus.post(event);
 	}
 
 	@Override
@@ -455,6 +443,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void onEvent (Event event) {
 		if (event instanceof MenuEvent) processMenuEvent((MenuEvent)event);
+
+		if (event instanceof ConnectionStatusEvent) setConnectionStatus((ConnectionStatusEvent)event);
 
 		if (event instanceof SaveProfileEvent) {
 			ProfileIO.saveProfile(profile);
