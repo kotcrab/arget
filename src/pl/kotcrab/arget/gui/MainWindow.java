@@ -60,6 +60,7 @@ import pl.kotcrab.arget.gui.dialog.CreateServerDialogFinished;
 import pl.kotcrab.arget.gui.dialog.CreateServerInfoDialog;
 import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
+import pl.kotcrab.arget.gui.dialog.OptionsDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
 import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
@@ -222,6 +223,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 
+		fileMenu.add(new MenuItem("Options", MenuEventType.FILE_EDIT_OPTIONS));
+		fileMenu.add(new JSeparator());
 		fileMenu.add(new MenuItem("Logout", MenuEventType.FILE_LOGOUT));
 		fileMenu.add(new MenuItem("Exit", MenuEventType.FILE_EXIT));
 
@@ -461,6 +464,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	private void processMenuEvent (MenuEvent event) {
 		switch (event.type) {
+		case FILE_EDIT_OPTIONS:
+			new OptionsDialog(this, profile);
+			break;
 		case FILE_LOGOUT:
 			Settings.resetAutoLogin();
 			dispose();
@@ -536,7 +542,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		case HELP_ABOUT:
 			new AboutDialog(instance);
 			break;
-
 		default:
 			Log.err(TAG, "Unknown menu event type: " + event.type);
 			break;

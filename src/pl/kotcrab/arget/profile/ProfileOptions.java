@@ -17,12 +17,22 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.event;
+package pl.kotcrab.arget.profile;
 
-public enum MenuEventType {
-	FILE_EDIT_OPTIONS, FILE_LOGOUT, FILE_EXIT, //
-	SERVERS_ADD, SERVERS_MANAGE, SERVERS_DISCONNECT, //
-	CONTACTS_SHOW_PUBLIC_KEY, CONTACTS_ADD, CONTACTS_REFRESH, //
-	VIEW_SHOW_HOME, VIEW_SHOW_LOG, //
-	HELP_ABOUT //
+public class ProfileOptions {
+	// main
+	public boolean mainPlaySoundNewMsg = true;
+
+	// notifications
+	public boolean notifConnectionLost = true;
+	public boolean notifUserOnline = true;
+	public boolean notifUserOffline = true;
+	public boolean notifNewMsg = true;
+	public boolean notifImageFileTrasnfer = true;
+	public boolean notifFileTrasnfer = true;
+
+	// news server
+	public boolean newsEnabled = true;
+	public String newsAdress = "khonsu.kotcrab.pl";
+	public int newsPort = 31400;
 }

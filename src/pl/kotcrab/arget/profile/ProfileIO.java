@@ -61,6 +61,7 @@ public class ProfileIO {
 		kryo.register(byte[].class);
 		kryo.register(BigInteger.class);
 		kryo.register(ProfileWrapper.class);
+		kryo.register(ProfileOptions.class);
 		kryo.register(Profile.class);
 	}
 
