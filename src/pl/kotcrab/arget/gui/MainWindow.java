@@ -196,7 +196,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				public void run () {
 					connectToServer(profile.autoconnectInfo);
 				}
-			}).start();
+			}, "AutoConnect").start();
 		}
 	}
 
@@ -227,25 +227,25 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 
-		fileMenu.add(new MenuItem("Options", MenuEventType.FILE_EDIT_OPTIONS));
+		fileMenu.add(new MenuItem("Options...", MenuEventType.FILE_EDIT_OPTIONS));
 		fileMenu.add(new JSeparator());
 		fileMenu.add(new MenuItem("Logout", MenuEventType.FILE_LOGOUT));
 		fileMenu.add(new MenuItem("Exit", MenuEventType.FILE_EXIT));
 
-		serversMenu.add(new MenuItem("Add Server", MenuEventType.SERVERS_ADD));
-		serversMenu.add(new MenuItem("Manage Servers", MenuEventType.SERVERS_MANAGE));
+		serversMenu.add(new MenuItem("Add Server...", MenuEventType.SERVERS_ADD));
+		serversMenu.add(new MenuItem("Manage Servers...", MenuEventType.SERVERS_MANAGE));
 		serversMenu.add(new MenuItem("Disconnect", MenuEventType.SERVERS_DISCONNECT));
 		serversMenu.add(new JSeparator());
 
 		viewMenu.add(new MenuItem("Show Home Screen", MenuEventType.VIEW_SHOW_HOME));
 		viewMenu.add(new MenuItem("Show Log", MenuEventType.VIEW_SHOW_LOG));
 
-		contactsMenu.add(new MenuItem("Show My Public Key", MenuEventType.CONTACTS_SHOW_PUBLIC_KEY));
-		contactsMenu.add(new MenuItem("Add Contact", MenuEventType.CONTACTS_ADD));
+		contactsMenu.add(new MenuItem("Show My Public Key...", MenuEventType.CONTACTS_SHOW_PUBLIC_KEY));
+		contactsMenu.add(new MenuItem("Add Contact...", MenuEventType.CONTACTS_ADD));
 		contactsMenu.add(new JSeparator());
 		contactsMenu.add(new MenuItem("Refresh list", MenuEventType.CONTACTS_REFRESH));
 
-		helpMenu.add(new MenuItem("About", MenuEventType.HELP_ABOUT));
+		helpMenu.add(new MenuItem("About Arget", MenuEventType.HELP_ABOUT));
 
 		addServersFromProfile();
 	}
