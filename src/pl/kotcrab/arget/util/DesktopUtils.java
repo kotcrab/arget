@@ -26,6 +26,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import com.sun.jna.Native;
+import com.sun.jna.platform.unix.X11;
+
 import pl.kotcrab.arget.Log;
 
 public class DesktopUtils {
@@ -67,5 +70,15 @@ public class DesktopUtils {
 
 	public static boolean isUnix () {
 		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+	}
+
+	public static boolean isLinuxX11 () {
+		try {
+			Native.loadLibrary("X11", X11.class);
+			return true;
+		} catch (UnsatisfiedLinkError e) {
+			return false;
+		}
+
 	}
 }
