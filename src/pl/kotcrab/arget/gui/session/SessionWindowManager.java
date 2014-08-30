@@ -46,6 +46,8 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferManager;
+import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
@@ -105,7 +107,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		panel.disableInput();
 		panel.addMessage(new TextMessage(Msg.SYSTEM, "Creating session..."));
 		panel.getContact().status = ContactStatus.CONNECTED_SESSION;
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 
 		if (panel.getContact() == showWhenSessionCreated) {
 			mainWindow.setCenterScreenTo(panel);
@@ -115,6 +117,11 @@ public class SessionWindowManager implements LocalSessionListener {
 		// this means that this method is executed when REMTOE is creating session window which means that LOCAL must be current
 		// center panel
 		if (panel != mainWindow.getCenterScreen()) panel.setRemoteCenterPanel(true);
+	}
+
+	private void post (Event event) {
+		App.eventBus.post(event);
+		
 	}
 
 	@Override
@@ -150,7 +157,7 @@ public class SessionWindowManager implements LocalSessionListener {
 
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 	}
 
 	@Override
@@ -160,7 +167,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 	}
 
 	@Override
@@ -205,7 +212,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		// if current panel is not panel that received data
 		if (panel != mainWindow.getCenterScreen()) {
 			panel.getContact().unreadMessages = true;
-			mainWindow.updateContacts();
+			post(new UpdateContactsEvent());
 		}
 
 		mainWindow.starFlasherAndSoundIfNeeded();
@@ -215,7 +222,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		for (SessionPanel panel : panels) {
 			if (panel.getContact() == contact) {
 				contact.unreadMessages = false;
-				mainWindow.updateContacts();
+				post(new UpdateContactsEvent());
 				mainWindow.setCenterScreenTo(panel);
 				return true;
 			}

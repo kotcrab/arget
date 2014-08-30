@@ -17,32 +17,11 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui;
+package pl.kotcrab.arget.event;
 
-import java.awt.Component;
-
-import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
-import pl.kotcrab.arget.profile.ProfileOptions;
-import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.server.ServerDescriptor;
-
-//TODO sort this maybe?
-public interface MainWindowCallback {
-	public void startChat (ContactInfo contact);
-
-	public boolean isKeyInContacts (String key);
-
-	public ContactInfo getContactsByKey (String key);
-
-	public void setCenterScreenTo (CenterPanel panel);
-
-	public Component getCenterScreen ();
-
-	public void starFlasherAndSoundIfNeeded ();
-
-	public void connectToServer (ServerDescriptor info);
-
-	public void setServerInfo (ServerInfoTransfer info);
-
-	public ProfileOptions getOptions ();
+public class UpdateContactsEvent implements Event {
+	@Override
+	public boolean isExectueOnEDT () {
+		return true;
+	}
 }

@@ -51,6 +51,7 @@ import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
 import pl.kotcrab.arget.event.SaveProfileEvent;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.components.BottomSplitPaneBorder;
 import pl.kotcrab.arget.gui.components.MenuItem;
 import pl.kotcrab.arget.gui.components.ServerMenuItem;
@@ -350,11 +351,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		}
 	}
 
-	@Override
-	public void updateContacts () {
-		performContactsUpdate();
-	}
-
 	// TODO move to contacts table
 	private void resetContacts () {
 		for (ContactInfo c : profile.contacts)
@@ -363,7 +359,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		updateContacts();
 	}
 
-	private void performContactsUpdate () {
+	private void updateContacts () {
 		if (client != null) {
 			client.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
 			contactsPanel.updateContactsTable();
@@ -448,8 +444,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void onEvent (Event event) {
 		if (event instanceof MenuEvent) processMenuEvent((MenuEvent)event);
-
 		if (event instanceof ConnectionStatusEvent) setConnectionStatus((ConnectionStatusEvent)event);
+		if (event instanceof UpdateContactsEvent) updateContacts();
 
 		if (event instanceof SaveProfileEvent) {
 			ProfileIO.saveProfile(profile);
@@ -515,7 +511,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				public void finished (ContactInfo contact) {
 					profile.contacts.add(contact);
 					ProfileIO.saveProfile(profile);
-					performContactsUpdate();
+					updateContacts();
 				}
 			});
 			break;

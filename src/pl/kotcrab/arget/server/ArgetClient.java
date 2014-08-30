@@ -49,6 +49,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
 import pl.kotcrab.arget.event.ConnectionStatusEvent;
 import pl.kotcrab.arget.event.ContactStatusEvent;
 import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
@@ -153,7 +154,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	private void processKeychain (KeychainTransfer keychain) {
 		lastKeychain = keychain.publicKeys;
-		guiCallback.updateContacts(); // this will call processLastKeychain
+		post(new UpdateContactsEvent());
 	}
 
 	public void processLastKeychain () {
