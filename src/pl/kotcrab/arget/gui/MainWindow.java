@@ -213,7 +213,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private void createMenuBars () {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorder(new EmptyBorder(0, 0, 0, 0));
-		getContentPane().add(menuBar, BorderLayout.NORTH);
+		setJMenuBar(menuBar);
 
 		JMenu fileMenu = new JMenu("File");
 		serversMenu = new JMenu("Servers");
