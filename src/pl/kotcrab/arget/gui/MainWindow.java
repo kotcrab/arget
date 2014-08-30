@@ -270,51 +270,14 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	public void setConnectionStatus (ConnectionStatusEvent e) {
-		String textToSet = null;
-
-		switch (e.status) {
-		case CONNECTED:
-			textToSet = "Connected";
-			break;
-		case CONNECTING:
-			textToSet = "Connecting...";
-			break;
-		case DISCONNECTED:
-			textToSet = "Disconnected";
-			client = null;
-			resetContacts();
-			break;
-		case ERROR:
-			textToSet = "Error";
-			client = null;
-			resetContacts();
-			break;
-		case TIMEDOUT:
-			textToSet = "Connection timed out";
-			client = null;
-			resetContacts();
-			break;
-		case SERVER_FULL:
-			textToSet = "Server is full";
-			client = null;
-			resetContacts();
-			break;
-		case SERVER_SHUTDOWN:
-			textToSet = "Server shutdown";
-			client = null;
-			resetContacts();
-			break;
-		case KICKED:
-			textToSet = "Kicked from server";
-			client = null;
-			resetContacts();
-			break;
-		default:
-			break;
-		}
-
+		String textToSet = e.status.toPrettyString();
 		if (e.msg != null) textToSet += ": " + e.msg;
 		statusLabel.setText(textToSet);
+
+		if (e.status.isConnectionBroken()) {
+			client = null;
+			resetContacts();
+		}
 	}
 
 	@Override
