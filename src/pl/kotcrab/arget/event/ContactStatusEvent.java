@@ -25,10 +25,10 @@ import pl.kotcrab.arget.server.ContactStatus;
 public class ContactStatusEvent implements Event {
 	public ContactInfo contact;
 	public ContactStatus previousStatus;
-	
+
 	public ContactStatusEvent (ContactInfo contact, ContactStatus previousStatus) {
-		//we are using copy constructor because we don't want to something mess with our contact data
-		this.contact = new ContactInfo(contact); 
+		// we are using copy constructor because we don't want to something mess with our contact data
+		this.contact = new ContactInfo(contact);
 		this.previousStatus = previousStatus;
 	}
 

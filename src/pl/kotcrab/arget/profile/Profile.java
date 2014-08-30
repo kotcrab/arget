@@ -36,8 +36,8 @@ public class Profile {
 
 	public transient String fileName;
 	public transient File file;
-	
-	transient SecretKeySpec profileKeySpec; //key-spec is only available from within this package 
+
+	transient SecretKeySpec profileKeySpec; // key-spec is only available from within this package
 
 	public ArrayList<ContactInfo> contacts;
 	public ArrayList<ServerDescriptor> servers;

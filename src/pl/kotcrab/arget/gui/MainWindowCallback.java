@@ -45,6 +45,6 @@ public interface MainWindowCallback {
 	public void connectToServer (ServerDescriptor info);
 
 	public void setServerInfo (ServerInfoTransfer info);
-	
-	public ProfileOptions getOptions();
+
+	public ProfileOptions getOptions ();
 }

@@ -43,7 +43,7 @@ public abstract class IconFlasher {
 	private static void setSharedInstance (JFrame frameWindow) {
 		if (DesktopUtils.isWindows()) SHARED_INSTANCE = new WindowsIconFlasher(frameWindow);
 		if (DesktopUtils.isLinuxX11()) SHARED_INSTANCE = new X11IconFlasher(frameWindow);
-		
+
 		if (SHARED_INSTANCE == null) SHARED_INSTANCE = new DefaultIconFlasher(frameWindow);
 	}
 }

@@ -416,9 +416,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	public void connectToServer (ServerDescriptor info) {
 		if (client == null) {
 			client = new ArgetClient(info, profile, instance, sessionWindowManager);
-			
-			ArgetClient clientRef = client; //client may be changed by set to null by some event
-			
+
+			ArgetClient clientRef = client; // client may be changed by set to null by some event
+
 			sessionWindowManager.setLocalSessionManager(client.getLocalSessionManager());
 
 			if (clientRef.isSuccessfullyInitialized() == false) {

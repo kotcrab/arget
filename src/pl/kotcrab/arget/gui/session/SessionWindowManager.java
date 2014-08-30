@@ -178,7 +178,7 @@ public class SessionWindowManager implements LocalSessionListener {
 
 			if (mainWindow.getOptions().notifNewMsg)
 				App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
-			
+
 			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}

@@ -73,7 +73,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	private boolean successfullyInitialized = false;
 
-	//private ServerDescriptor info;
+	// private ServerDescriptor info;
 	private Profile profile;
 	private MainWindowCallback guiCallback;
 
@@ -95,7 +95,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	public ArgetClient (ServerDescriptor info, Profile profile, MainWindowCallback guiCallback, LocalSessionListener listener) {
 		super("Client");
-		//this.info = info;
+		// this.info = info;
 		this.profile = profile;
 		this.guiCallback = guiCallback;
 
