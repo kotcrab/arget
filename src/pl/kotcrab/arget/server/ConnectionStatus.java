@@ -43,7 +43,6 @@ public enum ConnectionStatus {
 		default:
 			return super.toString();
 		}
-
 	}
 
 	public boolean isConnectionBroken () {
