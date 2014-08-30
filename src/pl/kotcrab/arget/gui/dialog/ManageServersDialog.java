@@ -89,7 +89,6 @@ public class ManageServersDialog extends ESCClosableDialog {
 				}
 			});
 
-			// TODO add confirmation
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed (ActionEvent e) {
@@ -129,7 +128,7 @@ public class ManageServersDialog extends ESCClosableDialog {
 		bottomPane.add(buttonPanel, BorderLayout.EAST);
 
 		JButton cancelButton = new JButton("Cancel");
-		JButton okButton = new JButton("OK");
+		JButton okButton = new JButton("Save");
 
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(okButton);
@@ -187,6 +186,11 @@ public class ManageServersDialog extends ESCClosableDialog {
 		if (isSomethingSelected() == false) return;
 
 		ServerDescriptor info = list.getSelectedValue();
+
+		int result = JOptionPane.showConfirmDialog(getInstance(), "Are you sure you want to delete '" + info.name + "'?",
+			"Warning", JOptionPane.YES_NO_OPTION);
+
+		if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) return;
 
 		if (info.equals(autoconnectInfo)) {
 			autoconnectInfo = null;
