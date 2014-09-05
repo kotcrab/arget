@@ -38,7 +38,7 @@ import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
 //TODO add txt length check
-public class NotificationView extends JDialog {
+class NotificationView extends JDialog {
 	private NotifcationListener listener;
 	private JLabel iconLabel;
 	private JLabel titleLabel;
