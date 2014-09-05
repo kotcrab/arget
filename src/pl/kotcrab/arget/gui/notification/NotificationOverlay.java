@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui;
+package pl.kotcrab.arget.gui.notification;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,15 +40,20 @@ import javax.swing.Timer;
 
 import pl.kotcrab.arget.util.ThreadUtils;
 
-public class NotificationOverlay extends JDialog {
+class NotificationOverlay extends JDialog {
 	private JFrame owner;
+	private JLabel label;
+
+	private NotificationOverlayLayout layout;
 
 	private int width = 0;
 
-	public NotificationOverlay (JFrame owner) {
+	public NotificationOverlay (JFrame owner, String text) {
 		super(owner);
 		this.owner = owner;
 
+		layout = new NotificationOverlayLayout();
+		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		update();
@@ -57,10 +62,12 @@ public class NotificationOverlay extends JDialog {
 		setFocusableWindowState(false); // stops notification from stealing focus when appearing
 
 		getContentPane().setLayout(new BorderLayout());
-		JPanel panel = new JPanel();
+
+		JPanel panel = new JPanel(layout);
 		panel.setBackground(Color.BLACK);
 		getContentPane().add(panel, BorderLayout.CENTER);
-		JLabel label = new JLabel("Notification");
+
+		label = new JLabel(text);
 		label.setFont(new Font("Verdana", Font.PLAIN, 12));
 		label.setForeground(Color.WHITE);
 		panel.add(label);
@@ -88,17 +95,17 @@ public class NotificationOverlay extends JDialog {
 
 		setVisible(true);
 
-		new Thread(new Runnable() {
+		Thread hider = new Thread(new Runnable() {
 
 			@Override
 			public void run () {
-				ThreadUtils.sleep(5000);
-				slideIn();
 				ThreadUtils.sleep(3000);
 				slideOut();
 			}
 
-		}).start();
+		}, "OverlayHider");
+		hider.setDaemon(true);
+		hider.start();
 
 	}
 
@@ -118,7 +125,7 @@ public class NotificationOverlay extends JDialog {
 		timer.start();
 	}
 
-	private void slideOut () {
+	public void slideOut () {
 		final Timer timer = new Timer(15, null);
 		timer.setRepeats(true);
 		timer.addActionListener(new ActionListener() {
@@ -138,7 +145,8 @@ public class NotificationOverlay extends JDialog {
 		Rectangle c = owner.getContentPane().getBounds();
 		Point loc = new Point(c.x, 0);
 		SwingUtilities.convertPointToScreen(loc, owner.getContentPane());
-
+		
+		layout.setYOffset(23 - width);
 		setBounds(loc.x, loc.y, c.width, width);
 		revalidate();
 	}
