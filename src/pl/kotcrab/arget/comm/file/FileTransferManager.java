@@ -136,7 +136,8 @@ public class FileTransferManager {
 				return true;
 			}
 
-		}, "FileSender");
+		}, "FileTransfer");
+		fileSender.setDaemon(true); //TODO sometimes file transfer may not be properly shutdown
 		fileSender.start();
 	}
 
