@@ -26,10 +26,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import pl.kotcrab.arget.Log;
+
 import com.sun.jna.Native;
 import com.sun.jna.platform.unix.X11;
-
-import pl.kotcrab.arget.Log;
 
 public class DesktopUtils {
 	public static final String OS = System.getProperty("os.name").toLowerCase();

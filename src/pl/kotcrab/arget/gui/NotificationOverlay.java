@@ -77,8 +77,8 @@ public class NotificationOverlay extends JDialog {
 			}
 
 		});
-		
-		//hide when window minimized
+
+		// hide when window minimized
 		owner.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowIconified (WindowEvent e) {
@@ -99,7 +99,6 @@ public class NotificationOverlay extends JDialog {
 			}
 
 		}).start();
-
 
 	}
 

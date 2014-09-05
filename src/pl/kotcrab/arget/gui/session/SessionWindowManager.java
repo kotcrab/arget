@@ -121,7 +121,7 @@ public class SessionWindowManager implements LocalSessionListener {
 
 	private void post (Event event) {
 		App.eventBus.post(event);
-		
+
 	}
 
 	@Override
