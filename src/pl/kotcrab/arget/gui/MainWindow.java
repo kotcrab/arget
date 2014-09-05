@@ -198,6 +198,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				}
 			}, "AutoConnect").start();
 		}
+
+		// NotificationOverlay overlay = new NotificationOverlay(this);
+		// SwingUtils.fadeIn(overlay);
 	}
 
 	@Override
