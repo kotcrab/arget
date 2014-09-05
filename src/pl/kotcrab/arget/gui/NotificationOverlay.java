@@ -1,14 +1,35 @@
+/*******************************************************************************
+    Copyright 2014 Pawel Pastuszak
+ 
+    This file is part of Arget.
+
+    Arget is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Arget is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Arget.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 package pl.kotcrab.arget.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -19,11 +40,6 @@ import javax.swing.Timer;
 
 import pl.kotcrab.arget.util.ThreadUtils;
 
-import com.sun.awt.AWTUtilities;
-
-import java.awt.Font;
-
-//TODO auto hide on window iconififed
 public class NotificationOverlay extends JDialog {
 	private JFrame owner;
 
@@ -36,10 +52,7 @@ public class NotificationOverlay extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		update();
-		//setBounds(0, 0, 200, 200);
-		//AWTUtilities.setWindowOpaque(this, false);
 		setOpacity(0.7f);
-		// setAlwaysOnTop(true);
 		setFocusable(false);
 		setFocusableWindowState(false); // stops notification from stealing focus when appearing
 
@@ -64,11 +77,19 @@ public class NotificationOverlay extends JDialog {
 			}
 
 		});
+		
+		//hide when window minimized
+		owner.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowIconified (WindowEvent e) {
+				dispose();
+			}
+		});
 
 		setVisible(true);
-		
+
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run () {
 				ThreadUtils.sleep(5000);
@@ -78,11 +99,9 @@ public class NotificationOverlay extends JDialog {
 			}
 
 		}).start();
-	}
 
-	// public void setNotificationWidth (int width) {
-	// this.width = width;
-	// }
+
+	}
 
 	public void slideIn () {
 		final Timer timer = new Timer(15, null);
@@ -99,7 +118,6 @@ public class NotificationOverlay extends JDialog {
 
 		timer.start();
 	}
-	
 
 	private void slideOut () {
 		final Timer timer = new Timer(15, null);
@@ -114,7 +132,7 @@ public class NotificationOverlay extends JDialog {
 			}
 		});
 
-		timer.start();		
+		timer.start();
 	}
 
 	private void update () {
