@@ -40,7 +40,8 @@ import javax.swing.Timer;
 
 import pl.kotcrab.arget.util.ThreadUtils;
 
-class NotificationOverlay extends JDialog {
+//TODO dispose or reuse
+public class NotificationOverlay extends JDialog {
 	private JFrame owner;
 	private JLabel label;
 
@@ -103,7 +104,7 @@ class NotificationOverlay extends JDialog {
 				slideOut();
 			}
 
-		}, "OverlayHider");
+		}, "OverlayAutoHide");
 		hider.setDaemon(true);
 		hider.start();
 
