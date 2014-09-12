@@ -90,11 +90,6 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
-//	@Deprecated //TODO remove this method after change to factory
-//	 TextMessage (MsgType type, String text) {
-//		this(type, text, true);
-//	}
-
 	public void setText (String newText) {
 		originalText = newText;
 		processedText = processText(originalText);
