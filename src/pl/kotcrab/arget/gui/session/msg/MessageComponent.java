@@ -35,7 +35,7 @@ public abstract class MessageComponent extends JPanel {
 	protected static Font textFont;
 	protected static Font smallTextFont;
 
-	private int type;
+	private Msg type;
 	private int requestedWidth = 150;
 
 	/** Has this message been read already */
@@ -50,20 +50,20 @@ public abstract class MessageComponent extends JPanel {
 		textFontMetrics = c.getFontMetrics(textFont);
 	}
 
-	public MessageComponent (int type) {
+	public MessageComponent (Msg type) {
 		this.type = type;
 
 		switch (type) {
-		case Msg.LEFT:
+		case LEFT:
 			setBackground(Color.WHITE);
 			break;
-		case Msg.RIGHT:
+		case RIGHT:
 			setBackground(new Color(204, 255, 204)); // green
 			break;
-		case Msg.SYSTEM:
+		case SYSTEM:
 			setBackground(new Color(204, 255, 255)); // blue
 			break;
-		case Msg.ERROR:
+		case ERROR:
 			setBackground(new Color(255, 153, 153)); // red
 			break;
 		default:
@@ -83,7 +83,8 @@ public abstract class MessageComponent extends JPanel {
 		return requestedWidth;
 	}
 
-	public int getSide () {
+	//TODO rename to type
+	public Msg getSide () {
 		return type;
 	}
 
