@@ -33,6 +33,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 //TODO don't have to be static class, change to instance maybe?
+//FIXME wrong config path generation (missing slash)
+//TODO rename to ServerConfig
 public class ServerInfoIO {
 	private static final String TAG = "ServerConfigIO";
 	private static Kryo kryo;

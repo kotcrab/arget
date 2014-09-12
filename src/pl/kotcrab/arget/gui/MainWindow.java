@@ -85,6 +85,7 @@ import com.alee.laf.button.WebToggleButton;
 //TODO add right click menu on text input area
 //TODO add version verification
 //TODO clear server details on disconnect
+//TODO craete createGUI method in every gui class
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
