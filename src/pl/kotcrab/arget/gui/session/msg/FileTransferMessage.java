@@ -42,7 +42,7 @@ import pl.kotcrab.arget.util.FileUitls;
 import com.alee.laf.button.WebButton;
 
 //TODO too long name breaks layout
-//TODO change sapace in status to empty border
+//TODO change space in status to empty border
 public class FileTransferMessage extends MessageComponent {
 	public enum Status {
 		REQUEST_SEND, REQUEST_RECEIVED, INPROGRESS, DONE, CANCELED
