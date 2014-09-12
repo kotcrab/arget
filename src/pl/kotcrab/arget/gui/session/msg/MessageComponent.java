@@ -26,7 +26,6 @@ import java.awt.FontMetrics;
 
 import javax.swing.JPanel;
 
-import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.gui.components.ShadowBorder;
 
 public abstract class MessageComponent extends JPanel {
@@ -64,10 +63,6 @@ public abstract class MessageComponent extends JPanel {
 			break;
 		case ERROR:
 			setBackground(new Color(255, 153, 153)); // red
-			break;
-		default:
-			Log.w("Unknown MessageComponent type! Got: " + type);
-			setBackground(Color.WHITE);
 			break;
 		}
 
