@@ -6,10 +6,29 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import pl.kotcrab.arget.Log;
+import pl.kotcrab.arget.comm.file.FileTransferTask;
+import pl.kotcrab.arget.comm.file.SendFileTask;
 
 public class MessageFactory {
 
-	public TextMessage text (final MsgType type, final String text) {
+	public FileTransferMessage fileTransfer (SendFileTask sendTask) {
+		return fileTransfer(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
+	}
+
+	public FileTransferMessage fileTransfer (final FileTransferTask transferTask, final String fileName, final long fileSize) {
+		final AtomicReference<FileTransferMessage> msg = new AtomicReference<FileTransferMessage>();
+
+		runOnEDT(new Runnable() {
+			@Override
+			public void run () {
+				msg.set(new FileTransferMessage(transferTask, fileName, fileSize));
+			}
+		});
+
+		return msg.get();
+	}
+
+	public TextMessage text (MsgType type, String text) {
 		return text(type, text, true);
 	}
 

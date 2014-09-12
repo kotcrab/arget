@@ -58,12 +58,12 @@ public class FileTransferMessage extends MessageComponent {
 	private WebButton acceptButton;
 	private WebButton cancelButton;
 
-	public FileTransferMessage (SendFileTask sendTask) {
+	FileTransferMessage (SendFileTask sendTask) {
 		this(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
 	}
 
 	/** @wbp.parser.constructor */
-	public FileTransferMessage (FileTransferTask transferTask, String fileName, long fileSize) {
+	FileTransferMessage (FileTransferTask transferTask, String fileName, long fileSize) {
 		super(MsgType.SYSTEM);
 		task = transferTask;
 		taskId = task.getId();

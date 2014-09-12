@@ -263,6 +263,10 @@ public class SessionWindowManager implements LocalSessionListener {
 		this.showWhenSessionCreated = contact;
 	}
 
+	public MessageFactory getMsgFactory () {
+		return factory;
+	}
+
 	public void clear () {
 		panels.clear();
 	}

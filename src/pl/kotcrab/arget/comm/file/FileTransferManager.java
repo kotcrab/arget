@@ -45,6 +45,7 @@ import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.gui.session.msg.FileTransferMessage;
 import pl.kotcrab.arget.gui.session.msg.ImageMessage;
+import pl.kotcrab.arget.gui.session.msg.MessageFactory;
 import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.server.session.LocalSession;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
@@ -59,6 +60,7 @@ public class FileTransferManager {
 
 	private LocalSessionManager sessionManager;
 	private SessionWindowManager windowManager;
+	private MessageFactory msgFactory;
 
 	private boolean running = true;
 
@@ -72,6 +74,8 @@ public class FileTransferManager {
 	public FileTransferManager (LocalSessionManager lSessionManager, SessionWindowManager sWindowManager) {
 		this.sessionManager = lSessionManager;
 		this.windowManager = sWindowManager;
+		
+		msgFactory = windowManager.getMsgFactory();
 
 		receiveTasks = new ArrayList<ReceiveFileTask>();
 		sendTasks = Collections.synchronizedList(new ArrayList<SendFileTask>());
@@ -182,7 +186,7 @@ public class FileTransferManager {
 				}
 			});
 
-			final FileTransferMessage guiMsg = new FileTransferMessage(task, req.fileName, req.fileSize);
+			final FileTransferMessage guiMsg = msgFactory.fileTransfer(task, req.fileName, req.fileSize);
 
 			guiMsg.setListener(new FileTransferMessageListener() {
 
@@ -289,7 +293,7 @@ public class FileTransferManager {
 	}
 
 	private void createGUIMessage (SendFileTask task) {
-		FileTransferMessage guiMsg = new FileTransferMessage(task);
+		FileTransferMessage guiMsg = msgFactory.fileTransfer(task);
 
 		guiMsg.setListener(new FileTransferMessageAdapter() {
 
