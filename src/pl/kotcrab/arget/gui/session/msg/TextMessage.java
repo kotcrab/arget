@@ -38,7 +38,6 @@ import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.components.WrapHTMLEditorKit;
 import pl.kotcrab.arget.util.DesktopUtils;
 
@@ -49,7 +48,7 @@ public class TextMessage extends MessageComponent {
 	private String originalText;
 	private String processedText;
 
-	public TextMessage (Msg type, String text, boolean markAsRead) {
+	public TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
 
 		textPane = new JTextPane();
@@ -91,7 +90,7 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
-	public TextMessage (Msg type, String text) {
+	public TextMessage (MsgType type, String text) {
 		this(type, text, true);
 	}
 

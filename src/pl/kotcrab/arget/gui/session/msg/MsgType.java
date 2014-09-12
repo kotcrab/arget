@@ -17,6 +17,6 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.comm;
+package pl.kotcrab.arget.gui.session.msg;
 
-public enum Msg{LEFT, RIGHT, SYSTEM, ERROR}
+public enum MsgType{LEFT, RIGHT, SYSTEM, ERROR}

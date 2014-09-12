@@ -33,7 +33,6 @@ import javax.swing.JProgressBar;
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.file.FileTransferTask;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Type;
 import pl.kotcrab.arget.comm.file.SendFileTask;
@@ -65,7 +64,7 @@ public class FileTransferMessage extends MessageComponent {
 
 	/** @wbp.parser.constructor */
 	public FileTransferMessage (FileTransferTask transferTask, String fileName, long fileSize) {
-		super(Msg.SYSTEM);
+		super(MsgType.SYSTEM);
 		task = transferTask;
 		taskId = task.getId();
 

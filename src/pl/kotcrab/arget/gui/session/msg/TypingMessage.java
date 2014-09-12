@@ -24,11 +24,10 @@ import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.Msg;
 
 public class TypingMessage extends MessageComponent {
 	public TypingMessage () {
-		super(Msg.LEFT);
+		super(MsgType.LEFT);
 
 		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
 		image.setBorder(new EmptyBorder(3, 1, 0, 0));

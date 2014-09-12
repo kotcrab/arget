@@ -57,7 +57,6 @@ import javax.swing.border.LineBorder;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
@@ -70,6 +69,7 @@ import pl.kotcrab.arget.gui.CenterPanel;
 import pl.kotcrab.arget.gui.ScrollLockEvent;
 import pl.kotcrab.arget.gui.ScrollLockStatusRequestEvent;
 import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.gui.session.msg.TypingMessage;
 import pl.kotcrab.arget.server.ContactInfo;
@@ -290,7 +290,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							addMessage(new TextMessage(Msg.RIGHT, msg, isRemoteCenterPanel()));
+							addMessage(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));
 						}
 					}

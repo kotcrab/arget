@@ -27,7 +27,6 @@ import java.awt.FontMetrics;
 import javax.swing.JPanel;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.components.ShadowBorder;
 
 public abstract class MessageComponent extends JPanel {
@@ -35,7 +34,7 @@ public abstract class MessageComponent extends JPanel {
 	protected static Font textFont;
 	protected static Font smallTextFont;
 
-	private Msg type;
+	private MsgType type;
 	private int requestedWidth = 150;
 
 	/** Has this message been read already */
@@ -50,7 +49,7 @@ public abstract class MessageComponent extends JPanel {
 		textFontMetrics = c.getFontMetrics(textFont);
 	}
 
-	public MessageComponent (Msg type) {
+	public MessageComponent (MsgType type) {
 		this.type = type;
 
 		switch (type) {
@@ -84,7 +83,7 @@ public abstract class MessageComponent extends JPanel {
 	}
 
 	//TODO rename to type
-	public Msg getSide () {
+	public MsgType getSide () {
 		return type;
 	}
 

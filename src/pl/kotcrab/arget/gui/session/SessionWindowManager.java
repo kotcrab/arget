@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
@@ -50,6 +49,7 @@ import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
 import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
@@ -107,7 +107,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			panel.setUUID(id);
 
 		panel.disableInput();
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Creating session..."));
+		panel.addMessage(new TextMessage(MsgType.SYSTEM, "Creating session..."));
 		panel.getContact().status = ContactStatus.CONNECTED_SESSION;
 		post(new UpdateContactsEvent());
 
@@ -129,7 +129,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	@Override
 	public void sessionReady (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Ready"));
+		panel.addMessage(new TextMessage(MsgType.SYSTEM, "Ready"));
 		panel.enableInput();
 	}
 
@@ -138,24 +138,24 @@ public class SessionWindowManager implements LocalSessionListener {
 		SessionPanel panel = getPanelByUUID(ex.id);
 
 		if (ex instanceof SessionCloseNotification)
-			panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
+			panel.addMessage(new TextMessage(MsgType.SYSTEM, "Session closed"));
 		else if (ex instanceof SessionRejectedNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session rejected by remote"));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Session rejected by remote"));
 		else if (ex instanceof SessionCipherInitError)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Remote could not initialize cipher"));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Remote could not initialize cipher"));
 		else if (ex instanceof SessionInvalidIDNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Error. This UUID is already used by server. Please try again"));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Error. This UUID is already used by server. Please try again"));
 		else if (ex instanceof SessionTargetKeyNotFound)
-			panel.addMessage(new TextMessage(Msg.ERROR,
+			panel.addMessage(new TextMessage(MsgType.ERROR,
 				"Server could not found key for this contact (contact not connected or internal error)"));
 		else if (ex instanceof SessionAlreadyExistNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session already exist on server"));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Session already exist on server"));
 		else if (ex instanceof SessionInvalidReciever)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Server said that this client does not belong to this session"));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Server said that this client does not belong to this session"));
 		else if (ex instanceof SessionDoesNotExist)
-			panel.addMessage(new TextMessage(Msg.SYSTEM, "This session does not exist on the server, session closed."));
+			panel.addMessage(new TextMessage(MsgType.SYSTEM, "This session does not exist on the server, session closed."));
 		else
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
+			panel.addMessage(new TextMessage(MsgType.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
 
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
@@ -166,7 +166,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	public void sessionClosed (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
 
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
+		panel.addMessage(new TextMessage(MsgType.SYSTEM, "Session closed"));
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
 		post(new UpdateContactsEvent());
@@ -188,7 +188,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			if (mainWindow.getOptions().notifNewMsg)
 				App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
 
-			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
+			panel.addMessage(new TextMessage(MsgType.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
 

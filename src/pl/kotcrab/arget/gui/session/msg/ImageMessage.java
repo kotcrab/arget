@@ -28,12 +28,11 @@ import javax.swing.JLabel;
 
 import org.imgscalr.Scalr;
 
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.session.ImageDisplayPanel;
 
 public class ImageMessage extends MessageComponent {
 
-	public ImageMessage (Msg type, final BufferedImage image, final String fileName) {
+	public ImageMessage (MsgType type, final BufferedImage image, final String fileName) {
 		super(type);
 
 		JLabel imageLabel = new JLabel();

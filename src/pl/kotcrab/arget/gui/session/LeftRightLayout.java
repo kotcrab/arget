@@ -25,8 +25,8 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
 
 public class LeftRightLayout implements LayoutManager {
 	private int vgap = 2;
@@ -47,11 +47,11 @@ public class LeftRightLayout implements LayoutManager {
 			if (c.isVisible()) {
 				Dimension d = c.getPreferredSize();
 
-				if (c.getSide() == Msg.LEFT)
+				if (c.getSide() == MsgType.LEFT)
 					x = 5;
-				else if (c.getSide() == Msg.RIGHT)
+				else if (c.getSide() == MsgType.RIGHT)
 					x = maxWidth - d.width - 3;
-				else if (c.getSide() == Msg.SYSTEM || c.getSide() == Msg.ERROR) x = (maxWidth - d.width) / 2;
+				else if (c.getSide() == MsgType.SYSTEM || c.getSide() == MsgType.ERROR) x = (maxWidth - d.width) / 2;
 
 				y += vgap + previousHeight;
 
