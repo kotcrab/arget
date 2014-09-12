@@ -47,11 +47,11 @@ public class LeftRightLayout implements LayoutManager {
 			if (c.isVisible()) {
 				Dimension d = c.getPreferredSize();
 
-				if (c.getSide() == MsgType.LEFT)
+				if (c.getType() == MsgType.LEFT)
 					x = 5;
-				else if (c.getSide() == MsgType.RIGHT)
+				else if (c.getType() == MsgType.RIGHT)
 					x = maxWidth - d.width - 3;
-				else if (c.getSide() == MsgType.SYSTEM || c.getSide() == MsgType.ERROR) x = (maxWidth - d.width) / 2;
+				else if (c.getType() == MsgType.SYSTEM || c.getType() == MsgType.ERROR) x = (maxWidth - d.width) / 2;
 
 				y += vgap + previousHeight;
 

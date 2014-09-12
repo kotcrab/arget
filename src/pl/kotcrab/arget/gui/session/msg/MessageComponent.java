@@ -82,8 +82,7 @@ public abstract class MessageComponent extends JPanel {
 		return requestedWidth;
 	}
 
-	//TODO rename to type
-	public MsgType getSide () {
+	public MsgType getType () {
 		return type;
 	}
 
