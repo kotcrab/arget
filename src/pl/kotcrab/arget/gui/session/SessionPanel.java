@@ -69,8 +69,8 @@ import pl.kotcrab.arget.gui.CenterPanel;
 import pl.kotcrab.arget.gui.ScrollLockEvent;
 import pl.kotcrab.arget.gui.ScrollLockStatusRequestEvent;
 import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MessageFactory;
 import pl.kotcrab.arget.gui.session.msg.MsgType;
-import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.gui.session.msg.TypingMessage;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.util.Timer;
@@ -85,6 +85,8 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	private UUID id;
 	private SessionPanelListener listener;
 
+	private MessageFactory factory;
+	
 	private InnerMessagePanel innerPanel;
 	private JTextArea inputTextArea;
 	private JScrollPane pane;
@@ -130,12 +132,15 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		}
 	};
 
+	//TODO create this on EDT!
 	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
 		this.id = sessionId;
 		this.listener = listener;
 
+		factory = new MessageFactory();
+		
 		typingTimer = new Timer("TypingTimer");
 
 		setLayout(new BorderLayout(0, 0));
@@ -156,7 +161,6 @@ public class SessionPanel extends CenterPanel implements EventListener {
 			public void adjustmentValueChanged (AdjustmentEvent e) {
 				Adjustable a = e.getAdjustable();
 
-				System.out.println(structureChanged);
 				if (scrollLockEnabled && structureChanged) {
 					a.setValue(lastScrollBarValue);
 					lastWheelEvent = null;
@@ -290,7 +294,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							addMessage(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
+							addMessage(factory.text(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));
 						}
 					}
@@ -405,6 +409,8 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		refreshPanel();
 	}
 
+	//TODO rename to addMsg
+	//TODO run on EDT
 	public void addMessage (MessageComponent comp) {
 		structureChanged = true;
 		lastScrollBarValue = pane.getVerticalScrollBar().getValue();

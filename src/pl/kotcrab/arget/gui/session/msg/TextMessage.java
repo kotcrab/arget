@@ -48,7 +48,7 @@ public class TextMessage extends MessageComponent {
 	private String originalText;
 	private String processedText;
 
-	public TextMessage (MsgType type, String text, boolean markAsRead) {
+	TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
 
 		textPane = new JTextPane();
@@ -90,9 +90,10 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
-	public TextMessage (MsgType type, String text) {
-		this(type, text, true);
-	}
+//	@Deprecated //TODO remove this method after change to factory
+//	 TextMessage (MsgType type, String text) {
+//		this(type, text, true);
+//	}
 
 	public void setText (String newText) {
 		originalText = newText;
