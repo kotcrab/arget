@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -64,6 +66,7 @@ import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
 import pl.kotcrab.arget.gui.dialog.OptionsDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
+import pl.kotcrab.arget.gui.notification.NotificationOverlay;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
@@ -75,7 +78,10 @@ import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.ThreadUtils;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
+
+import com.alee.laf.button.WebToggleButton;
 
 //TODO event bus
 //TODO add right click menu on text input area
@@ -102,6 +108,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private IconFlasher iconFlasher;
 
 	private boolean painted;
+	private WebToggleButton scrollLockToggle;
 
 	public MainWindow (Profile profile) {
 		if (checkAndSetInstance() == false) return;
@@ -145,7 +152,25 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));
-		getContentPane().add(statusLabel, BorderLayout.SOUTH);
+
+		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
+
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+		scrollLockToggle = new WebToggleButton();
+		scrollLockToggle.setToolTipText("Scroll lock");
+		scrollLockToggle.setRolloverDecoratedOnly(true);
+		scrollLockToggle.setDrawFocus(false);
+		scrollLockToggle.setIcon(App.loadImageIcon("/data/scrolllock.png"));
+		scrollLockToggle.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				postScrollLockUpdate();
+			}
+		});
+
+		bottomPanel.add(statusLabel);
+		bottomPanel.add(scrollLockToggle, BorderLayout.EAST);
 
 		splitPane = new JSplitPane();
 		splitPane.setBorder(new BottomSplitPaneBorder());
@@ -198,6 +223,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				}
 			}, "AutoConnect").start();
 		}
+
 	}
 
 	@Override
@@ -208,6 +234,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			painted = true;
 			splitPane.setDividerLocation(0.25);
 		}
+	}
+
+	private void post (Event event) {
+		App.eventBus.post(event);
 	}
 
 	private void createMenuBars () {
@@ -409,6 +439,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		if (event instanceof MenuEvent) processMenuEvent((MenuEvent)event);
 		if (event instanceof ConnectionStatusEvent) setConnectionStatus((ConnectionStatusEvent)event);
 		if (event instanceof UpdateContactsEvent) updateContacts();
+		if (event instanceof ScrollLockStatusRequestEvent) postScrollLockUpdate();
 
 		if (event instanceof SaveProfileEvent) {
 			ProfileIO.saveProfile(profile);
@@ -500,6 +531,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			Log.err(TAG, "Unknown menu event type: " + event.type);
 			break;
 		}
+	}
+
+	private void postScrollLockUpdate () {
+		post(new ScrollLockEvent(scrollLockToggle.isSelected()));
 	}
 
 	@Override
