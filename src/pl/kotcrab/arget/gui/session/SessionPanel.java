@@ -294,7 +294,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							addMessage(factory.text(MsgType.RIGHT, msg, isRemoteCenterPanel()));
+							addMsg(factory.text(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));
 						}
 					}
@@ -409,9 +409,8 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		refreshPanel();
 	}
 
-	//TODO rename to addMsg
 	//TODO run on EDT
-	public void addMessage (MessageComponent comp) {
+	public void addMsg (MessageComponent comp) {
 		structureChanged = true;
 		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
 
@@ -448,7 +447,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	@Override
 	protected void addImpl (Component comp, Object constraints, int index) {
 		if (comp instanceof MessageComponent)
-			throw new IllegalArgumentException("MessageComponent can't be added here, use addMessage function!");
+			throw new IllegalArgumentException("MessageComponent can't be added here, use addMsg method!");
 
 		super.addImpl(comp, constraints, index);
 	}

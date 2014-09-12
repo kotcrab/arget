@@ -110,7 +110,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			panel.setUUID(id);
 
 		panel.disableInput();
-		panel.addMessage(factory.text(MsgType.SYSTEM, "Creating session..."));
+		panel.addMsg(factory.text(MsgType.SYSTEM, "Creating session..."));
 		panel.getContact().status = ContactStatus.CONNECTED_SESSION;
 		post(new UpdateContactsEvent());
 
@@ -132,7 +132,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	@Override
 	public void sessionReady (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
-		panel.addMessage(factory.text(MsgType.SYSTEM, "Ready"));
+		panel.addMsg(factory.text(MsgType.SYSTEM, "Ready"));
 		panel.enableInput();
 	}
 
@@ -141,24 +141,24 @@ public class SessionWindowManager implements LocalSessionListener {
 		SessionPanel panel = getPanelByUUID(ex.id);
 
 		if (ex instanceof SessionCloseNotification)
-			panel.addMessage(factory.text(MsgType.SYSTEM, "Session closed"));
+			panel.addMsg(factory.text(MsgType.SYSTEM, "Session closed"));
 		else if (ex instanceof SessionRejectedNotification)
-			panel.addMessage(factory.text(MsgType.ERROR, "Session rejected by remote"));
+			panel.addMsg(factory.text(MsgType.ERROR, "Session rejected by remote"));
 		else if (ex instanceof SessionCipherInitError)
-			panel.addMessage(factory.text(MsgType.ERROR, "Remote could not initialize cipher"));
+			panel.addMsg(factory.text(MsgType.ERROR, "Remote could not initialize cipher"));
 		else if (ex instanceof SessionInvalidIDNotification)
-			panel.addMessage(factory.text(MsgType.ERROR, "Error. This UUID is already used by server. Please try again"));
+			panel.addMsg(factory.text(MsgType.ERROR, "Error. This UUID is already used by server. Please try again"));
 		else if (ex instanceof SessionTargetKeyNotFound)
-			panel.addMessage(factory.text(MsgType.ERROR,
+			panel.addMsg(factory.text(MsgType.ERROR,
 				"Server could not found key for this contact (contact not connected or internal error)"));
 		else if (ex instanceof SessionAlreadyExistNotification)
-			panel.addMessage(factory.text(MsgType.ERROR, "Session already exist on server"));
+			panel.addMsg(factory.text(MsgType.ERROR, "Session already exist on server"));
 		else if (ex instanceof SessionInvalidReciever)
-			panel.addMessage(factory.text(MsgType.ERROR, "Server said that this client does not belong to this session"));
+			panel.addMsg(factory.text(MsgType.ERROR, "Server said that this client does not belong to this session"));
 		else if (ex instanceof SessionDoesNotExist)
-			panel.addMessage(factory.text(MsgType.SYSTEM, "This session does not exist on the server, session closed."));
+			panel.addMsg(factory.text(MsgType.SYSTEM, "This session does not exist on the server, session closed."));
 		else
-			panel.addMessage(factory.text(MsgType.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
+			panel.addMsg(factory.text(MsgType.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
 
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
@@ -169,7 +169,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	public void sessionClosed (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
 
-		panel.addMessage(factory.text(MsgType.SYSTEM, "Session closed"));
+		panel.addMsg(factory.text(MsgType.SYSTEM, "Session closed"));
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
 		post(new UpdateContactsEvent());
@@ -191,7 +191,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			if (mainWindow.getOptions().notifNewMsg)
 				App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
 
-			panel.addMessage(factory.text(MsgType.LEFT, msg.msg));
+			panel.addMsg(factory.text(MsgType.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
 
@@ -256,7 +256,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	// TODO depracted na factory use
 	public void addMessage (LocalSession session, MessageComponent comp) {
 		SessionPanel panel = getPanelByUUID(session.id);
-		if (panel != null) panel.addMessage(comp);
+		if (panel != null) panel.addMsg(comp);
 	}
 
 	public void showPanelForContactWhenReady (ContactInfo contact) {
