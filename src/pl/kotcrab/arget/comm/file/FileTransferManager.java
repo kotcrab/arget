@@ -41,11 +41,11 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRe
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Status;
 import pl.kotcrab.arget.gui.MainWindow;
-import pl.kotcrab.arget.gui.session.FileTransferMessage;
 import pl.kotcrab.arget.gui.session.FileTransferMessageAdapter;
 import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
-import pl.kotcrab.arget.gui.session.ImageMessage;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
+import pl.kotcrab.arget.gui.session.msg.FileTransferMessage;
+import pl.kotcrab.arget.gui.session.msg.ImageMessage;
 import pl.kotcrab.arget.server.session.LocalSession;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
 import pl.kotcrab.arget.util.FileUitls;

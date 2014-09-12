@@ -17,37 +17,21 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
+package pl.kotcrab.arget.gui.session.msg;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
-import org.imgscalr.Scalr;
+import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.comm.Msg;
 
-public class ImageMessage extends MessageComponent {
+public class TypingMessage extends MessageComponent {
+	public TypingMessage () {
+		super(Msg.LEFT);
 
-	public ImageMessage (int type, final BufferedImage image, final String fileName) {
-		super(type);
-
-		JLabel imageLabel = new JLabel();
-		add(imageLabel);
-
-		// TODO optimzie for gif, png, jpg
-		BufferedImage thumbnail = Scalr.resize(image, 150);
-		imageLabel.setIcon(new ImageIcon(thumbnail));
-		// imageLabel.setIcon(new ImageIcon(data));
-
-		imageLabel.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked (MouseEvent e) {
-				if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) new ImageDisplayPanel(image, fileName);
-			}
-		});
+		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
+		image.setBorder(new EmptyBorder(3, 1, 0, 0));
+		add(image);
 	}
-
 }

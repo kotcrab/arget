@@ -29,7 +29,7 @@ import javax.swing.border.EmptyBorder;
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.session.SessionPanel;
-import pl.kotcrab.arget.gui.session.TextMessage;
+import pl.kotcrab.arget.gui.session.msg.TextMessage;
 
 public class SessionPanelTest extends JFrame {
 

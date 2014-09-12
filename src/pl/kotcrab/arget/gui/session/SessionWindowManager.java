@@ -49,6 +49,8 @@ import pl.kotcrab.arget.comm.file.FileTransferManager;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
+import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.session.LocalSession;

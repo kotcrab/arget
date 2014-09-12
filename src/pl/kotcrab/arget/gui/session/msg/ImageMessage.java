@@ -17,21 +17,39 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.session.msg;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.border.EmptyBorder;
 
-import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.Msg;
+import org.imgscalr.Scalr;
 
-public class TypingMessage extends MessageComponent {
-	public TypingMessage () {
-		super(Msg.LEFT);
+import pl.kotcrab.arget.gui.session.ImageDisplayPanel;
 
-		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
-		image.setBorder(new EmptyBorder(3, 1, 0, 0));
-		add(image);
+public class ImageMessage extends MessageComponent {
+
+	public ImageMessage (int type, final BufferedImage image, final String fileName) {
+		super(type);
+
+		JLabel imageLabel = new JLabel();
+		add(imageLabel);
+
+		// TODO optimzie for gif, png, jpg
+		BufferedImage thumbnail = Scalr.resize(image, 150);
+		imageLabel.setIcon(new ImageIcon(thumbnail));
+		// imageLabel.setIcon(new ImageIcon(data));
+
+		imageLabel.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked (MouseEvent e) {
+				if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) new ImageDisplayPanel(image, fileName);
+			}
+		});
 	}
+
 }

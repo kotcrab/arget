@@ -26,6 +26,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 
 import pl.kotcrab.arget.comm.Msg;
+import pl.kotcrab.arget.gui.session.msg.MessageComponent;
 
 public class LeftRightLayout implements LayoutManager {
 	private int vgap = 2;
