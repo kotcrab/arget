@@ -54,7 +54,7 @@ public class NotificationOverlay extends JDialog {
 		this.owner = owner;
 
 		layout = new NotificationOverlayLayout();
-		
+
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		update();
@@ -146,7 +146,7 @@ public class NotificationOverlay extends JDialog {
 		Rectangle c = owner.getContentPane().getBounds();
 		Point loc = new Point(c.x, 0);
 		SwingUtilities.convertPointToScreen(loc, owner.getContentPane());
-		
+
 		layout.setYOffset(23 - width);
 		setBounds(loc.x, loc.y, c.width, width);
 		revalidate();

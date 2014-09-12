@@ -66,7 +66,6 @@ import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
 import pl.kotcrab.arget.gui.dialog.OptionsDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
-import pl.kotcrab.arget.gui.notification.NotificationOverlay;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
@@ -78,7 +77,6 @@ import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
-import pl.kotcrab.arget.util.ThreadUtils;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
 import com.alee.laf.button.WebToggleButton;

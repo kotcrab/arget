@@ -52,6 +52,7 @@ public class SessionPanelTest extends JFrame {
 	}
 
 	/** Create the frame. */
+	@SuppressWarnings("deprecation")
 	public SessionPanelTest () {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 700);

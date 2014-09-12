@@ -43,7 +43,6 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.swing.JPanel;
@@ -71,7 +70,6 @@ import pl.kotcrab.arget.gui.CenterPanel;
 import pl.kotcrab.arget.gui.ScrollLockEvent;
 import pl.kotcrab.arget.gui.ScrollLockStatusRequestEvent;
 import pl.kotcrab.arget.server.ContactInfo;
-import pl.kotcrab.arget.util.ThreadUtils;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
@@ -186,24 +184,25 @@ public class SessionPanel extends CenterPanel implements EventListener {
 			}
 		});
 
-// /test code that automatycily sends msg
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run () {
-				ThreadUtils.sleep(3000);
-
-				//for (;;) {
- for (int i = 0; i < 8; i++) {
-	 System.out.println("add");
-					addMessage(new TextMessage(Msg.RIGHT, String.valueOf(new Random().nextFloat()), isRemoteCenterPanel()));
-					// send(new MessageTransfer(id, "HAAHA"));
-// ThreadUtils.sleep(300);
-					ThreadUtils.sleep(700);
-			}
-			}
-		});
-		t.setDaemon(true);
-		t.start();
+// /test code that automatically sends msg
+// remove this after finishing scroll lock
+// Thread t = new Thread(new Runnable() {
+// @Override
+// public void run () {
+// ThreadUtils.sleep(3000);
+//
+// //for (;;) {
+// for (int i = 0; i < 8; i++) {
+// System.out.println("add");
+// addMessage(new TextMessage(Msg.RIGHT, String.valueOf(new Random().nextFloat()), isRemoteCenterPanel()));
+// // send(new MessageTransfer(id, "HAAHA"));
+// // ThreadUtils.sleep(300);
+// ThreadUtils.sleep(700);
+// }
+// }
+// });
+// t.setDaemon(true);
+// t.start();
 
 		pane.addMouseWheelListener(new MouseWheelListener() {
 
