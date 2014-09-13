@@ -26,6 +26,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -33,6 +34,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -86,7 +89,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	private SessionPanelListener listener;
 
 	private MessageFactory msgFactory;
-	
+
 	private InnerMessagePanel innerPanel;
 	private JTextArea inputTextArea;
 	private JScrollPane pane;
@@ -132,7 +135,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		}
 	};
 
-	//TODO create this on EDT!
+	// TODO create this on EDT!
 	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
@@ -140,7 +143,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		this.listener = listener;
 
 		msgFactory = new MessageFactory();
-		
+
 		typingTimer = new Timer("TypingTimer");
 
 		setLayout(new BorderLayout(0, 0));
@@ -168,6 +171,10 @@ public class SessionPanel extends CenterPanel implements EventListener {
 				}
 
 				if (lastWheelEvent != null) {
+					lastScrollBarValue = a.getValue();
+				}
+
+				if (lastDragEvent != null) {
 					lastScrollBarValue = a.getValue();
 				}
 
@@ -392,52 +399,73 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	}
 
 	public void showTyping () {
-		structureChanged = true;
-		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
 
-		innerPanel.add(typingComponent);
-		typingShowed = true;
-		refreshPanel();
+				structureChanged = true;
+				lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+
+				innerPanel.add(typingComponent);
+				typingShowed = true;
+
+				refreshPanel();
+			}
+
+		});
+
+		// refreshPanel();
 	}
 
 	public void hideTyping () {
-		structureChanged = true;
-		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
+				structureChanged = true;
+				lastScrollBarValue = pane.getVerticalScrollBar().getValue();
 
-		innerPanel.remove(typingComponent);
-		typingShowed = false;
-		refreshPanel();
+				innerPanel.remove(typingComponent);
+				typingShowed = false;
+
+				refreshPanel();
+			}
+
+		});
 	}
 
-	//TODO run on EDT
-	public void addMsg (MessageComponent comp) {
-		structureChanged = true;
-		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+	public void addMsg (final MessageComponent comp) {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
+				structureChanged = true;
+				lastScrollBarValue = pane.getVerticalScrollBar().getValue();
 
-		if (typingShowed)
-			innerPanel.add(comp, innerPanel.getComponentCount() - 1);
-		else
-			innerPanel.add(comp);
+				if (typingShowed)
+					innerPanel.add(comp, innerPanel.getComponentCount() - 1);
+				else
+					innerPanel.add(comp);
 
-		refreshPanel();
+				refreshPanel();
+			}
+		});
 
 	}
 
 	public void clear () {
-		structureChanged = true;
-		innerPanel.removeAll();
-		refreshPanel();
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
+				structureChanged = true;
+				innerPanel.removeAll();
+
+				refreshPanel();
+			}
+		});
 	}
 
 	private void refreshPanel () {
-		EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run () {
-				innerPanel.validate();
-				innerPanel.repaint();
-			}
-		});
+		innerPanel.validate();
+		innerPanel.repaint();
 	}
 
 	public ContactInfo getContact () {
@@ -455,7 +483,17 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	public void setRemoteCenterPanel (boolean isCenter) {
 		remoteCenterPanel = isCenter;
 
-		if (remoteCenterPanel) innerPanel.markAllAsRead();
+		EventQueue.invokeLater(new Runnable() {
+
+			@Override
+			public void run () {
+				if (remoteCenterPanel) {
+					innerPanel.markAllAsRead();
+					refreshPanel();
+				}
+			}
+		});
+
 	}
 
 	public boolean isRemoteCenterPanel () {
