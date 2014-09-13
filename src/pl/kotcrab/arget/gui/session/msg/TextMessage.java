@@ -48,6 +48,9 @@ public class TextMessage extends MessageComponent {
 	private String originalText;
 	private String processedText;
 
+	private int textWidth;
+	private int lastTextWidth;
+
 	TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
 
@@ -93,6 +96,10 @@ public class TextMessage extends MessageComponent {
 	public void setText (String newText) {
 		originalText = newText;
 		processedText = processText(originalText);
+
+		textWidth = textFontMetrics.stringWidth(originalText);
+		textWidth -= textWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+
 		setLabelText();
 	}
 
@@ -103,16 +110,17 @@ public class TextMessage extends MessageComponent {
 	}
 
 	private void setLabelText () {
-		int actualTextWidth = textFontMetrics.stringWidth(originalText);
-		actualTextWidth -= actualTextWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+		// TODO can't make new line
 
-		// TODO niemozna zrobic new line
+		if (textWidth != lastTextWidth) {
+			if (textWidth > getRequestedWidth())
+				textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(),
+					processedText));
+			else
+				textPane.setText("<html>" + processedText + "</html>");
 
-		if (actualTextWidth > getRequestedWidth())
-			textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(), processedText));
-		else
-			textPane.setText("<html>" + processedText + "</html>");
-
+			textWidth = lastTextWidth;
+		}
 // TODO font is not set
 		// MutableAttributeSet set = textPane.getInputAttributes();
 		// StyleConstants.setFontFamily(set, "Tahoma");
