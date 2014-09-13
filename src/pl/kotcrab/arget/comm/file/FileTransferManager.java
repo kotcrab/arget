@@ -267,7 +267,7 @@ public class FileTransferManager {
 
 	public void sendFile (LocalSession session, File file) {
 		if (file.isDirectory() || file.exists() == false || file.canRead() == false) {
-			JOptionPane.showMessageDialog(MainWindow.instance, "Invalid file.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(MainWindow.instance, "Invalid file", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
