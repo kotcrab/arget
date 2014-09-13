@@ -1,6 +1,11 @@
-[1.4-beta5]
+[1.5-b1]
+-Changed version numbering scheme
+-Changed configuration directory structure
 -Options
 -Fixed notifications
+-Better checking for X11
+-Notification overlay
+-Bug fixes and code optimization
 
 [1.4-beta4]
 -Fixed X11 icon flasher
