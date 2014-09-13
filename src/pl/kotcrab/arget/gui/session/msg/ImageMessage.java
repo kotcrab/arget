@@ -19,28 +19,34 @@
 
 package pl.kotcrab.arget.gui.session.msg;
 
+import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
 import org.imgscalr.Scalr;
 
 import pl.kotcrab.arget.gui.session.ImageDisplayPanel;
 
 public class ImageMessage extends MessageComponent {
+	private JLabel imageLabel;
 
 	ImageMessage (MsgType type, final BufferedImage image, final String fileName) {
 		super(type);
 
-		JLabel imageLabel = new JLabel();
-		add(imageLabel);
+		setLayout(new BorderLayout());
+		imageLabel = new JLabel();
+		add(imageLabel, BorderLayout.CENTER);
 
-		// TODO optimzie for gif, png, jpg
+		// TODO optimize for gif, png, jpg
+
 		BufferedImage thumbnail = Scalr.resize(image, 150);
 		imageLabel.setIcon(new ImageIcon(thumbnail));
+		imageLabel.setBorder(new EmptyBorder(3, 3, 1, 1));
 
 		imageLabel.addMouseListener(new MouseAdapter() {
 
@@ -50,5 +56,4 @@ public class ImageMessage extends MessageComponent {
 			}
 		});
 	}
-
 }
