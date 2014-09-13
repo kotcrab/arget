@@ -86,6 +86,7 @@ import com.alee.laf.button.WebToggleButton;
 //TODO add version verification
 //TODO clear server details on disconnect
 //TODO craete createGUI method in every gui class
+//TODO when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
