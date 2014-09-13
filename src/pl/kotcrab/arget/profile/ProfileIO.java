@@ -46,7 +46,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 public class ProfileIO {
-	private static final String PROFILE_DIRECTORY_PATH = App.APP_FOLDER + "profiles" + File.separator;
+	private static final int PROFILE_VERSION = App.PROFILE_VERSION;
+	private static final String PROFILE_DIRECTORY_PATH = App.APP_FOLDER + "profiles" + PROFILE_VERSION + File.separator;
 	private static final File PROFILE_DIRECTORY = new File(PROFILE_DIRECTORY_PATH);
 
 	private static Kryo kryo;
