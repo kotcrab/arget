@@ -41,7 +41,6 @@ public class ImageMessage extends MessageComponent {
 		// TODO optimzie for gif, png, jpg
 		BufferedImage thumbnail = Scalr.resize(image, 150);
 		imageLabel.setIcon(new ImageIcon(thumbnail));
-		// imageLabel.setIcon(new ImageIcon(data));
 
 		imageLabel.addMouseListener(new MouseAdapter() {
 
