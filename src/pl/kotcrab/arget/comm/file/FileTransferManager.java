@@ -44,7 +44,6 @@ import pl.kotcrab.arget.gui.session.FileTransferMessageAdapter;
 import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.gui.session.msg.FileTransferMessage;
-import pl.kotcrab.arget.gui.session.msg.ImageMessage;
 import pl.kotcrab.arget.gui.session.msg.MessageFactory;
 import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.server.session.LocalSession;
@@ -101,7 +100,7 @@ public class FileTransferManager {
 							File file = task.getFile();
 
 							if (task.isToMemory())
-								windowManager.addMessage(session, new ImageMessage(MsgType.RIGHT, ImageUitls.read(file), null));
+								windowManager.addMessage(session, msgFactory.image(MsgType.RIGHT, ImageUitls.read(file), null));
 
 							sendFileTransferRequest(task);
 						}
@@ -162,7 +161,7 @@ public class FileTransferManager {
 					// TODO check mimetype, chyba nie potrzebne
 					BufferedImage image = ImageUitls.read(data);
 					if (image != null)
-						windowManager.addMessage(task.getSession(), new ImageMessage(MsgType.LEFT, image, task.getFileName()));
+						windowManager.addMessage(task.getSession(), msgFactory.image(MsgType.LEFT, image, task.getFileName()));
 					else
 						Log.err(TAG, "Received image data but program was unable to build image form it.");
 				}

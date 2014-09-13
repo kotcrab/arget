@@ -48,7 +48,7 @@ public abstract class MessageComponent extends JPanel {
 		textFontMetrics = c.getFontMetrics(textFont);
 	}
 
-	public MessageComponent (MsgType type) {
+	MessageComponent (MsgType type) {
 		this.type = type;
 
 		switch (type) {

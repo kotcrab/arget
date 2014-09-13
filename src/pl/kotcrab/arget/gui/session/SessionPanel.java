@@ -85,7 +85,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 	private UUID id;
 	private SessionPanelListener listener;
 
-	private MessageFactory factory;
+	private MessageFactory msgFactory;
 	
 	private InnerMessagePanel innerPanel;
 	private JTextArea inputTextArea;
@@ -139,7 +139,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		this.id = sessionId;
 		this.listener = listener;
 
-		factory = new MessageFactory();
+		msgFactory = new MessageFactory();
 		
 		typingTimer = new Timer("TypingTimer");
 
@@ -277,7 +277,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 
 		add(inputTextArea, BorderLayout.SOUTH);
 
-		typingComponent = new TypingMessage();
+		typingComponent = msgFactory.typing();
 		inputTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		inputTextArea.setBorder(new LineBorder(new Color(192, 192, 192)));
 		inputTextArea.setLineWrap(true);
@@ -294,7 +294,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							addMsg(factory.text(MsgType.RIGHT, msg, isRemoteCenterPanel()));
+							addMsg(msgFactory.text(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));
 						}
 					}

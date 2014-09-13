@@ -35,7 +35,6 @@ import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.file.FileTransferTask;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Type;
-import pl.kotcrab.arget.comm.file.SendFileTask;
 import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
 import pl.kotcrab.arget.util.FileUitls;
 
@@ -58,11 +57,6 @@ public class FileTransferMessage extends MessageComponent {
 	private WebButton acceptButton;
 	private WebButton cancelButton;
 
-	FileTransferMessage (SendFileTask sendTask) {
-		this(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
-	}
-
-	/** @wbp.parser.constructor */
 	FileTransferMessage (FileTransferTask transferTask, String fileName, long fileSize) {
 		super(MsgType.SYSTEM);
 		task = transferTask;

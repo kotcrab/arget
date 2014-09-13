@@ -2,6 +2,7 @@
 package pl.kotcrab.arget.gui.session.msg;
 
 import java.awt.EventQueue;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -11,6 +12,20 @@ import pl.kotcrab.arget.comm.file.SendFileTask;
 
 public class MessageFactory {
 
+	public ImageMessage image(final MsgType type, final BufferedImage image, final String fileName) {
+		final AtomicReference<ImageMessage> msg = new AtomicReference<ImageMessage>();
+
+		runOnEDT(new Runnable() {
+			@Override
+			public void run () {
+				msg.set(new ImageMessage(type, image, fileName));
+			}
+		});
+
+		return msg.get();
+	}
+
+	
 	public FileTransferMessage fileTransfer (SendFileTask sendTask) {
 		return fileTransfer(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
 	}
@@ -28,6 +43,19 @@ public class MessageFactory {
 		return msg.get();
 	}
 
+	public TypingMessage typing () {
+		final AtomicReference<TypingMessage> msg = new AtomicReference<TypingMessage>();
+
+		runOnEDT(new Runnable() {
+			@Override
+			public void run () {
+				msg.set(new TypingMessage());
+			}
+		});
+
+		return msg.get();
+	}
+	
 	public TextMessage text (MsgType type, String text) {
 		return text(type, text, true);
 	}

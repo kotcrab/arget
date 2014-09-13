@@ -26,7 +26,7 @@ import javax.swing.border.EmptyBorder;
 import pl.kotcrab.arget.App;
 
 public class TypingMessage extends MessageComponent {
-	public TypingMessage () {
+	TypingMessage () {
 		super(MsgType.LEFT);
 
 		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
