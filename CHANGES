@@ -1,3 +1,6 @@
+[1.5.1-b1]
+-Markdown: Change * to ** and _ to __
+
 [1.5-b2]
 -Rename 'File' to 'Arget'
 -Fixed message layout

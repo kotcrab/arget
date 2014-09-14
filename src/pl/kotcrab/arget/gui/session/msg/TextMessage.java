@@ -156,8 +156,8 @@ public class TextMessage extends MessageComponent {
 		}
 
 		String result = builder.toString().replace(" ", "&nbsp;");
-		result = markdownReplace(result, "*", "\\*", "<b>", "</b>");
-		result = markdownReplace(result, "_", "_", "<em>", "</em>");
+		result = markdownReplace(result, "**", "\\*\\*", "<b>", "</b>");
+		result = markdownReplace(result, "__", "__", "<em>", "</em>");
 
 		return result;
 	}
