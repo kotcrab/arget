@@ -20,6 +20,7 @@
 package pl.kotcrab.arget;
 
 import java.awt.EventQueue;
+import java.util.Arrays;
 
 import pl.kotcrab.arget.gui.LoginFrame;
 import pl.kotcrab.arget.profile.ProfileGenerator;
@@ -74,12 +75,6 @@ public class Main {
 			return;
 		}
 
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].startsWith("--")) {
-				System.err.println("Unrecognized option: " + args[i]);
-				return;
-			}
-		}
-
+		System.err.println("Unrecognized command line options: " + Arrays.toString(args));
 	}
 }

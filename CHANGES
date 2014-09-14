@@ -6,6 +6,7 @@
 -Better checking for X11
 -Notification overlay
 -Bug fixes and code optimization
+-Better printing of invalid command line arguments
 
 [1.4-beta4]
 -Fixed X11 icon flasher
