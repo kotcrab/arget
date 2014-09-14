@@ -35,7 +35,7 @@ import pl.kotcrab.arget.gui.session.ImageDisplayPanel;
 public class ImageMessage extends MessageComponent {
 	private JLabel imageLabel;
 
-	ImageMessage (MsgType type, final BufferedImage image, final String fileName) {
+	public ImageMessage (MsgType type, final BufferedImage image, final String fileName) {
 		super(type);
 
 		setLayout(new BorderLayout());

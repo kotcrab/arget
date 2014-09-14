@@ -28,8 +28,8 @@ import javax.swing.border.EmptyBorder;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.gui.session.SessionPanel;
-import pl.kotcrab.arget.gui.session.msg.MessageFactory;
 import pl.kotcrab.arget.gui.session.msg.MsgType;
+import pl.kotcrab.arget.gui.session.msg.TextMessage;
 
 public class SessionPanelTest extends JFrame {
 
@@ -62,30 +62,26 @@ public class SessionPanelTest extends JFrame {
 		contentPane.add(panel);
 		setContentPane(contentPane);
 
-		MessageFactory factory = new MessageFactory();
-
-		panel.addMsg(factory.text(MsgType.LEFT, "Lorem ipsum dolor sit amet"));
-		panel.addMsg(factory.text(MsgType.RIGHT, "Lorem ipsum dolor sit amet"));
-		panel.addMsg(factory.text(MsgType.SYSTEM, "System msg"));
-		panel.addMsg(factory.text(MsgType.ERROR, "System error msg"));
+		panel.addMsg(new TextMessage(MsgType.LEFT, "Lorem ipsum dolor sit amet"));
+		panel.addMsg(new TextMessage(MsgType.RIGHT, "Lorem ipsum dolor sit amet"));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "System msg"));
+		panel.addMsg(new TextMessage(MsgType.ERROR, "System error msg"));
 		// FIXME too long text without spaces break layouts
 		panel
-			.addMsg(factory
-				.text(
+			.addMsg(new TextMessage(
 					MsgType.RIGHT,
 					"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tincidunt, eros id convallis ultricies, nulla mi eleifend velit,"
 						+ " vel placerat ante urna interdum velit. Nunc tincidunt eros ac consectetur varius. Aenean a pretium est, id tincidunt eros."));
 
-		panel.addMsg(factory.text(MsgType.RIGHT, "Linki: https://www.kotcrab.pl/ Formatowanie: *Lorem* _ipsum_"));
-		panel.addMsg(factory.text(MsgType.RIGHT, "Linki: https://www.youtube.com/watch?v=3vI_7os2V_o"));
+		panel.addMsg(new TextMessage(MsgType.RIGHT, "Linki: https://www.kotcrab.pl/ Formatowanie: *Lorem* _ipsum_"));
+		panel.addMsg(new TextMessage(MsgType.RIGHT, "Linki: https://www.youtube.com/watch?v=3vI_7os2V_o"));
 
 		panel
-			.addMsg(factory
-				.text(
+			.addMsg(new TextMessage(
 					MsgType.RIGHT,
 					"Linki: http://mashable.com/2014/08/14/watch-surgery-on-the-oculus-rift-but-maybe-do-it-after-lunch/?utm_cid=mash-com-G+-main-link"));
 
-		panel.addMsg(factory.text(MsgType.LEFT, "Obrazki w okienku rozmowy i przesy�anie plik�w"));
+		panel.addMsg(new TextMessage(MsgType.LEFT, "Obrazki w okienku rozmowy i przesy�anie plik�w"));
 		// panel.addMessage(new ImageMessage(Msg.LEFT, ImageUitls.read(new File("avatar.jpg")), ""));
 
 		// panel.addMessage(new FileTransferMessage(new SendFileTask(null, new File("test.txt"), false)));

@@ -44,7 +44,7 @@ import pl.kotcrab.arget.gui.session.FileTransferMessageAdapter;
 import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.gui.session.msg.FileTransferMessage;
-import pl.kotcrab.arget.gui.session.msg.MessageFactory;
+import pl.kotcrab.arget.gui.session.msg.ImageMessage;
 import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.server.session.LocalSession;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
@@ -59,7 +59,6 @@ public class FileTransferManager {
 
 	private LocalSessionManager sessionManager;
 	private SessionWindowManager windowManager;
-	private MessageFactory msgFactory;
 
 	private boolean running = true;
 
@@ -74,8 +73,6 @@ public class FileTransferManager {
 		this.sessionManager = lSessionManager;
 		this.windowManager = sWindowManager;
 		
-		msgFactory = windowManager.getMsgFactory();
-
 		receiveTasks = new ArrayList<ReceiveFileTask>();
 		sendTasks = Collections.synchronizedList(new ArrayList<SendFileTask>());
 		sendTasksToRemove = new ArrayList<SendFileTask>();
@@ -100,7 +97,7 @@ public class FileTransferManager {
 							File file = task.getFile();
 
 							if (task.isToMemory())
-								windowManager.addMessage(session, msgFactory.image(MsgType.RIGHT, ImageUitls.read(file), null));
+								windowManager.addMessage(session, new ImageMessage(MsgType.RIGHT, ImageUitls.read(file), null));
 
 							sendFileTransferRequest(task);
 						}
@@ -161,7 +158,7 @@ public class FileTransferManager {
 					// TODO check mimetype, chyba nie potrzebne
 					BufferedImage image = ImageUitls.read(data);
 					if (image != null)
-						windowManager.addMessage(task.getSession(), msgFactory.image(MsgType.LEFT, image, task.getFileName()));
+						windowManager.addMessage(task.getSession(), new ImageMessage(MsgType.LEFT, image, task.getFileName()));
 					else
 						Log.err(TAG, "Received image data but program was unable to build image form it.");
 				}
@@ -185,7 +182,7 @@ public class FileTransferManager {
 				}
 			});
 
-			final FileTransferMessage guiMsg = msgFactory.fileTransfer(task, req.fileName, req.fileSize);
+			final FileTransferMessage guiMsg = new FileTransferMessage(task, req.fileName, req.fileSize);
 
 			guiMsg.setListener(new FileTransferMessageListener() {
 
@@ -292,7 +289,7 @@ public class FileTransferManager {
 	}
 
 	private void createGUIMessage (SendFileTask task) {
-		FileTransferMessage guiMsg = msgFactory.fileTransfer(task);
+		FileTransferMessage guiMsg = new FileTransferMessage(task);
 
 		guiMsg.setListener(new FileTransferMessageAdapter() {
 

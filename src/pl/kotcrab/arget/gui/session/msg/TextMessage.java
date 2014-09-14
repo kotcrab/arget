@@ -51,7 +51,7 @@ public class TextMessage extends MessageComponent {
 	private int realTextWidth;
 	private int lastSetWidth;
 
-	TextMessage (MsgType type, String text, boolean markAsRead) {
+	public TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
 
 		textPane = new JTextPane();
@@ -93,13 +93,17 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
+	public TextMessage (MsgType type, String text) {
+		this(type, text, true);
+	}
+
 	private void setText (String newText) {
 		originalText = newText;
 		processedText = processText(originalText);
 
 		realTextWidth = textFontMetrics.stringWidth(originalText);
 		realTextWidth -= realTextWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
-		
+
 		lastSetWidth = getRequestedWidth();
 
 		setLabelText();
@@ -122,7 +126,7 @@ public class TextMessage extends MessageComponent {
 			else
 				textPane.setText("<html>" + processedText + "</html>");
 
-			 lastSetWidth = getRequestedWidth();
+			lastSetWidth = getRequestedWidth();
 		}
 // TODO font is not set
 		// MutableAttributeSet set = textPane.getInputAttributes();
