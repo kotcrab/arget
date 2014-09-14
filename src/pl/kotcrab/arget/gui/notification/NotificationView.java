@@ -38,11 +38,12 @@ import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
 //TODO add txt length check
-public class NotificationView extends JDialog {
+class NotificationView extends JDialog {
 	private NotifcationListener listener;
 	private JLabel iconLabel;
 	private JLabel titleLabel;
 	private JLabel textLabel;
+	private int timeSec;
 
 	public NotificationView (NotifcationListener listener) {
 		this.listener = listener;
@@ -98,14 +99,14 @@ public class NotificationView extends JDialog {
 				listener.refrshNotifcations();
 				dispose();
 			}
-		}, 3000);
+		}, timeSec * 1000);
 	}
 
-	public void setData (Icon image, String title, String text) {
+	public void setData (Icon image, String title, String text, int timeSec) {
 		iconLabel.setIcon(image);
 		titleLabel.setText(title);
 		textLabel.setText("<html>" + text + "</html>");
-
+		this.timeSec = timeSec;
 	}
 
 }

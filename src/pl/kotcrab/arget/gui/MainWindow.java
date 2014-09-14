@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -45,11 +47,13 @@ import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.Settings;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
+import pl.kotcrab.arget.event.ConnectionStatusEvent;
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.event.MenuEvent;
 import pl.kotcrab.arget.event.MenuEventType;
 import pl.kotcrab.arget.event.SaveProfileEvent;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.components.BottomSplitPaneBorder;
 import pl.kotcrab.arget.gui.components.MenuItem;
 import pl.kotcrab.arget.gui.components.ServerMenuItem;
@@ -60,11 +64,12 @@ import pl.kotcrab.arget.gui.dialog.CreateServerDialogFinished;
 import pl.kotcrab.arget.gui.dialog.CreateServerInfoDialog;
 import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
+import pl.kotcrab.arget.gui.dialog.OptionsDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
+import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
@@ -74,10 +79,14 @@ import pl.kotcrab.arget.util.SoundUtils;
 import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
+import com.alee.laf.button.WebToggleButton;
+
 //TODO event bus
 //TODO add right click menu on text input area
 //TODO add version verification
 //TODO clear server details on disconnect
+//TODO craete createGUI method in every gui class
+//TODO when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
@@ -99,6 +108,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private IconFlasher iconFlasher;
 
 	private boolean painted;
+	private WebToggleButton scrollLockToggle;
 
 	public MainWindow (Profile profile) {
 		if (checkAndSetInstance() == false) return;
@@ -106,7 +116,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		this.profile = profile;
 
 		App.eventBus.register(this);
-		App.getNotificationService().setControler(this);
+		App.notificationService.setControler(this);
 
 		createAndShowGUI();
 
@@ -129,7 +139,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setBounds(100, 100, 800, 700);
 		setMinimumSize(new Dimension(500, 250));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setIconImage(App.loadImage("/data/icon.png"));
+		setIconImage(App.loadImage("/data/icon/icon.png"));
 
 		sessionWindowManager = new SessionWindowManager(this);
 
@@ -142,8 +152,25 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));
-		setConnectionStatus(ConnectionStatus.DISCONNECTED);
-		getContentPane().add(statusLabel, BorderLayout.SOUTH);
+
+		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
+
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+		scrollLockToggle = new WebToggleButton();
+		scrollLockToggle.setToolTipText("Scroll lock");
+		scrollLockToggle.setRolloverDecoratedOnly(true);
+		scrollLockToggle.setDrawFocus(false);
+		scrollLockToggle.setIcon(App.loadImageIcon("/data/scrolllock.png"));
+		scrollLockToggle.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				postScrollLockUpdate();
+			}
+		});
+
+		bottomPanel.add(statusLabel);
+		bottomPanel.add(scrollLockToggle, BorderLayout.EAST);
 
 		splitPane = new JSplitPane();
 		splitPane.setBorder(new BottomSplitPaneBorder());
@@ -160,7 +187,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(contactsPanel, BorderLayout.CENTER);
 		leftPanel.add(errorStatusPanel, BorderLayout.SOUTH);
-		// splitPane.setLeftComponent(contactsPanel);
+
 		splitPane.setLeftComponent(leftPanel);
 		splitPane.setRightComponent(null);
 		setCenterScreenTo(homePanel);
@@ -182,6 +209,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		});
 
+		// manually use event to set initial state of gui
+		setConnectionStatus(new ConnectionStatusEvent(ConnectionStatus.DISCONNECTED));
+
 		setVisible(true);
 
 		if (profile.autoconnectInfo != null) {
@@ -191,8 +221,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				public void run () {
 					connectToServer(profile.autoconnectInfo);
 				}
-			}).start();
+			}, "AutoConnect").start();
 		}
+
 	}
 
 	@Override
@@ -205,40 +236,46 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		}
 	}
 
+	private void post (Event event) {
+		App.eventBus.post(event);
+	}
+
 	private void createMenuBars () {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorder(new EmptyBorder(0, 0, 0, 0));
-		getContentPane().add(menuBar, BorderLayout.NORTH);
+		setJMenuBar(menuBar);
 
-		JMenu fileMenu = new JMenu("File");
+		JMenu argetMenu = new JMenu("Arget");
 		serversMenu = new JMenu("Servers");
 		JMenu contactsMenu = new JMenu("Contacts");
 		JMenu viewMenu = new JMenu("View");
 		JMenu helpMenu = new JMenu("Help");
 
-		menuBar.add(fileMenu);
+		menuBar.add(argetMenu);
 		menuBar.add(serversMenu);
 		menuBar.add(contactsMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 
-		fileMenu.add(new MenuItem("Logout", MenuEventType.FILE_LOGOUT));
-		fileMenu.add(new MenuItem("Exit", MenuEventType.FILE_EXIT));
+		argetMenu.add(new MenuItem("Options...", MenuEventType.ARGET_EDIT_OPTIONS));
+		argetMenu.add(new JSeparator());
+		argetMenu.add(new MenuItem("Logout", MenuEventType.ARGET_LOGOUT));
+		argetMenu.add(new MenuItem("Exit", MenuEventType.ARGET_EXIT));
 
-		serversMenu.add(new MenuItem("Add Server", MenuEventType.SERVERS_ADD));
-		serversMenu.add(new MenuItem("Manage Servers", MenuEventType.SERVERS_MANAGE));
+		serversMenu.add(new MenuItem("Add Server...", MenuEventType.SERVERS_ADD));
+		serversMenu.add(new MenuItem("Manage Servers...", MenuEventType.SERVERS_MANAGE));
 		serversMenu.add(new MenuItem("Disconnect", MenuEventType.SERVERS_DISCONNECT));
 		serversMenu.add(new JSeparator());
 
 		viewMenu.add(new MenuItem("Show Home Screen", MenuEventType.VIEW_SHOW_HOME));
 		viewMenu.add(new MenuItem("Show Log", MenuEventType.VIEW_SHOW_LOG));
 
-		contactsMenu.add(new MenuItem("Show My Public Key", MenuEventType.CONTACTS_SHOW_PUBLIC_KEY));
-		contactsMenu.add(new MenuItem("Add Contact", MenuEventType.CONTACTS_ADD));
+		contactsMenu.add(new MenuItem("Show My Public Key...", MenuEventType.CONTACTS_SHOW_PUBLIC_KEY));
+		contactsMenu.add(new MenuItem("Add Contact...", MenuEventType.CONTACTS_ADD));
 		contactsMenu.add(new JSeparator());
 		contactsMenu.add(new MenuItem("Refresh list", MenuEventType.CONTACTS_REFRESH));
 
-		helpMenu.add(new MenuItem("About", MenuEventType.HELP_ABOUT));
+		helpMenu.add(new MenuItem("About Arget", MenuEventType.HELP_ABOUT));
 
 		addServersFromProfile();
 	}
@@ -262,66 +299,15 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	}
 
-	@Override
-	public void setConnectionStatus (ConnectionStatus status) {
-		setConnectionStatus(status, null);
-	}
-
-	@Override
-	public void setConnectionStatus (ConnectionStatus status, String msg) {
-		String textToSet = null;
-
-		switch (status) {
-		case CONNECTED:
-			textToSet = "Connected";
-			break;
-		case CONNECTING:
-			textToSet = "Connecting...";
-			break;
-		case DISCONNECTED:
-			// post(new ShowNotificationEvent(5, "Offline", "Disconnected"));
-			textToSet = "Disconnected";
-			client = null;
-			resetContacts();
-			break;
-		case ERROR:
-			textToSet = "Error";
-			client = null;
-			resetContacts();
-			break;
-		case TIMEDOUT:
-			post(new ShowNotificationEvent(5, "Disconnected", "Connection timed out"));
-			textToSet = "Connection timed out";
-			client = null;
-			resetContacts();
-			break;
-		case SERVER_FULL:
-			textToSet = "Server is full";
-			client = null;
-			resetContacts();
-			break;
-		case SERVER_SHUTDOWN:
-			post(new ShowNotificationEvent(5, "Disconnected", "Server shutdown"));
-			textToSet = "Server shutdown";
-			client = null;
-			resetContacts();
-			break;
-		case KICKED:
-			post(new ShowNotificationEvent(5, "Disconnected", "Kicked from server"));
-			textToSet = "Kicked from server";
-			client = null;
-			resetContacts();
-			break;
-		default:
-			break;
-		}
-
-		if (msg != null) textToSet += ": " + msg;
+	public void setConnectionStatus (ConnectionStatusEvent e) {
+		String textToSet = e.status.toPrettyString();
+		if (e.msg != null) textToSet += ": " + e.msg;
 		statusLabel.setText(textToSet);
-	}
 
-	private void post (Event event) {
-		App.eventBus.post(event);
+		if (e.status.isConnectionBroken()) {
+			client = null;
+			resetContacts();
+		}
 	}
 
 	@Override
@@ -358,11 +344,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		}
 	}
 
-	@Override
-	public void updateContacts () {
-		performContactsUpdate();
-	}
-
 	// TODO move to contacts table
 	private void resetContacts () {
 		for (ContactInfo c : profile.contacts)
@@ -371,7 +352,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		updateContacts();
 	}
 
-	private void performContactsUpdate () {
+	private void updateContacts () {
 		if (client != null) {
 			client.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
 			contactsPanel.updateContactsTable();
@@ -424,10 +405,13 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	public void connectToServer (ServerDescriptor info) {
 		if (client == null) {
 			client = new ArgetClient(info, profile, instance, sessionWindowManager);
+
+			ArgetClient clientRef = client; // client may be changed by set to null by some event
+
 			sessionWindowManager.setLocalSessionManager(client.getLocalSessionManager());
 
-			if (client.isSuccessfullyInitialized() == false) {
-				client.requestDisconnect();
+			if (clientRef.isSuccessfullyInitialized() == false) {
+				clientRef.requestDisconnect();
 				client = null;
 			}
 		} else
@@ -440,7 +424,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	public void starFlasherAndSoundIfNeeded () {
 		if (isFocused() == false) {
 			iconFlasher.flashIcon();
-			SoundUtils.playSound("/data/notification.wav");
+
+			if (profile.options.mainPlaySoundNewMsg) SoundUtils.playSound("/data/notification.wav");
 		}
 	}
 
@@ -452,6 +437,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	@Override
 	public void onEvent (Event event) {
 		if (event instanceof MenuEvent) processMenuEvent((MenuEvent)event);
+		if (event instanceof ConnectionStatusEvent) setConnectionStatus((ConnectionStatusEvent)event);
+		if (event instanceof UpdateContactsEvent) updateContacts();
+		if (event instanceof ScrollLockStatusRequestEvent) postScrollLockUpdate();
 
 		if (event instanceof SaveProfileEvent) {
 			ProfileIO.saveProfile(profile);
@@ -461,7 +449,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	private void processMenuEvent (MenuEvent event) {
 		switch (event.type) {
-		case FILE_LOGOUT:
+		case ARGET_EDIT_OPTIONS:
+			new OptionsDialog(this, profile);
+			break;
+		case ARGET_LOGOUT:
 			Settings.resetAutoLogin();
 			dispose();
 
@@ -472,7 +463,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				}
 			});
 			break;
-		case FILE_EXIT:
+		case ARGET_EXIT:
 			dispose();
 			break;
 
@@ -514,7 +505,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				public void finished (ContactInfo contact) {
 					profile.contacts.add(contact);
 					ProfileIO.saveProfile(profile);
-					performContactsUpdate();
+					updateContacts();
 				}
 			});
 			break;
@@ -536,16 +527,24 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		case HELP_ABOUT:
 			new AboutDialog(instance);
 			break;
-
 		default:
 			Log.err(TAG, "Unknown menu event type: " + event.type);
 			break;
 		}
 	}
 
+	private void postScrollLockUpdate () {
+		post(new ScrollLockEvent(scrollLockToggle.isSelected()));
+	}
+
 	@Override
 	public boolean shouldDisplayNotification () {
 		return !isFocused();
+	}
+
+	@Override
+	public ProfileOptions getOptions () {
+		return profile.options;
 	}
 
 }

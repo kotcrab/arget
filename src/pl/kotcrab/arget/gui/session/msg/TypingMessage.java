@@ -17,17 +17,20 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.event;
+package pl.kotcrab.arget.gui.session.msg;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
-	}
+import pl.kotcrab.arget.App;
 
-	@Override
-	public boolean isExectueOnEDT () {
-		return true;
+public class TypingMessage extends MessageComponent {
+	public TypingMessage () {
+		super(MsgType.LEFT);
+
+		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
+		image.setBorder(new EmptyBorder(3, 1, 0, 0));
+		add(image);
 	}
 }

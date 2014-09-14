@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionAlreadyExistNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionCipherInitError;
@@ -46,8 +45,12 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRequest;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferManager;
+import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
+import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
+import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.session.LocalSession;
@@ -68,6 +71,7 @@ public class SessionWindowManager implements LocalSessionListener {
 
 	public SessionWindowManager (MainWindowCallback mainWindowCallback) {
 		this.mainWindow = mainWindowCallback;
+
 		panels = new ArrayList<SessionPanel>();
 	}
 
@@ -104,9 +108,9 @@ public class SessionWindowManager implements LocalSessionListener {
 			panel.setUUID(id);
 
 		panel.disableInput();
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Creating session..."));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Creating session..."));
 		panel.getContact().status = ContactStatus.CONNECTED_SESSION;
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 
 		if (panel.getContact() == showWhenSessionCreated) {
 			mainWindow.setCenterScreenTo(panel);
@@ -118,10 +122,15 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (panel != mainWindow.getCenterScreen()) panel.setRemoteCenterPanel(true);
 	}
 
+	private void post (Event event) {
+		App.eventBus.post(event);
+
+	}
+
 	@Override
 	public void sessionReady (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Ready"));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Ready"));
 		panel.enableInput();
 	}
 
@@ -130,38 +139,38 @@ public class SessionWindowManager implements LocalSessionListener {
 		SessionPanel panel = getPanelByUUID(ex.id);
 
 		if (ex instanceof SessionCloseNotification)
-			panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
+			panel.addMsg(new TextMessage(MsgType.SYSTEM, "Session closed"));
 		else if (ex instanceof SessionRejectedNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session rejected by remote"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Session rejected by remote"));
 		else if (ex instanceof SessionCipherInitError)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Remote could not initialize cipher"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Remote could not initialize cipher"));
 		else if (ex instanceof SessionInvalidIDNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Error. This UUID is already used by server. Please try again"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. This UUID is already used by server. Please try again"));
 		else if (ex instanceof SessionTargetKeyNotFound)
-			panel.addMessage(new TextMessage(Msg.ERROR,
+			panel.addMsg(new TextMessage(MsgType.ERROR,
 				"Server could not found key for this contact (contact not connected or internal error)"));
 		else if (ex instanceof SessionAlreadyExistNotification)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session already exist on server"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Session already exist on server"));
 		else if (ex instanceof SessionInvalidReciever)
-			panel.addMessage(new TextMessage(Msg.ERROR, "Server said that this client does not belong to this session"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Server said that this client does not belong to this session"));
 		else if (ex instanceof SessionDoesNotExist)
-			panel.addMessage(new TextMessage(Msg.SYSTEM, "This session does not exist on the server, session closed."));
+			panel.addMsg(new TextMessage(MsgType.SYSTEM, "This session does not exist on the server, session closed."));
 		else
-			panel.addMessage(new TextMessage(Msg.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
 
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 	}
 
 	@Override
 	public void sessionClosed (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
 
-		panel.addMessage(new TextMessage(Msg.SYSTEM, "Session closed"));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Session closed"));
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
-		mainWindow.updateContacts();
+		post(new UpdateContactsEvent());
 	}
 
 	@Override
@@ -177,8 +186,10 @@ public class SessionWindowManager implements LocalSessionListener {
 			else
 				msgNotif = msg.msg;
 
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, msgNotif));
-			panel.addMessage(new TextMessage(Msg.LEFT, msg.msg));
+			if (mainWindow.getOptions().notifNewMsg)
+				App.notificationService.showMessageNotification(panel.getContact().name, msgNotif);
+
+			panel.addMsg(new TextMessage(MsgType.LEFT, msg.msg));
 			notificationIfNotMainScreen(panel);
 		}
 
@@ -187,13 +198,13 @@ public class SessionWindowManager implements LocalSessionListener {
 		if (ex instanceof RemotePanelShowNotification) panel.setRemoteCenterPanel(true);
 		if (ex instanceof RemotePanelHideNotification) panel.setRemoteCenterPanel(false);
 
-		if (ex instanceof FileTransferToMemoryRequest)
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "Image transfer in progress..."));
+		if (mainWindow.getOptions().notifImageFileTrasnfer && ex instanceof FileTransferToMemoryRequest)
+			App.notificationService.showMessageNotification(panel.getContact().name, "Image transfer in progress...");
 
-		if (ex instanceof FileTransferToFileRequest) {
+		if (mainWindow.getOptions().notifFileTrasnfer && ex instanceof FileTransferToFileRequest) {
 			FileTransferRequest req = (FileTransferRequest)ex;
-			App.eventBus.post(new ShowNotificationEvent(panel.getContact().name, "File transfer request: " + req.fileName
-				+ ", size: " + FileUitls.readableFileSize(req.fileSize)));
+			App.notificationService.showMessageNotification(panel.getContact().name, "File transfer request: " + req.fileName
+				+ ", size: " + FileUitls.readableFileSize(req.fileSize));
 		}
 
 		if (ex instanceof FileTransferExchange)
@@ -204,7 +215,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		// if current panel is not panel that received data
 		if (panel != mainWindow.getCenterScreen()) {
 			panel.getContact().unreadMessages = true;
-			mainWindow.updateContacts();
+			post(new UpdateContactsEvent());
 		}
 
 		mainWindow.starFlasherAndSoundIfNeeded();
@@ -214,7 +225,7 @@ public class SessionWindowManager implements LocalSessionListener {
 		for (SessionPanel panel : panels) {
 			if (panel.getContact() == contact) {
 				contact.unreadMessages = false;
-				mainWindow.updateContacts();
+				post(new UpdateContactsEvent());
 				mainWindow.setCenterScreenTo(panel);
 				return true;
 			}
@@ -239,9 +250,11 @@ public class SessionWindowManager implements LocalSessionListener {
 		return null;
 	}
 
+	// TODO reanme to addMsg
+	// TODO depracted na factory use
 	public void addMessage (LocalSession session, MessageComponent comp) {
 		SessionPanel panel = getPanelByUUID(session.id);
-		if (panel != null) panel.addMessage(comp);
+		if (panel != null) panel.addMsg(comp);
 	}
 
 	public void showPanelForContactWhenReady (ContactInfo contact) {

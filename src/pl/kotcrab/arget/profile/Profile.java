@@ -36,15 +36,21 @@ public class Profile {
 
 	public transient String fileName;
 	public transient File file;
-	public transient SecretKeySpec profileKeySpec;
+
+	transient SecretKeySpec profileKeySpec; // key-spec is only available from within this package
 
 	public ArrayList<ContactInfo> contacts;
 	public ArrayList<ServerDescriptor> servers;
 
-	// OPTIONS
-	public boolean playSound;
+	public ProfileOptions options;
+
 	public ServerDescriptor autoconnectInfo;
 	public Rectangle mainWindowBounds;
+
+	public Profile () { // no-arg constructor for kryo
+		// for backward compatibility
+		if (options == null) options = new ProfileOptions();
+	}
 
 	public void init (File file, SecretKeySpec keySpec) {
 		if (rsa == null) {
@@ -64,7 +70,8 @@ public class Profile {
 
 		keyset = new RSAKeySet(rsa.getPublicKeySpec(), rsa.getPrivateKeySpec());
 
-		playSound = true;
+		options = new ProfileOptions();
+
 		autoconnectInfo = null;
 		mainWindowBounds = null;
 

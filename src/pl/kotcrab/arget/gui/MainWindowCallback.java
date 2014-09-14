@@ -22,19 +22,13 @@ package pl.kotcrab.arget.gui;
 import java.awt.Component;
 
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
-import pl.kotcrab.arget.server.ConnectionStatus;
+import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ServerDescriptor;
 
 //TODO sort this maybe?
 public interface MainWindowCallback {
-	public void setConnectionStatus (ConnectionStatus status);
-
-	public void setConnectionStatus (ConnectionStatus status, String msg);
-
 	public void startChat (ContactInfo contact);
-
-	public void updateContacts ();
 
 	public boolean isKeyInContacts (String key);
 
@@ -49,4 +43,6 @@ public interface MainWindowCallback {
 	public void connectToServer (ServerDescriptor info);
 
 	public void setServerInfo (ServerInfoTransfer info);
+
+	public ProfileOptions getOptions ();
 }

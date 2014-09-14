@@ -17,17 +17,8 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.event;
+package pl.kotcrab.arget;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
-
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
-	}
-
-	@Override
-	public boolean isExectueOnEDT () {
-		return true;
-	}
+//TODO start using this with DocumentFieldsChangeListener
+public class FieldVerifcationException extends Exception {
 }

@@ -33,16 +33,15 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 //TODO don't have to be static class, change to instance maybe?
+//TODO rename to ServerConfig
 public class ServerInfoIO {
+	private static final int SERVER_CONFIG_VERSION = App.SERVER_CONFIG_VERSION;
 	private static final String TAG = "ServerConfigIO";
+
 	private static Kryo kryo;
 
-	private static final String SERVERS_DIRECTORY_PATH = App.APP_FOLDER + "server" + File.separator;
+	private static final String SERVERS_DIRECTORY_PATH = App.APP_FOLDER + "servers" + SERVER_CONFIG_VERSION + File.separator;
 	private static final File SERVERS_DIRECTORY = new File(SERVERS_DIRECTORY_PATH);
-
-	public static File getServersInfoDirectory () {
-		return SERVERS_DIRECTORY;
-	}
 
 	public static void init () {
 		SERVERS_DIRECTORY.mkdirs();
@@ -82,5 +81,9 @@ public class ServerInfoIO {
 
 		System.exit(-1);
 		return null;
+	}
+
+	public static ServerInfo loadInfoByName (String infoFileName) {
+		return loadInfo(new File(SERVERS_DIRECTORY_PATH + infoFileName));
 	}
 }

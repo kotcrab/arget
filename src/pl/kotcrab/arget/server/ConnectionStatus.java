@@ -20,5 +20,45 @@
 package pl.kotcrab.arget.server;
 
 public enum ConnectionStatus {
-	CONNECTING, CONNECTED, DISCONNECTED, ERROR, TIMEDOUT, SERVER_FULL, SERVER_SHUTDOWN, KICKED
-};
+	CONNECTING, CONNECTED, DISCONNECTED, ERROR, TIMEDOUT, SERVER_FULL, SERVER_SHUTDOWN, KICKED;
+
+	public String toPrettyString () {
+		switch (this) {
+		case CONNECTED:
+			return "Connected";
+		case CONNECTING:
+			return "Connecting...";
+		case DISCONNECTED:
+			return "Disconnected";
+		case ERROR:
+			return "Error";
+		case TIMEDOUT:
+			return "Connection timed out";
+		case SERVER_FULL:
+			return "Server is full";
+		case SERVER_SHUTDOWN:
+			return "Server shutdown";
+		case KICKED:
+			return "Kicked from server";
+		default:
+			return super.toString();
+		}
+	}
+
+	public boolean isConnectionBroken () {
+		switch (this) {
+		case CONNECTED:
+		case CONNECTING:
+			return false;
+		case DISCONNECTED:
+		case ERROR:
+		case TIMEDOUT:
+		case SERVER_FULL:
+		case SERVER_SHUTDOWN:
+		case KICKED:
+			return true;
+		default:
+			throw new IllegalStateException("Unknown ConnectionStatus, cannot tell if it's broken or not.");
+		}
+	}
+}

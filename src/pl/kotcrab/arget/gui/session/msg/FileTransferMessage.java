@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.session.msg;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -33,16 +33,16 @@ import javax.swing.JProgressBar;
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.file.FileTransferTask;
-import pl.kotcrab.arget.comm.file.FileTransferTask.Type;
 import pl.kotcrab.arget.comm.file.SendFileTask;
+import pl.kotcrab.arget.comm.file.FileTransferTask.Type;
+import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
 import pl.kotcrab.arget.util.FileUitls;
 
 import com.alee.laf.button.WebButton;
 
 //TODO too long name breaks layout
-//TODO change sapace in status to empty border
+//TODO change space in status to empty border
 public class FileTransferMessage extends MessageComponent {
 	public enum Status {
 		REQUEST_SEND, REQUEST_RECEIVED, INPROGRESS, DONE, CANCELED
@@ -58,13 +58,8 @@ public class FileTransferMessage extends MessageComponent {
 	private WebButton acceptButton;
 	private WebButton cancelButton;
 
-	public FileTransferMessage (SendFileTask sendTask) {
-		this(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
-	}
-
-	/** @wbp.parser.constructor */
 	public FileTransferMessage (FileTransferTask transferTask, String fileName, long fileSize) {
-		super(Msg.SYSTEM);
+		super(MsgType.SYSTEM);
 		task = transferTask;
 		taskId = task.getId();
 
@@ -111,6 +106,10 @@ public class FileTransferMessage extends MessageComponent {
 		});
 	}
 
+	public FileTransferMessage (SendFileTask sendTask) {
+		this(sendTask, sendTask.getFile().getName(), sendTask.getFile().length());
+	}
+	
 	public void setListener (FileTransferMessageListener listener) {
 		this.listener = listener;
 	}

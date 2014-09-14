@@ -17,12 +17,19 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.comm;
+package pl.kotcrab.arget.gui;
 
-public class Msg {
-	// TODO switch to enum?
-	public static final int LEFT = 0;
-	public static final int RIGHT = 1;
-	public static final int SYSTEM = 2;
-	public static final int ERROR = 3;
+import pl.kotcrab.arget.event.Event;
+
+public class ScrollLockEvent implements Event {
+	public boolean enabled;
+
+	public ScrollLockEvent (boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public boolean isExectueOnEDT () {
+		return false;
+	}
 }

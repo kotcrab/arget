@@ -17,17 +17,16 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.event;
+package pl.kotcrab.arget.gui;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
+import pl.kotcrab.arget.event.Event;
 
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
+public class ScrollLockStatusRequestEvent implements Event {
+	public ScrollLockStatusRequestEvent () {
 	}
 
 	@Override
 	public boolean isExectueOnEDT () {
-		return true;
+		return false;
 	}
 }

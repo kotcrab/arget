@@ -19,11 +19,17 @@
 
 package pl.kotcrab.arget.event;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
+import pl.kotcrab.arget.server.ContactInfo;
+import pl.kotcrab.arget.server.ContactStatus;
 
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
+public class ContactStatusEvent implements Event {
+	public ContactInfo contact;
+	public ContactStatus previousStatus;
+
+	public ContactStatusEvent (ContactInfo contact, ContactStatus previousStatus) {
+		// we are using copy constructor because we don't want to something mess with our contact data
+		this.contact = new ContactInfo(contact);
+		this.previousStatus = previousStatus;
 	}
 
 	@Override

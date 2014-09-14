@@ -17,38 +17,22 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.notification;
+package pl.kotcrab.arget.profile;
 
-import java.awt.image.BufferedImage;
+public class ProfileOptions {
+	// main
+	public boolean mainPlaySoundNewMsg = true;
 
-import pl.kotcrab.arget.event.Event;
+	// notifications
+	public boolean notifConnectionLost = true;
+	public boolean notifUserOnline = true;
+	public boolean notifUserOffline = true;
+	public boolean notifNewMsg = true;
+	public boolean notifImageFileTrasnfer = true;
+	public boolean notifFileTrasnfer = true;
 
-public class ShowNotificationEvent implements Event {
-	public int displayTime = 3000;
-	public BufferedImage image;
-	public String title;
-	public String text;
-
-	public ShowNotificationEvent (String title, String text) {
-		this.title = title;
-		this.text = text;
-	}
-
-	public ShowNotificationEvent (int displayTimeSeconds, String title, String text) {
-		this.displayTime = displayTimeSeconds * 1000;
-		this.title = title;
-		this.text = text;
-	}
-
-	public ShowNotificationEvent (BufferedImage icon, String title, String text) {
-		this.image = icon;
-		this.title = title;
-		this.text = text;
-	}
-
-	@Override
-	public boolean isExectueOnAWTEventQueue () {
-		return true;
-	}
-
+	// news server
+	public boolean newsEnabled = true;
+	public String newsAdress = "khonsu.kotcrab.pl";
+	public int newsPort = 31400;
 }

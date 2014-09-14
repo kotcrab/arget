@@ -58,8 +58,6 @@ public class WindowsIconFlasher extends IconFlasher {
 		int FLASHW_TIMERNOFG = 14;
 		int FLASHW_TRAY = 2;
 
-		HWND GetForegroundWindow ();
-
 		boolean FlashWindowEx (FLASHWINFO info);
 
 		// http://msdn.microsoft.com/en-us/library/ms679348%28v=VS.85%29.aspx

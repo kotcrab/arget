@@ -52,6 +52,5 @@ public class SwingUtils {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		return gd.isWindowTranslucencySupported(WindowTranslucency.PERPIXEL_TRANSLUCENT);
-
 	}
 }

@@ -41,18 +41,17 @@ import pl.kotcrab.arget.util.SwingUtils;
 
 import com.alee.laf.WebLookAndFeel;
 
+//TODO change version scheme from BETA1 to b1, ALPHA1 to a1
 public class App {
 	public static final boolean DEBUG = false;
+	public static final boolean SNAPSHOT = true;
 
 	private static final String TAG = "App";
 	public static final String APP_NAME = "Arget";
-	public static final String APP_VERSION = "1.4-BETA5";
-
-// public static final String APP_DIRECTORY_NAME = "1.3-BETA";
-	public static final String APP_DIRECTORY_NAME = "1.3-SNAPSHOT";
+	public static final String APP_VERSION = "1.5.1-b1";
 
 	private static final String SYSTEM_APPDATA_LOCATION = System.getProperty("user.home") + File.separator;
-	public static final String APP_FOLDER = SYSTEM_APPDATA_LOCATION + ".arget-" + App.APP_DIRECTORY_NAME + File.separator;
+	public static final String APP_FOLDER = SYSTEM_APPDATA_LOCATION + ".arget" + File.separator;
 
 	public static String JAR_FOLDER_PATH;
 	public static String DOWNLOAD_FOLDER_PATH;
@@ -61,7 +60,20 @@ public class App {
 	private static boolean appInitialized;
 
 	public static EventBus eventBus;
-	private static NotificationService notificationService;
+	public static NotificationService notificationService;
+
+	public static final int PROFILE_VERSION;
+	public static final int SERVER_CONFIG_VERSION;
+
+	static {
+		if (SNAPSHOT) {
+			PROFILE_VERSION = 0;
+			SERVER_CONFIG_VERSION = 0;
+		} else {
+			PROFILE_VERSION = 1;
+			SERVER_CONFIG_VERSION = 1;
+		}
+	}
 
 	public static void init () {
 		init(true);
@@ -71,6 +83,7 @@ public class App {
 	 * and checks if proper charset is set */
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
+
 			checkCharset();
 			Security.addProvider(new BouncyCastleProvider());
 
@@ -130,10 +143,6 @@ public class App {
 
 	public static boolean isAppInitialized () {
 		return appInitialized;
-	}
-
-	public static NotificationService getNotificationService () {
-		return notificationService;
 	}
 
 	public static URL getResource (String path) {

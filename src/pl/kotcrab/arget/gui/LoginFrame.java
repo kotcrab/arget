@@ -69,7 +69,7 @@ public class LoginFrame extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 0, 0);
-		setIconImage(App.loadImage("/data/icon.png"));
+		setIconImage(App.loadImage("/data/icon/icon.png"));
 
 		JPanel mainPanel = new JPanel(new MigLayout("", "[][87.00][grow]", "[][][][]"));
 		setContentPane(mainPanel);

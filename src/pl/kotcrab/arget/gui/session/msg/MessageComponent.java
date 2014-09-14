@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.session.msg;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -26,8 +26,6 @@ import java.awt.FontMetrics;
 
 import javax.swing.JPanel;
 
-import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.gui.components.ShadowBorder;
 
 public abstract class MessageComponent extends JPanel {
@@ -35,7 +33,7 @@ public abstract class MessageComponent extends JPanel {
 	protected static Font textFont;
 	protected static Font smallTextFont;
 
-	private int type;
+	private MsgType type;
 	private int requestedWidth = 150;
 
 	/** Has this message been read already */
@@ -50,25 +48,21 @@ public abstract class MessageComponent extends JPanel {
 		textFontMetrics = c.getFontMetrics(textFont);
 	}
 
-	public MessageComponent (int type) {
+	MessageComponent (MsgType type) {
 		this.type = type;
 
 		switch (type) {
-		case Msg.LEFT:
+		case LEFT:
 			setBackground(Color.WHITE);
 			break;
-		case Msg.RIGHT:
+		case RIGHT:
 			setBackground(new Color(204, 255, 204)); // green
 			break;
-		case Msg.SYSTEM:
+		case SYSTEM:
 			setBackground(new Color(204, 255, 255)); // blue
 			break;
-		case Msg.ERROR:
+		case ERROR:
 			setBackground(new Color(255, 153, 153)); // red
-			break;
-		default:
-			Log.w("Unknown MessageComponent type! Got: " + type);
-			setBackground(Color.WHITE);
 			break;
 		}
 
@@ -83,7 +77,7 @@ public abstract class MessageComponent extends JPanel {
 		return requestedWidth;
 	}
 
-	public int getSide () {
+	public MsgType getType () {
 		return type;
 	}
 

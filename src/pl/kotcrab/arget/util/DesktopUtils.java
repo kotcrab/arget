@@ -28,6 +28,9 @@ import java.net.URLDecoder;
 
 import pl.kotcrab.arget.Log;
 
+import com.sun.jna.Native;
+import com.sun.jna.platform.unix.X11;
+
 public class DesktopUtils {
 	public static final String OS = System.getProperty("os.name").toLowerCase();
 
@@ -67,5 +70,15 @@ public class DesktopUtils {
 
 	public static boolean isUnix () {
 		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+	}
+
+	public static boolean isLinuxX11 () {
+		try {
+			Native.loadLibrary("X11", X11.class);
+			return true;
+		} catch (UnsatisfiedLinkError e) {
+			return false;
+		}
+
 	}
 }

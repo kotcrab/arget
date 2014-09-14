@@ -46,8 +46,11 @@ import pl.kotcrab.arget.comm.exchange.internal.ProfilePublicKeyVerificationRespo
 import pl.kotcrab.arget.comm.exchange.internal.ServerInfoTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.TestMsgResponseOKNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.SessionExchange;
+import pl.kotcrab.arget.event.ConnectionStatusEvent;
+import pl.kotcrab.arget.event.ContactStatusEvent;
+import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.UpdateContactsEvent;
 import pl.kotcrab.arget.gui.MainWindowCallback;
-import pl.kotcrab.arget.gui.notification.ShowNotificationEvent;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.server.session.LocalSessionListener;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
@@ -71,7 +74,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	private boolean successfullyInitialized = false;
 
-	private ServerDescriptor info;
+	// private ServerDescriptor info;
 	private Profile profile;
 	private MainWindowCallback guiCallback;
 
@@ -93,11 +96,11 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	public ArgetClient (ServerDescriptor info, Profile profile, MainWindowCallback guiCallback, LocalSessionListener listener) {
 		super("Client");
-		this.info = info;
+		// this.info = info;
 		this.profile = profile;
 		this.guiCallback = guiCallback;
 
-		guiCallback.setConnectionStatus(ConnectionStatus.CONNECTING);
+		postStatus(ConnectionStatus.CONNECTING);
 
 		sessionManager = new LocalSessionManager(this, guiCallback, listener);
 
@@ -107,7 +110,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		try {
 			initSocket(info.ip, info.port);
 		} catch (IOException e) {
-			guiCallback.setConnectionStatus(ConnectionStatus.ERROR, e.getMessage());
+			postStatus(ConnectionStatus.ERROR, e.getMessage());
 
 			// we don't have to print stack trace if this just was "unable to connect" error
 			if (e.getMessage().contains("Unable to connect") == false) Log.exception(e);
@@ -131,7 +134,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			@Override
 			public void timedOut () {
 				disconnect();
-				guiCallback.setConnectionStatus(ConnectionStatus.TIMEDOUT, "Server not responded to ping messages.");
+				postStatus(ConnectionStatus.TIMEDOUT, "Server not responded to ping messages.");
 			}
 		});
 
@@ -151,7 +154,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	private void processKeychain (KeychainTransfer keychain) {
 		lastKeychain = keychain.publicKeys;
-		guiCallback.updateContacts(); // this will call processLastKeychain
+		post(new UpdateContactsEvent());
 	}
 
 	public void processLastKeychain () {
@@ -159,28 +162,24 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			List<ContactInfo> contacts = profile.contacts;
 
 			for (ContactInfo c : contacts) {
-				ContactStatus lastStatus = c.status;
+				ContactStatus previousStatus = c.status;
 				c.status = ContactStatus.DISCONNECTED;
 
 				for (String key : lastKeychain) {
 
 					if (c.publicProfileKey.equals(key)) {
 						// contact may have status CONNECTED_SESSION, we don't want to reset that after getting keychain update
-						if (lastStatus == ContactStatus.DISCONNECTED)
+						if (previousStatus == ContactStatus.DISCONNECTED)
 							c.status = ContactStatus.CONNECTED;
 						else
-							c.status = lastStatus;
-
-						if (c.status == ContactStatus.DISCONNECTED && lastStatus == ContactStatus.CONNECTED_SESSION)
-							App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now offline"));
-
-						if (c.status == ContactStatus.CONNECTED && lastStatus == ContactStatus.DISCONNECTED)
-							App.eventBus.post(new ShowNotificationEvent(c.name, c.name + " is now online"));
+							c.status = previousStatus;
 
 						break;
 					}
 
 				}
+
+				App.eventBus.post(new ContactStatusEvent(c, previousStatus));
 			}
 		}
 	}
@@ -204,7 +203,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		client.stop();
 		sessionManager.stop();
 
-		if (changeGuiStatus) guiCallback.setConnectionStatus(ConnectionStatus.DISCONNECTED);
+		if (changeGuiStatus) postStatus(ConnectionStatus.DISCONNECTED);
 	}
 
 	public Profile getProfile () {
@@ -293,7 +292,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 		if (ex instanceof TestMsgResponseOKNotification && state == State.WAIT_FOR_OK_NOTIF) {
 			state = State.CONNECTED;
-			guiCallback.setConnectionStatus(ConnectionStatus.CONNECTED);
+			postStatus(ConnectionStatus.CONNECTED);
 			pinger.start();
 		}
 
@@ -301,17 +300,17 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			UnsecuredEventNotification resp = (UnsecuredEventNotification)ex;
 
 			if (resp.type == Type.SERVER_FULL) {
-				guiCallback.setConnectionStatus(ConnectionStatus.SERVER_FULL);
+				postStatus(ConnectionStatus.SERVER_FULL);
 				disconnect(false);
 			}
 
 			if (resp.type == Type.SERVER_SHUTTING_DOWN) {
-				guiCallback.setConnectionStatus(ConnectionStatus.SERVER_SHUTDOWN);
+				postStatus(ConnectionStatus.SERVER_SHUTDOWN);
 				disconnect(false);
 			}
 
 			if (resp.type == Type.KICKED) {
-				guiCallback.setConnectionStatus(ConnectionStatus.KICKED);
+				postStatus(ConnectionStatus.KICKED);
 				disconnect(false);
 			}
 		}
@@ -327,6 +326,19 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			if (ex instanceof SessionExchange) sessionManager.processReceivedElementLater((SessionExchange)ex);
 			if (ex instanceof ServerInfoTransfer) guiCallback.setServerInfo((ServerInfoTransfer)ex);
 		}
+	}
+
+	private void postStatus (ConnectionStatus status) {
+		post(new ConnectionStatusEvent(status));
+	}
+
+	private void postStatus (ConnectionStatus status, String msg) {
+		post(new ConnectionStatusEvent(status, msg));
+
+	}
+
+	private void post (Event event) {
+		App.eventBus.post(event);
 	}
 
 	public boolean isSuccessfullyInitialized () {

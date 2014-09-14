@@ -1,7 +1,24 @@
-[1.4-beta5]
+[1.5.1-b1]
+-Markdown: Change * to ** and _ to __
+
+[1.5-b2]
+-Rename 'File' to 'Arget'
+-Fixed message layout
+-Fixed rendering artefacts
+
+[1.5-b1]
+-Changed version numbering scheme
+-Changed configuration directory structure
+-Options
+-Scroll lock
+-Fixed notifications
+-Better checking for X11
+-Notification overlay
+-Bug fixes and code optimization
+-Better printing of invalid command line arguments
 
 [1.4-beta4]
-Fixed X11 icon flasher
+-Fixed X11 icon flasher
 
 [1.4-beta3]
 -Proper InterruptedException handling

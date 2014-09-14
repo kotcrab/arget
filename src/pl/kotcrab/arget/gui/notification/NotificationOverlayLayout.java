@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.notification;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -25,41 +25,33 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 
-import pl.kotcrab.arget.gui.session.msg.MessageComponent;
-import pl.kotcrab.arget.gui.session.msg.MsgType;
-
-public class LeftRightLayout implements LayoutManager {
+class NotificationOverlayLayout implements LayoutManager {
 	private int vgap = 2;
+	private int yOffset = 0;
 
 	@Override
 	public void layoutContainer (Container parent) {
 		Insets insets = parent.getInsets();
-		int maxWidth = parent.getWidth() - (insets.left + insets.right);
 		int previousHeight = 0;
 		int x = 0, y = insets.top;
 
 		for (int i = 0; i < parent.getComponentCount(); i++) {
-			MessageComponent c = (MessageComponent)parent.getComponent(i);
-
-			int width = (int)(parent.getWidth() * 0.65f);
-			c.setRequestWidth(width);
+			Component c = parent.getComponent(i);
 
 			if (c.isVisible()) {
 				Dimension d = c.getPreferredSize();
 
-				if (c.getType() == MsgType.LEFT)
-					x = 5;
-				else if (c.getType() == MsgType.RIGHT)
-					x = maxWidth - d.width - 3;
-				else if (c.getType() == MsgType.SYSTEM || c.getType() == MsgType.ERROR) x = (maxWidth - d.width) / 2;
-
-				y += vgap + previousHeight;
-
+				x = (parent.getWidth() - c.getPreferredSize().width) / 2;
+				y += vgap + previousHeight - yOffset;
 				c.setBounds(x, y, d.width, d.height);
 
 				previousHeight = d.height;
 			}
 		}
+	}
+
+	public void setYOffset (int y) {
+		yOffset = y;
 	}
 
 	@Override

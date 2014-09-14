@@ -17,7 +17,7 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.session.msg;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -48,7 +48,10 @@ public class TextMessage extends MessageComponent {
 	private String originalText;
 	private String processedText;
 
-	public TextMessage (int type, String text, boolean markAsRead) {
+	private int realTextWidth;
+	private int lastSetWidth;
+
+	public TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
 
 		textPane = new JTextPane();
@@ -90,13 +93,19 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
-	public TextMessage (int type, String text) {
+	public TextMessage (MsgType type, String text) {
 		this(type, text, true);
 	}
 
-	public void setText (String newText) {
+	private void setText (String newText) {
 		originalText = newText;
 		processedText = processText(originalText);
+
+		realTextWidth = textFontMetrics.stringWidth(originalText);
+		realTextWidth -= realTextWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+
+		lastSetWidth = getRequestedWidth();
+
 		setLabelText();
 	}
 
@@ -107,16 +116,18 @@ public class TextMessage extends MessageComponent {
 	}
 
 	private void setLabelText () {
-		int actualTextWidth = textFontMetrics.stringWidth(originalText);
-		actualTextWidth -= actualTextWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+		// TODO can't make new line
 
-		// TODO niemozna zrobic new line
+		if (getRequestedWidth() != lastSetWidth) {
 
-		if (actualTextWidth > getRequestedWidth())
-			textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(), processedText));
-		else
-			textPane.setText("<html>" + processedText + "</html>");
+			if (realTextWidth > getRequestedWidth())
+				textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(),
+					processedText));
+			else
+				textPane.setText("<html>" + processedText + "</html>");
 
+			lastSetWidth = getRequestedWidth();
+		}
 // TODO font is not set
 		// MutableAttributeSet set = textPane.getInputAttributes();
 		// StyleConstants.setFontFamily(set, "Tahoma");
@@ -145,8 +156,8 @@ public class TextMessage extends MessageComponent {
 		}
 
 		String result = builder.toString().replace(" ", "&nbsp;");
-		result = markdownReplace(result, "*", "\\*", "<b>", "</b>");
-		result = markdownReplace(result, "_", "_", "<em>", "</em>");
+		result = markdownReplace(result, "**", "\\*\\*", "<b>", "</b>");
+		result = markdownReplace(result, "__", "__", "<em>", "</em>");
 
 		return result;
 	}

@@ -73,6 +73,10 @@ public class ESCClosableDialog extends JDialog {
 		}
 	}
 
+	protected ESCClosableDialog getInstance () {
+		return this;
+	}
+
 	// ====== copied constructors, sorry :( ======
 	public ESCClosableDialog () {
 		super();

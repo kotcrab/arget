@@ -19,11 +19,19 @@
 
 package pl.kotcrab.arget.event;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
+import pl.kotcrab.arget.server.ConnectionStatus;
 
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
+public class ConnectionStatusEvent implements Event {
+	public ConnectionStatus status;
+	public String msg;
+
+	public ConnectionStatusEvent (ConnectionStatus status) {
+		this.status = status;
+	}
+
+	public ConnectionStatusEvent (ConnectionStatus status, String msg) {
+		this.status = status;
+		this.msg = msg;
 	}
 
 	@Override

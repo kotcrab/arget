@@ -29,7 +29,6 @@ import java.util.UUID;
 import javax.swing.JOptionPane;
 
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileAcceptedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileDataBlockReceivedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileDataBlockTransfer;
@@ -41,11 +40,12 @@ import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToFileRe
 import pl.kotcrab.arget.comm.exchange.internal.session.file.FileTransferToMemoryRequest;
 import pl.kotcrab.arget.comm.file.FileTransferTask.Status;
 import pl.kotcrab.arget.gui.MainWindow;
-import pl.kotcrab.arget.gui.session.FileTransferMessage;
 import pl.kotcrab.arget.gui.session.FileTransferMessageAdapter;
 import pl.kotcrab.arget.gui.session.FileTransferMessageListener;
-import pl.kotcrab.arget.gui.session.ImageMessage;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
+import pl.kotcrab.arget.gui.session.msg.FileTransferMessage;
+import pl.kotcrab.arget.gui.session.msg.ImageMessage;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.server.session.LocalSession;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
 import pl.kotcrab.arget.util.FileUitls;
@@ -72,7 +72,7 @@ public class FileTransferManager {
 	public FileTransferManager (LocalSessionManager lSessionManager, SessionWindowManager sWindowManager) {
 		this.sessionManager = lSessionManager;
 		this.windowManager = sWindowManager;
-
+		
 		receiveTasks = new ArrayList<ReceiveFileTask>();
 		sendTasks = Collections.synchronizedList(new ArrayList<SendFileTask>());
 		sendTasksToRemove = new ArrayList<SendFileTask>();
@@ -97,7 +97,7 @@ public class FileTransferManager {
 							File file = task.getFile();
 
 							if (task.isToMemory())
-								windowManager.addMessage(session, new ImageMessage(Msg.RIGHT, ImageUitls.read(file), null));
+								windowManager.addMessage(session, new ImageMessage(MsgType.RIGHT, ImageUitls.read(file), null));
 
 							sendFileTransferRequest(task);
 						}
@@ -136,7 +136,8 @@ public class FileTransferManager {
 				return true;
 			}
 
-		}, "FileSender");
+		}, "FileTransfer");
+		fileSender.setDaemon(true); // TODO sometimes file transfer may not be properly shutdown
 		fileSender.start();
 	}
 
@@ -157,7 +158,7 @@ public class FileTransferManager {
 					// TODO check mimetype, chyba nie potrzebne
 					BufferedImage image = ImageUitls.read(data);
 					if (image != null)
-						windowManager.addMessage(task.getSession(), new ImageMessage(Msg.LEFT, image, task.getFileName()));
+						windowManager.addMessage(task.getSession(), new ImageMessage(MsgType.LEFT, image, task.getFileName()));
 					else
 						Log.err(TAG, "Received image data but program was unable to build image form it.");
 				}
@@ -263,7 +264,7 @@ public class FileTransferManager {
 
 	public void sendFile (LocalSession session, File file) {
 		if (file.isDirectory() || file.exists() == false || file.canRead() == false) {
-			JOptionPane.showMessageDialog(MainWindow.instance, "Invalid file.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(MainWindow.instance, "Invalid file", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 

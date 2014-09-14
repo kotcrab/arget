@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
@@ -36,7 +37,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,26 +50,35 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
-import pl.kotcrab.arget.comm.Msg;
 import pl.kotcrab.arget.comm.exchange.internal.session.InternalSessionExchange;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.MessageTransfer;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelHideNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.RemotePanelShowNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingFinishedNotification;
 import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotification;
+import pl.kotcrab.arget.event.Event;
+import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.gui.CenterPanel;
+import pl.kotcrab.arget.gui.ScrollLockEvent;
+import pl.kotcrab.arget.gui.ScrollLockStatusRequestEvent;
+import pl.kotcrab.arget.gui.session.msg.MessageComponent;
+import pl.kotcrab.arget.gui.session.msg.MsgType;
+import pl.kotcrab.arget.gui.session.msg.TextMessage;
+import pl.kotcrab.arget.gui.session.msg.TypingMessage;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
 //TODO you can't send msg with tab only, tab + spaces, and mark down signs only: _ and *
-//TODO better scroll (scroll lock option?)
-public class SessionPanel extends CenterPanel {
+//TODO better scrolllock
+public class SessionPanel extends CenterPanel implements EventListener {
 	private SessionPanel instance;
 
 	private ContactInfo contact;
@@ -84,6 +98,15 @@ public class SessionPanel extends CenterPanel {
 	private boolean remoteCenterPanel = false;
 
 	private boolean mouseOnScrollbar = false;
+	private boolean mouseOnPane = false;
+	private boolean mousePressed;
+
+	private boolean structureChanged = false;
+	private MouseWheelEvent lastWheelEvent;
+	private MouseEvent lastDragEvent;
+
+	private boolean scrollLockEnabled = false;
+	private int lastScrollBarValue;
 
 	private boolean sessionValid;
 
@@ -101,12 +124,13 @@ public class SessionPanel extends CenterPanel {
 				File file = droppedFiles.get(0);
 				listener.sendFile(instance, file);
 
-			} catch (Exception e) {
+			} catch (IOException | UnsupportedFlavorException e) {
 				Log.exception(e);
 			}
 		}
 	};
 
+	// TODO create this on EDT!
 	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
@@ -131,11 +155,94 @@ public class SessionPanel extends CenterPanel {
 		pane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged (AdjustmentEvent e) {
+				Adjustable a = e.getAdjustable();
 
-				if (mouseOnScrollbar == false) {
-					Adjustable a = e.getAdjustable();
-					a.setValue(a.getMaximum());
+				if (scrollLockEnabled && structureChanged) {
+					a.setValue(lastScrollBarValue);
+					lastWheelEvent = null;
+					lastDragEvent = null;
 				}
+
+				if (lastWheelEvent != null) {
+					lastScrollBarValue = a.getValue();
+				}
+
+				if (lastDragEvent != null) {
+					lastScrollBarValue = a.getValue();
+				}
+
+				if (scrollLockEnabled && lastWheelEvent == null && lastDragEvent == null && structureChanged == false) {
+					a.setValue(lastScrollBarValue);
+				}
+
+				if (scrollLockEnabled && lastWheelEvent != null && structureChanged == false) {
+					if (lastWheelEvent.getWheelRotation() > 0)
+						lastScrollBarValue = a.getValue() + 40;
+					else
+						lastScrollBarValue = a.getValue() - 40;
+				}
+
+				if (scrollLockEnabled == false) a.setValue(a.getMaximum());
+
+				lastWheelEvent = null;
+				lastDragEvent = null;
+				structureChanged = false;
+
+			}
+		});
+
+// /test code that automatically sends msg
+// remove this after finishing scroll lock
+// Thread t = new Thread(new Runnable() {
+// @Override
+// public void run () {
+// ThreadUtils.sleep(3000);
+//
+// //for (;;) {
+// for (int i = 0; i < 8; i++) {
+// System.out.println("add");
+// addMessage(new TextMessage(Msg.RIGHT, String.valueOf(new Random().nextFloat()), isRemoteCenterPanel()));
+// // send(new MessageTransfer(id, "HAAHA"));
+// // ThreadUtils.sleep(300);
+// ThreadUtils.sleep(700);
+// }
+// }
+// });
+// t.setDaemon(true);
+// t.start();
+
+		pane.addMouseWheelListener(new MouseWheelListener() {
+
+			@Override
+			public void mouseWheelMoved (MouseWheelEvent e) {
+				lastWheelEvent = e;
+			}
+		});
+
+		pane.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseExited (MouseEvent e) {
+				mouseOnPane = false;
+			}
+
+			@Override
+			public void mouseEntered (MouseEvent e) {
+				mouseOnPane = true;
+			}
+
+		});
+
+		pane.getVerticalScrollBar().addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseMoved (MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseDragged (MouseEvent e) {
+				lastDragEvent = e;
 			}
 		});
 
@@ -149,6 +256,17 @@ public class SessionPanel extends CenterPanel {
 			@Override
 			public void mouseEntered (MouseEvent e) {
 				mouseOnScrollbar = true;
+			}
+
+			@Override
+			public void mousePressed (MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e)) mousePressed = true;
+			}
+
+			@Override
+			public void mouseReleased (MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e)) mousePressed = false;
+
 			}
 
 		});
@@ -176,7 +294,7 @@ public class SessionPanel extends CenterPanel {
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
 
-							addMessage(new TextMessage(Msg.RIGHT, msg, isRemoteCenterPanel()));
+							addMsg(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));
 						}
 					}
@@ -243,6 +361,9 @@ public class SessionPanel extends CenterPanel {
 		});
 
 		inputTextArea.setDropTarget(dropTarget);
+
+		App.eventBus.register(this);
+		App.eventBus.post(new ScrollLockStatusRequestEvent());
 	}
 
 	private void send (InternalSessionExchange ex) {
@@ -271,18 +392,29 @@ public class SessionPanel extends CenterPanel {
 	}
 
 	public void showTyping () {
+
+		structureChanged = true;
+		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+
 		innerPanel.add(typingComponent);
 		typingShowed = true;
+
 		refreshPanel();
 	}
 
 	public void hideTyping () {
+		structureChanged = true;
+		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
+
 		innerPanel.remove(typingComponent);
 		typingShowed = false;
+
 		refreshPanel();
 	}
 
-	public void addMessage (MessageComponent comp) {
+	public void addMsg (final MessageComponent comp) {
+		structureChanged = true;
+		lastScrollBarValue = pane.getVerticalScrollBar().getValue();
 
 		if (typingShowed)
 			innerPanel.add(comp, innerPanel.getComponentCount() - 1);
@@ -290,23 +422,25 @@ public class SessionPanel extends CenterPanel {
 			innerPanel.add(comp);
 
 		refreshPanel();
+	}
 
+	public void clear () {
+		structureChanged = true;
+		innerPanel.removeAll();
+
+		refreshPanel();
 	}
 
 	private void refreshPanel () {
 		EventQueue.invokeLater(new Runnable() {
 
 			@Override
-			public void run () { // TODO wiadomosci sie nie pokazujo (maybe fixed)
-				innerPanel.validate();
+			public void run () {
 				innerPanel.revalidate();
 				innerPanel.repaint();
 			}
 		});
-	}
 
-	public void clear () {
-		innerPanel.removeAll();
 	}
 
 	public ContactInfo getContact () {
@@ -316,7 +450,7 @@ public class SessionPanel extends CenterPanel {
 	@Override
 	protected void addImpl (Component comp, Object constraints, int index) {
 		if (comp instanceof MessageComponent)
-			throw new IllegalArgumentException("MessageComponent can't be added here, use addMessage function!");
+			throw new IllegalArgumentException("MessageComponent can't be added here, use addMsg method!");
 
 		super.addImpl(comp, constraints, index);
 	}
@@ -324,7 +458,17 @@ public class SessionPanel extends CenterPanel {
 	public void setRemoteCenterPanel (boolean isCenter) {
 		remoteCenterPanel = isCenter;
 
-		if (remoteCenterPanel) innerPanel.markAllAsRead();
+		EventQueue.invokeLater(new Runnable() {
+
+			@Override
+			public void run () {
+				if (remoteCenterPanel) {
+					innerPanel.markAllAsRead();
+					refreshPanel();
+				}
+			}
+		});
+
 	}
 
 	public boolean isRemoteCenterPanel () {
@@ -366,6 +510,14 @@ public class SessionPanel extends CenterPanel {
 			}
 		}
 
+	}
+
+	@Override
+	public void onEvent (Event event) {
+		if (event instanceof ScrollLockEvent) {
+			ScrollLockEvent e = (ScrollLockEvent)event;
+			scrollLockEnabled = e.enabled;
+		}
 	}
 
 }

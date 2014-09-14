@@ -17,21 +17,6 @@
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package pl.kotcrab.arget.gui.session;
+package pl.kotcrab.arget.gui.session.msg;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.border.EmptyBorder;
-
-import pl.kotcrab.arget.App;
-import pl.kotcrab.arget.comm.Msg;
-
-public class TypingMessage extends MessageComponent {
-	public TypingMessage () {
-		super(Msg.LEFT);
-
-		JLabel image = new JLabel(new ImageIcon(App.getResource("/data/type.gif")));
-		image.setBorder(new EmptyBorder(3, 1, 0, 0));
-		add(image);
-	}
-}
+public enum MsgType{LEFT, RIGHT, SYSTEM, ERROR}
