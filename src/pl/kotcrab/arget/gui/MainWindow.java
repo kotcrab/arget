@@ -245,22 +245,22 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		menuBar.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setJMenuBar(menuBar);
 
-		JMenu fileMenu = new JMenu("File");
+		JMenu argetMenu = new JMenu("Arget");
 		serversMenu = new JMenu("Servers");
 		JMenu contactsMenu = new JMenu("Contacts");
 		JMenu viewMenu = new JMenu("View");
 		JMenu helpMenu = new JMenu("Help");
 
-		menuBar.add(fileMenu);
+		menuBar.add(argetMenu);
 		menuBar.add(serversMenu);
 		menuBar.add(contactsMenu);
 		menuBar.add(viewMenu);
 		menuBar.add(helpMenu);
 
-		fileMenu.add(new MenuItem("Options...", MenuEventType.FILE_EDIT_OPTIONS));
-		fileMenu.add(new JSeparator());
-		fileMenu.add(new MenuItem("Logout", MenuEventType.FILE_LOGOUT));
-		fileMenu.add(new MenuItem("Exit", MenuEventType.FILE_EXIT));
+		argetMenu.add(new MenuItem("Options...", MenuEventType.ARGET_EDIT_OPTIONS));
+		argetMenu.add(new JSeparator());
+		argetMenu.add(new MenuItem("Logout", MenuEventType.ARGET_LOGOUT));
+		argetMenu.add(new MenuItem("Exit", MenuEventType.ARGET_EXIT));
 
 		serversMenu.add(new MenuItem("Add Server...", MenuEventType.SERVERS_ADD));
 		serversMenu.add(new MenuItem("Manage Servers...", MenuEventType.SERVERS_MANAGE));
@@ -449,10 +449,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	private void processMenuEvent (MenuEvent event) {
 		switch (event.type) {
-		case FILE_EDIT_OPTIONS:
+		case ARGET_EDIT_OPTIONS:
 			new OptionsDialog(this, profile);
 			break;
-		case FILE_LOGOUT:
+		case ARGET_LOGOUT:
 			Settings.resetAutoLogin();
 			dispose();
 
@@ -463,7 +463,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 				}
 			});
 			break;
-		case FILE_EXIT:
+		case ARGET_EXIT:
 			dispose();
 			break;
 
