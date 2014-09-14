@@ -1,7 +1,11 @@
+[1.5-b2]
+-Fixed message layout
+
 [1.5-b1]
 -Changed version numbering scheme
 -Changed configuration directory structure
 -Options
+-Scroll lock
 -Fixed notifications
 -Better checking for X11
 -Notification overlay

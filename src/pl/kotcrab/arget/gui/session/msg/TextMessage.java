@@ -48,8 +48,8 @@ public class TextMessage extends MessageComponent {
 	private String originalText;
 	private String processedText;
 
-	private int textWidth;
-	private int lastTextWidth;
+	private int realTextWidth;
+	private int lastSetWidth;
 
 	TextMessage (MsgType type, String text, boolean markAsRead) {
 		super(type);
@@ -93,12 +93,14 @@ public class TextMessage extends MessageComponent {
 		add(timeLabel);
 	}
 
-	public void setText (String newText) {
+	private void setText (String newText) {
 		originalText = newText;
 		processedText = processText(originalText);
 
-		textWidth = textFontMetrics.stringWidth(originalText);
-		textWidth -= textWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+		realTextWidth = textFontMetrics.stringWidth(originalText);
+		realTextWidth -= realTextWidth * 3 / 10; // stupid FontMetrics is lying by about 30%
+		
+		lastSetWidth = getRequestedWidth();
 
 		setLabelText();
 	}
@@ -112,14 +114,15 @@ public class TextMessage extends MessageComponent {
 	private void setLabelText () {
 		// TODO can't make new line
 
-		if (textWidth != lastTextWidth) {
-			if (textWidth > getRequestedWidth())
+		if (getRequestedWidth() != lastSetWidth) {
+
+			if (realTextWidth > getRequestedWidth())
 				textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(),
 					processedText));
 			else
 				textPane.setText("<html>" + processedText + "</html>");
 
-			textWidth = lastTextWidth;
+			 lastSetWidth = getRequestedWidth();
 		}
 // TODO font is not set
 		// MutableAttributeSet set = textPane.getInputAttributes();
