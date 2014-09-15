@@ -2,9 +2,6 @@
 ## Eclipse
 #################
 
-libs/
-libssource/
-
 *.pydevproject
 .project
 .metadata
@@ -36,6 +33,11 @@ local.properties
 #################
 *.iml
 .idea
+
+#################
+## Arget
+#################
+tools/build/
 
 #################
 ## Visual Studio
