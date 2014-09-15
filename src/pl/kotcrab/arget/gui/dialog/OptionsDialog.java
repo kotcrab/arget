@@ -20,6 +20,7 @@
 package pl.kotcrab.arget.gui.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,6 @@ import pl.kotcrab.arget.gui.components.DocumentFieldsChangeListener;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileOptions;
-import java.awt.Color;
 
 //TODO colors changing
 public class OptionsDialog extends ESCClosableDialog {
@@ -218,7 +218,7 @@ public class OptionsDialog extends ESCClosableDialog {
 			newsPanel.add(new JLabel("Address:"), "cell 0 1,alignx left");
 			newsPanel.add(new JLabel("Port:"), "cell 0 2,alignx left");
 			newsPanel.add(portTextfield, "cell 1 2,growx");
-			
+
 			JLabel infoLabel = new JLabel("NOTE: This settings are currently doing nothing!");
 			infoLabel.setForeground(Color.RED);
 			newsPanel.add(infoLabel, "cell 0 6 2 1");

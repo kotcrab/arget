@@ -19,4 +19,6 @@
 
 package pl.kotcrab.arget.gui.session.msg;
 
-public enum MsgType{LEFT, RIGHT, SYSTEM, ERROR}
+public enum MsgType {
+	LEFT, RIGHT, SYSTEM, ERROR
+}

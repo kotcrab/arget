@@ -80,7 +80,7 @@ public class ArgetServer {
 		ServerInfoIO.init();
 
 		if (infoFileName.equals("default")) Log.w(TAG, "Configuration file not specified, using default file");
-		
+
 		info = ServerInfoIO.loadInfoByName(infoFileName);
 		infoFile = ServerInfoIO.getFileFromName(infoFileName);
 		Log.l(TAG, String.format("MOTD: '%s', hosted by: '%s'", info.motd, info.hostedBy));

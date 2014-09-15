@@ -72,7 +72,7 @@ public class FileTransferManager {
 	public FileTransferManager (LocalSessionManager lSessionManager, SessionWindowManager sWindowManager) {
 		this.sessionManager = lSessionManager;
 		this.windowManager = sWindowManager;
-		
+
 		receiveTasks = new ArrayList<ReceiveFileTask>();
 		sendTasks = Collections.synchronizedList(new ArrayList<SendFileTask>());
 		sendTasksToRemove = new ArrayList<SendFileTask>();
