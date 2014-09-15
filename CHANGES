@@ -8,6 +8,7 @@
 -Rename 'File' to 'Arget'
 -Fixed message layout
 -Fixed rendering artefacts
+-Smaller image message border
 
 [1.5-b1]
 -Changed version numbering scheme
