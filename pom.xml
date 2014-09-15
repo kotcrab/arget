@@ -68,6 +68,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
 			<groupId>pl.kotcrab.crypto</groupId>
 			<artifactId>simple-crypto</artifactId>
 			<version>0.0.5-SNAPSHOT</version>
@@ -89,8 +94,8 @@
 		</resources>
 
 		<plugins>
-		
-			<plugin> <!-- Comipler -->
+
+			<plugin> <!-- Compiler -->
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
@@ -134,7 +139,25 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
+			<plugin> <!-- Do stuff -->
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+				<version>2.7.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
+							<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 
 	</build>
