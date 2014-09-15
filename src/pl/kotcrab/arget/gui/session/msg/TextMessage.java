@@ -121,14 +121,14 @@ public class TextMessage extends MessageComponent {
 		if (getRequestedWidth() != lastSetWidth) {
 
 			if (realTextWidth > getRequestedWidth())
-				textPane.setText(String.format("<html><div style=\"width:%dpx; \">%s</div></html>", getRequestedWidth(),
-					processedText));
+				textPane.setText(getHTMLTextWithWidth(processedText, getRequestedWidth()));
 			else
 				textPane.setText("<html>" + processedText + "</html>");
 
 			lastSetWidth = getRequestedWidth();
 		}
-// TODO font is not set
+
+		// TODO font is not set
 		// MutableAttributeSet set = textPane.getInputAttributes();
 		// StyleConstants.setFontFamily(set, "Tahoma");
 		// StyleConstants.setFontSize(set, 13);
@@ -189,6 +189,20 @@ public class TextMessage extends MessageComponent {
 		}
 
 		return text;
+	}
+
+	private String getHTMLTextWithWidth (String text, int width) {
+		// String.format("<html><div style=\"width:%dpx; \">%s", width, text)
+
+		// not very beautiful but probably better performance than String.format
+		StringBuilder b = new StringBuilder();
+		b.append("<html><div style=\"width:");
+		b.append(width);
+		b.append("px; \">");
+		b.append(text);
+		b.append("</div></html>");
+
+		return b.toString();
 	}
 
 	@Override
