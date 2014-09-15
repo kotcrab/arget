@@ -84,6 +84,10 @@ public class ServerInfoIO {
 	}
 
 	public static ServerInfo loadInfoByName (String infoFileName) {
-		return loadInfo(new File(SERVERS_DIRECTORY_PATH + infoFileName));
+		return loadInfo(getFileFromName(infoFileName));
+	}
+	
+	public static File getFileFromName(String infoFileName){
+		return new File(SERVERS_DIRECTORY_PATH + infoFileName);
 	}
 }
