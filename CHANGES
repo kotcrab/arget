@@ -1,5 +1,8 @@
 [1.5.1-b1]
 -Markdown: Change * to ** and _ to __
+-Optimized TextMessage
+-Fixed bug where saving server configuration caused exception
+-Added info in News server settings
 
 [1.5-b2]
 -Rename 'File' to 'Arget'
