@@ -5,7 +5,7 @@ import javax.sound.sampled.Clip
 import pl.kotcrab.arget.App
 
 class Sound {
-	private Clip clip
+	val Clip clip
 
 	new(String path) {
 		clip = AudioSystem.getClip()
