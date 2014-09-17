@@ -85,8 +85,9 @@ import com.alee.laf.button.WebToggleButton;
 //TODO add right click menu on text input area
 //TODO add version verification
 //TODO clear server details on disconnect
-//TODO craete createGUI method in every gui class
+//TODO create createGUI method in every gui class
 //TODO when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
+//TODO usage statistics sever
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
@@ -113,10 +114,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	
 	private boolean painted;
 
-	public MainWindow (Profile profile) {
+	public MainWindow (Profile _profile) {
 		if (checkAndSetInstance() == false) return;
 
-		this.profile = profile;
+		this.profile = _profile;
 
 		App.eventBus.register(this);
 		App.notificationService.setControler(this);
@@ -126,6 +127,16 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		createAndShowGUI();
 		
 		iconFlasher = IconFlasher.getIconFlasher(this);
+		
+		if (profile.autoconnectInfo != null) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run () {
+					connectToServer(profile.autoconnectInfo);
+				}
+			}, "AutoConnect").start();
+		}
 	}
 
 	private boolean checkAndSetInstance () {
@@ -218,17 +229,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		setConnectionStatus(new ConnectionStatusEvent(ConnectionStatus.DISCONNECTED));
 
 		setVisible(true);
-
-		if (profile.autoconnectInfo != null) {
-			new Thread(new Runnable() {
-
-				@Override
-				public void run () {
-					connectToServer(profile.autoconnectInfo);
-				}
-			}, "AutoConnect").start();
-		}
-
 	}
 
 	@Override
