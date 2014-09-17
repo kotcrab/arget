@@ -75,7 +75,7 @@ import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
-import pl.kotcrab.arget.util.SoundUtils;
+import pl.kotcrab.arget.util.Sound;
 import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
@@ -94,6 +94,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private Profile profile;
 	private ArgetClient client;
 	private SessionWindowManager sessionWindowManager;
+	
+	private Sound notificationSound;
 
 	private JMenu serversMenu;
 	private JLabel statusLabel;
@@ -107,8 +109,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	private IconFlasher iconFlasher;
 
-	private boolean painted;
 	private WebToggleButton scrollLockToggle;
+	
+	private boolean painted;
 
 	public MainWindow (Profile profile) {
 		if (checkAndSetInstance() == false) return;
@@ -118,8 +121,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		App.eventBus.register(this);
 		App.notificationService.setControler(this);
 
+		notificationSound = new Sound("/data/notification.wav");
+		
 		createAndShowGUI();
-
+		
 		iconFlasher = IconFlasher.getIconFlasher(this);
 	}
 
@@ -425,7 +430,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		if (isFocused() == false) {
 			iconFlasher.flashIcon();
 
-			if (profile.options.mainPlaySoundNewMsg) SoundUtils.playSound("/data/notification.wav");
+			notificationSound.play();
+		//	if (profile.options.mainPlaySoundNewMsg) SoundUtils.playSound("/data/notification.wav");
 		}
 	}
 

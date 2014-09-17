@@ -4,6 +4,7 @@
 -Fixed bug where saving server configuration caused exception
 -Added info in News server settings
 -When GUI is available error will be displayed when charset change fails
+-Using new and recommended sound API
 
 [1.5-b2]
 -Rename 'File' to 'Arget'
