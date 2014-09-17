@@ -32,8 +32,9 @@ f = open(header)
 header_lines = f.readlines()
 f.close()
 
-for root, dirnames, filenames in os.walk(main_dir):
-  for filename in fnmatch.filter(filenames, '*.java'):
-      process_file(os.path.join(root, filename))
-      
+for root, dirnames, files in os.walk(src_dir):
+       for filename in files:
+            if filename.endswith(('.java', '.xtend')):
+                process_file(os.path.join(root, filename))
+          
 print 'Done, missing: ' + str(missing)
