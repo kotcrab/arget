@@ -30,6 +30,7 @@ import java.security.Security;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -41,7 +42,7 @@ import pl.kotcrab.arget.util.SwingUtils;
 
 import com.alee.laf.WebLookAndFeel;
 
-//TODO change version scheme from BETA1 to b1, ALPHA1 to a1
+//TODO wrapper for joptionpane?
 public class App {
 	public static final boolean DEBUG = false;
 	public static final boolean SNAPSHOT = true;
@@ -65,6 +66,9 @@ public class App {
 	public static final int PROFILE_VERSION;
 	public static final int SERVER_CONFIG_VERSION;
 
+	private static final String CHARSET_CHANGE_FAILURE_MSG = "Failed! UTF-8 charset is not default for this system and "
+		+ "attempt to change it failed, cannot continue! Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";
+
 	static {
 		if (SNAPSHOT) {
 			PROFILE_VERSION = 0;
@@ -84,7 +88,7 @@ public class App {
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
 
-			checkCharset();
+			checkCharset(initGui);
 			Security.addProvider(new BouncyCastleProvider());
 
 			eventBus = new EventBus();
@@ -119,7 +123,7 @@ public class App {
 	}
 
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
-	private static void checkCharset () {
+	private static void checkCharset (boolean initGui) {
 		if (Charset.defaultCharset().name().equals("UTF-8") == false) {
 			Log.err(TAG, "UTF-8 is not default charset, trying to change...");
 
@@ -130,9 +134,8 @@ public class App {
 				charset.set(null, null);
 				Log.l(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
-				throw new IllegalStateException(
-					"Failed! UTF-8 charset is not default for this system and attempt to change it failed, cannot continue! Default is: "
-						+ Charset.defaultCharset().name() + ", run with VM argument: -Dfile.encoding=UTF-8 to fix this.");
+				if(initGui) JOptionPane.showMessageDialog(null, CHARSET_CHANGE_FAILURE_MSG, "Fatal error", JOptionPane.ERROR_MESSAGE); 
+				throw new IllegalStateException(CHARSET_CHANGE_FAILURE_MSG);
 			}
 		}
 	}
