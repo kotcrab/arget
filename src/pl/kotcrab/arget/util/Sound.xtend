@@ -16,8 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with Arget.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
-
 package pl.kotcrab.arget.util
 
 import javax.sound.sampled.AudioSystem
