@@ -2,8 +2,11 @@ import os
 import re
 import sys
 import shutil
-
 from subprocess import call
+
+import check_license
+
+# TODO check for license headres befroe build
 
 # config
 JET_FOLDER = 'F:\Arget\JET'
@@ -51,13 +54,20 @@ def build_maven():
 
 
 version = get_pom_version()
+missing_headers_count = check_license.count_missing_headers()
 
 print 'Arget Build Tool v1.0 (building: ' + version + ')'
 print ''
+
+if missing_headers_count > 0:
+    print 'WARNING: Missing license headers! (' + str(missing_headers_count) + ')'
+    print ''
+
 print 'Select build:'
 print '1: Cleanup and Maven build'
 print '2: JET native build'
 print '3: Windows installer'
+
 
 option = raw_input('Build:')
 
