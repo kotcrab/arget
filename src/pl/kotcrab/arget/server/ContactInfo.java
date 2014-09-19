@@ -23,7 +23,7 @@ public class ContactInfo {
 	public String name;
 	public String publicProfileKey;
 
-	public transient ContactStatus status;
+	public transient ContactStatus status = ContactStatus.DISCONNECTED;
 	public transient boolean unreadMessages;
 
 	public ContactInfo () {
