@@ -108,7 +108,7 @@ public class SessionWindowManager implements LocalSessionListener {
 			panel.setUUID(id);
 
 		panel.disableInput();
-		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Creating session..."));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Connecting..."));
 		panel.getContact().status = ContactStatus.CONNECTED_SESSION;
 		post(new UpdateContactsEvent());
 
@@ -139,24 +139,25 @@ public class SessionWindowManager implements LocalSessionListener {
 		SessionPanel panel = getPanelByUUID(ex.id);
 
 		if (ex instanceof SessionCloseNotification)
-			panel.addMsg(new TextMessage(MsgType.SYSTEM, "Session closed"));
+			panel.addMsg(new TextMessage(MsgType.SYSTEM, "Disconnected"));
 		else if (ex instanceof SessionRejectedNotification)
-			panel.addMsg(new TextMessage(MsgType.ERROR, "Session rejected by remote"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. Rejected by remote"));
 		else if (ex instanceof SessionCipherInitError)
-			panel.addMsg(new TextMessage(MsgType.ERROR, "Remote could not initialize cipher"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. Remote could not initialize cipher"));
 		else if (ex instanceof SessionInvalidIDNotification)
 			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. This UUID is already used by server. Please try again"));
 		else if (ex instanceof SessionTargetKeyNotFound)
 			panel.addMsg(new TextMessage(MsgType.ERROR,
-				"Server could not found key for this contact (contact not connected or internal error)"));
+				"Server could not found key for this contact (contact not connected or internal server error) "
+					+ "Use Contacts -> Refresh list"));
 		else if (ex instanceof SessionAlreadyExistNotification)
-			panel.addMsg(new TextMessage(MsgType.ERROR, "Session already exist on server"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. Session already exist on server"));
 		else if (ex instanceof SessionInvalidReciever)
-			panel.addMsg(new TextMessage(MsgType.ERROR, "Server said that this client does not belong to this session"));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Error. Server said that this client does not belong to this session"));
 		else if (ex instanceof SessionDoesNotExist)
-			panel.addMsg(new TextMessage(MsgType.SYSTEM, "This session does not exist on the server, session closed."));
+			panel.addMsg(new TextMessage(MsgType.SYSTEM, "Error. This session does not exist on the server, session closed."));
 		else
-			panel.addMsg(new TextMessage(MsgType.ERROR, "Session closed, error unrecognized: " + ex.getClass()));
+			panel.addMsg(new TextMessage(MsgType.ERROR, "Session closed with unrecognized error: " + ex.getClass()));
 
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
@@ -167,7 +168,7 @@ public class SessionWindowManager implements LocalSessionListener {
 	public void sessionClosed (UUID id) {
 		SessionPanel panel = getPanelByUUID(id);
 
-		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Session closed"));
+		panel.addMsg(new TextMessage(MsgType.SYSTEM, "Disconnected"));
 		panel.getContact().status = ContactStatus.CONNECTED;
 		panel.disableInput();
 		post(new UpdateContactsEvent());

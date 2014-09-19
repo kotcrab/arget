@@ -8,6 +8,7 @@
 -Reconnect automatically after connection timed out
 -Fixed: Menu freeze when trying to connect to offline server
 -Session will be auto closed on timed out
+-Latest commit: Changed session messages to be more human-like.
 -Bug fixes and code optimization
 
 [1.5-b2]
