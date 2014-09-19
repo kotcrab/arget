@@ -21,7 +21,6 @@ package pl.kotcrab.arget.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,10 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.validator.routines.InetAddressValidator;
-
+import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.gui.components.DocumentFieldsChangeListener;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.server.ServerDescriptor;
@@ -53,11 +50,11 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 	public CreateServerInfoDialog (Window window, CreateServerDialogFinished listener) {
 		this(window, null, listener);
 	}
-
+	
 	public CreateServerInfoDialog (Window window, ServerDescriptor descriptor) {
 		this(window, descriptor, null);
 	}
-
+	
 	public CreateServerInfoDialog (Window window, ServerDescriptor existingDesc, CreateServerDialogFinished listener) {
 		super(window, ModalityType.APPLICATION_MODAL);
 		init(existingDesc, listener);
@@ -70,13 +67,12 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 		FieldsChangeListener fieldsChangeListener = new FieldsChangeListener();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Edit Server Details");
-		setSize(233, 149);
+		setSize(270, 161);
 		setPositionToCenter(getParent());
 		setResizable(false);
 
 		JPanel contentPanel = new JPanel();
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPanel.setLayout(new GridLayout(0, 2, 0, 5));
+		contentPanel.setBorder(null);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -93,13 +89,14 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 		portField.setText("31415");
 		portField.getDocument().addDocumentListener(fieldsChangeListener);
 		portField.setColumns(10);
+		contentPanel.setLayout(new MigLayout("", "[80.00px][127px,grow]", "[22px][22px][22px]"));
 
-		contentPanel.add(new JLabel("Server name:"));
-		contentPanel.add(nameField);
-		contentPanel.add(new JLabel("Ip:"));
-		contentPanel.add(ipField);
-		contentPanel.add(new JLabel("Port:"));
-		contentPanel.add(portField);
+		contentPanel.add(new JLabel("Server name:"), "cell 0 0,grow");
+		contentPanel.add(nameField, "cell 1 0,grow");
+		contentPanel.add(new JLabel("Ip:"), "cell 0 1,grow");
+		contentPanel.add(ipField, "cell 1 1,grow");
+		contentPanel.add(new JLabel("Port:"), "cell 0 2,grow");
+		contentPanel.add(portField, "cell 1 2,grow");
 
 		createButtonPane();
 
@@ -154,12 +151,9 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 		protected void verify () {
 			okButton.setEnabled(true);
 
-			if (nameField.getText().isEmpty() || nameField.getText().contains(":")) lockOkButton();
+			if (nameField.getText().isEmpty()) lockOkButton();
+			if (ipField.getText().isEmpty()) lockOkButton();
 			if (isInteger(portField.getText()) == false) lockOkButton();
-
-			if (ipField.getText().equals("localhost")) return;
-			// if (ipField.getText().startsWith("http")) return; //TODO proper support for url adresses
-			if (InetAddressValidator.getInstance().isValidInet4Address(ipField.getText()) == false) lockOkButton();
 		}
 
 		private void lockOkButton () {

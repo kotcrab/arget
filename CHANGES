@@ -13,6 +13,7 @@
  from user exit request, Arget will dump thread info to file, display error 
  and perform force exit
 -Fixed rendering artefacts (again)
+-Added support for hostnames
 -Bug fixes and code optimization
 
 [1.5-b2]

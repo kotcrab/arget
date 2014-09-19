@@ -20,10 +20,13 @@
 package pl.kotcrab.arget.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
@@ -118,10 +121,10 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 	}
 
 	private void initSocket (String serverIp, int port) throws IOException {
-// if (serverIp.startsWith("http")) { //TODO proper support for url adresses
-// InetAddress address = InetAddress.getByName(new URL(serverIp).getHost());
-// serverIp = address.getHostAddress();
-// }
+		if (InetAddressValidator.getInstance().isValidInet4Address(serverIp) == false) {
+			InetAddress address = InetAddress.getByName(serverIp);
+			serverIp = address.getHostAddress();
+		}
 
 		client = new Client(200000, 200000);
 		KryoUtils.registerNetClasses(client.getKryo());
@@ -209,7 +212,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	public void requestDisconnect () {
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run () {
 				if (sender != null) sender.processLater(new DisconnectingNotification());
