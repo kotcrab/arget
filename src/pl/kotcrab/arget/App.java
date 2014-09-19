@@ -63,6 +63,7 @@ public class App {
 	public static EventBus eventBus;
 	public static NotificationService notificationService;
 
+	public static final int VERSION_COMPATIBILITY_CODE = 1;
 	public static final int PROFILE_VERSION;
 	public static final int SERVER_CONFIG_VERSION;
 
