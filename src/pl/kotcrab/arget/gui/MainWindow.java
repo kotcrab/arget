@@ -43,6 +43,7 @@ import javax.swing.border.EmptyBorder;
 import org.apache.commons.codec.binary.Base64;
 
 import pl.kotcrab.arget.App;
+import pl.kotcrab.arget.ExitCleaner;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.Settings;
 import pl.kotcrab.arget.comm.exchange.internal.KeychainRequest;
@@ -324,6 +325,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		ProfileIO.saveProfile(profile);
 
 		MainWindow.instance = null;
+
+		ExitCleaner.forceExit();
+		
 		super.dispose();
 	}
 

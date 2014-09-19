@@ -9,6 +9,9 @@
 -Fixed: Menu freeze when trying to connect to offline server
 -Session will be auto closed on timed out
 -Changed session messages to be more human-like
+-Added: When some thread is blocking Arget from exiting after 10 seconds 
+ from user exit request, Arget will dump thread info to file, display error 
+ and perform force exit
 -Bug fixes and code optimization
 
 [1.5-b2]
