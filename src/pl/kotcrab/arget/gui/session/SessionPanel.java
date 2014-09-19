@@ -48,7 +48,6 @@ import java.util.UUID;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -130,7 +129,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		}
 	};
 
-	// TODO create this on EDT!
+	// TODO create this on EDT! (maybe not required)
 	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;
@@ -148,7 +147,6 @@ public class SessionPanel extends CenterPanel implements EventListener {
 
 		pane = new JScrollPane(innerPanel);
 		pane.setBorder(null);
-		pane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		pane.getVerticalScrollBar().setUnitIncrement(26);
 		pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 

@@ -12,6 +12,7 @@
 -Added: When some thread is blocking Arget from exiting after 10 seconds 
  from user exit request, Arget will dump thread info to file, display error 
  and perform force exit
+-Fixed rendering artefacts (again)
 -Bug fixes and code optimization
 
 [1.5-b2]
