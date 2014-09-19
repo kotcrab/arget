@@ -79,11 +79,11 @@ class ConnectionManager implements EventListener {
 	}
 
 	def send(Exchange ex) {
-		if(client != null) client.send(ex)
+		if (client != null) client.send(ex)
 	}
 
 	def compareClient(ArgetClient client) {
-		if(this.client == null) return true
+		if (this.client == null) return true
 
 		return this.client == client
 	}

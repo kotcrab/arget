@@ -51,7 +51,7 @@ class ExitCleaner {
 		val Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 
 		for (Thread t : threadSet) {
-			if(t.isDaemon) {
+			if (t.isDaemon) {
 				writer.println("Skipping daemon thread: " + t.name);
 			} else {
 				writer.println("Thread: " + t.name);

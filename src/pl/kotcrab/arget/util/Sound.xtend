@@ -18,6 +18,8 @@
  ******************************************************************************/
 package pl.kotcrab.arget.util
 
+import java.io.BufferedInputStream
+import java.io.InputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import pl.kotcrab.arget.App
@@ -26,8 +28,10 @@ class Sound {
 	val Clip clip
 
 	new(String path) {
+		val InputStream bufferedIn = new BufferedInputStream(App.getResourceAsStream(path));
+		val ais = AudioSystem.getAudioInputStream(bufferedIn)
+
 		clip = AudioSystem.getClip()
-		var ais = AudioSystem.getAudioInputStream(App.getResourceAsStream(path))
 		clip.open(ais)
 	}
 
