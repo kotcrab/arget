@@ -110,7 +110,7 @@ public class App {
 			guiAvailable = initGui;
 
 			JAR_FOLDER_PATH = DesktopUtils.getJarPath();
-			DOWNLOAD_FOLDER_PATH = JAR_FOLDER_PATH + File.separator + "File Transfer" + File.separator;
+			DOWNLOAD_FOLDER_PATH = JAR_FOLDER_PATH + "File Transfer" + File.separator;
 
 			new File(APP_FOLDER).mkdirs();
 			new File(DOWNLOAD_FOLDER_PATH).mkdirs();

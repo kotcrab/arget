@@ -20,6 +20,7 @@
 package pl.kotcrab.arget.util;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -52,7 +53,8 @@ public class DesktopUtils {
 		try {
 			URL url = DesktopUtils.class.getProtectionDomain().getCodeSource().getLocation();
 			String path = URLDecoder.decode(url.getFile(), "UTF-8");
-			return path.substring(0, path.lastIndexOf('/')); // remove jar name from path
+			path = path.substring(0, path.lastIndexOf('/')); // remove jar name from path
+			return path + File.separator;
 		} catch (UnsupportedEncodingException e) {
 			Log.exception(e);
 		}
