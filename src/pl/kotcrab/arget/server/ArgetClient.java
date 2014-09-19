@@ -71,8 +71,6 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		WAIT_FOR_CONFIG, WAIT_FOR_RSA, WAIT_FOR_TEST_DATA, WAIT_FOR_OK_NOTIF, CONNECTED
 	}
 
-	private boolean successfullyInitialized = false;
-
 	// private ServerDescriptor info;
 	private Profile profile;
 	private MainWindowCallback guiCallback;
@@ -110,6 +108,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			initSocket(info.ip, info.port);
 		} catch (IOException e) {
 			postStatus(ConnectionStatus.ERROR, e.getMessage());
+			disconnect(false);
 
 			// we don't have to print stack trace if this just was "unable to connect" error
 			if (e.getMessage().contains("Unable to connect") == false) Log.exception(e);
@@ -147,8 +146,6 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 				}
 			}
 		});
-
-		successfullyInitialized = true;
 	}
 
 	private void processKeychain (KeychainTransfer keychain) {
@@ -212,7 +209,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	public void requestDisconnect () {
 		new Thread(new Runnable() {
-
+			
 			@Override
 			public void run () {
 				if (sender != null) sender.processLater(new DisconnectingNotification());
@@ -336,10 +333,6 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 	private void post (Event event) {
 		App.eventBus.post(event);
-	}
-
-	public boolean isSuccessfullyInitialized () {
-		return successfullyInitialized;
 	}
 
 }

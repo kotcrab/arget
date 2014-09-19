@@ -33,7 +33,6 @@ class ConnectionManager implements EventListener {
 	val MainWindowCallback callback;
 
 	var ArgetClient client;
-	var ArgetClient clientRef;
 
 	var ServerDescriptor lastDescriptor;
 
@@ -52,10 +51,8 @@ class ConnectionManager implements EventListener {
 	def connect(ServerDescriptor info) {
 		lastDescriptor = info
 		client = new ArgetClient(info, profile, callback, windowManager)
-		clientRef = client // client may be changed by set to null by some event
 
 		windowManager.localSessionManager = client.localSessionManager
-		if(clientRef.isSuccessfullyInitialized == false) requestDisconnect()
 	}
 
 	def isConnected() {
@@ -81,10 +78,6 @@ class ConnectionManager implements EventListener {
 		return client.localSessionManager
 	}
 
-	def isClientInitialized() {
-		return clientRef.isSuccessfullyInitialized()
-	}
-
 	def send(Exchange ex) {
 		if(client != null) client.send(ex)
 	}
@@ -100,7 +93,6 @@ class ConnectionManager implements EventListener {
 			if (client == event.eventSender) {
 				if (event.status.isReconnectable && profile.options.mainReconnectWhenTimedout)
 					connect(lastDescriptor)
-				else if(event.status.isConnectionBroken) requestDisconnect()
 			}
 
 		}
