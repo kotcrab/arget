@@ -52,6 +52,7 @@ public class OptionsDialog extends ESCClosableDialog {
 
 	// main
 	private JCheckBox cmPlaySoundNewMsg;
+	private JCheckBox cmReconnectWhenTimedout;
 
 	// notifications
 	private JCheckBox cnConnectionLost;
@@ -71,10 +72,11 @@ public class OptionsDialog extends ESCClosableDialog {
 
 	public OptionsDialog (JFrame owner, Profile profile) {
 		super(owner, true);
+		setResizable(false);
 
 		this.profile = profile;
 
-		setSize(387, 280);
+		setSize(435, 290);
 		setPositionToCenter(owner);
 		setTitle(App.APP_NAME + " - Options");
 
@@ -143,6 +145,7 @@ public class OptionsDialog extends ESCClosableDialog {
 		ProfileOptions o = profile.options;
 
 		cmPlaySoundNewMsg.setSelected(o.mainPlaySoundNewMsg);
+		cmReconnectWhenTimedout.setSelected(o.mainReconnectWhenTimedout);
 
 		cnConnectionLost.setSelected(o.notifConnectionLost);
 		cnUserOnline.setSelected(o.notifUserOnline);
@@ -160,6 +163,7 @@ public class OptionsDialog extends ESCClosableDialog {
 		ProfileOptions o = profile.options;
 
 		o.mainPlaySoundNewMsg = cmPlaySoundNewMsg.isSelected();
+		o.mainReconnectWhenTimedout = cmReconnectWhenTimedout.isSelected();
 
 		o.notifConnectionLost = cnConnectionLost.isSelected();
 		o.notifUserOnline = cnUserOnline.isSelected();
@@ -180,7 +184,10 @@ public class OptionsDialog extends ESCClosableDialog {
 			mainPanel.setLayout(new MigLayout("", "[100px,grow]", "[16px]"));
 
 			cmPlaySoundNewMsg = new JCheckBox("Play sound on new message");
-			mainPanel.add(cmPlaySoundNewMsg, "cell 0 0,alignx left,aligny top");
+			cmReconnectWhenTimedout = new JCheckBox("Try to reconnect on connection timed out");
+
+			mainPanel.add(cmPlaySoundNewMsg, "cell 0 0");
+			mainPanel.add(cmReconnectWhenTimedout, "cell 0 1");
 		}
 
 		{

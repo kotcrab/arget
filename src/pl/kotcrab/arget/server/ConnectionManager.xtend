@@ -28,9 +28,9 @@ import pl.kotcrab.arget.gui.session.SessionWindowManager
 import pl.kotcrab.arget.profile.Profile
 
 class ConnectionManager implements EventListener {
+	val Profile profile;
 	val SessionWindowManager windowManager;
 	val MainWindowCallback callback;
-	val Profile profile;
 
 	var ArgetClient client;
 	var ArgetClient clientRef;
@@ -90,18 +90,19 @@ class ConnectionManager implements EventListener {
 	}
 
 	def compareClient(ArgetClient client) {
+		if(this.client == null) return true
+
 		return this.client == client
 	}
 
 	override onEvent(Event event) {
 		if (event instanceof ConnectionStatusEvent) {
-			
 			if (client == event.eventSender) {
-				if (event.status.isReconnectable) {
+				if (event.status.isReconnectable && profile.options.mainReconnectWhenTimedout)
 					connect(lastDescriptor)
-				} else if(event.status.isConnectionBroken) requestDisconnect()
+				else if(event.status.isConnectionBroken) requestDisconnect()
 			}
-			
+
 		}
 	}
 

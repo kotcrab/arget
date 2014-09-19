@@ -5,10 +5,10 @@
 -Added info in News server settings
 -When GUI is available error will be displayed when charset change fails
 -Using new and recommended sound API
--Reconnect automatically after connection timed out
+-Reconnect automatically after connection timed out (can be disabled in options)
 -Fixed: Menu freeze when trying to connect to offline server
 -Session will be auto closed on timed out
--Latest commit: Changed session messages to be more human-like.
+-Changed session messages to be more human-like
 -Bug fixes and code optimization
 
 [1.5-b2]

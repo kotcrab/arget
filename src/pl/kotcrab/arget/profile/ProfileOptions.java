@@ -22,6 +22,7 @@ package pl.kotcrab.arget.profile;
 public class ProfileOptions {
 	// main
 	public boolean mainPlaySoundNewMsg = true;
+	public boolean mainReconnectWhenTimedout = true;
 
 	// notifications
 	public boolean notifConnectionLost = true;
