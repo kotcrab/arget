@@ -5,6 +5,13 @@ import os
 main_dir = os.path.dirname(os.getcwd())
 src_dir = os.path.join(main_dir, 'src', 'pl', 'kotcrab', 'arget')
 header = os.path.join(main_dir, 'src', 'data', 'license_header.txt')
+#config end
+
+f = open(header)
+header_lines = f.readlines()
+f.close()
+
+verbose = False
 
 def contains(small, big):
     if(len(small) > len(big)):
@@ -24,17 +31,24 @@ def process_file(file_path):
     
     if not contains(header_lines, source):
         missing += 1
-        print 'WARNING: Missing header: ' + file_path
+        if verbose:
+            print 'WARNING: Missing header: ' + file_path
 
 missing = 0
 
-f = open(header)
-header_lines = f.readlines()
-f.close()
+def count_missing_headers():
+    
+    for root, dirnames, files in os.walk(src_dir):
+           for filename in files:
+                if filename.endswith(('.java', '.xtend')):
+                    process_file(os.path.join(root, filename))
+    return missing
 
-for root, dirnames, files in os.walk(src_dir):
-       for filename in files:
-            if filename.endswith(('.java', '.xtend')):
-                process_file(os.path.join(root, filename))
-          
-print 'Done, missing: ' + str(missing)
+def main():
+    global verbose
+    verbose = True
+    count_missing_headers()
+    print 'Done, missing: ' + str(missing)
+    
+if __name__ == "__main__":
+    main()
