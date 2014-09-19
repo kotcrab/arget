@@ -135,7 +135,8 @@ public class App {
 				charset.set(null, null);
 				Log.l(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
-				if(initGui) JOptionPane.showMessageDialog(null, CHARSET_CHANGE_FAILURE_MSG, "Fatal error", JOptionPane.ERROR_MESSAGE); 
+				if (initGui)
+					JOptionPane.showMessageDialog(null, CHARSET_CHANGE_FAILURE_MSG, "Fatal error", JOptionPane.ERROR_MESSAGE);
 				throw new IllegalStateException(CHARSET_CHANGE_FAILURE_MSG);
 			}
 		}

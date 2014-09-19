@@ -327,7 +327,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		MainWindow.instance = null;
 
 		ExitCleaner.forceExit();
-		
+
 		super.dispose();
 	}
 

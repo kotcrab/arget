@@ -50,11 +50,11 @@ public class CreateServerInfoDialog extends ESCClosableDialog {
 	public CreateServerInfoDialog (Window window, CreateServerDialogFinished listener) {
 		this(window, null, listener);
 	}
-	
+
 	public CreateServerInfoDialog (Window window, ServerDescriptor descriptor) {
 		this(window, descriptor, null);
 	}
-	
+
 	public CreateServerInfoDialog (Window window, ServerDescriptor existingDesc, CreateServerDialogFinished listener) {
 		super(window, ModalityType.APPLICATION_MODAL);
 		init(existingDesc, listener);
