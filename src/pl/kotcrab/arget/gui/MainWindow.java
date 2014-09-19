@@ -70,8 +70,7 @@ import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.profile.ProfileOptions;
-import pl.kotcrab.arget.server.ArgetClient;
-import pl.kotcrab.arget.server.ConnectionStatus;
+import pl.kotcrab.arget.server.ConnectionManager;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
@@ -93,9 +92,10 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	public static MainWindow instance;
 
 	private Profile profile;
-	private ArgetClient client;
+	private ConnectionManager connection;
+	// private ArgetClient client;
 	private SessionWindowManager sessionWindowManager;
-	
+
 	private Sound notificationSound;
 
 	private JMenu serversMenu;
@@ -111,7 +111,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private IconFlasher iconFlasher;
 
 	private WebToggleButton scrollLockToggle;
-	
+
 	private boolean painted;
 
 	public MainWindow (Profile _profile) {
@@ -123,11 +123,15 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		App.notificationService.setControler(this);
 
 		notificationSound = new Sound("/data/notification.wav");
-		
+
 		createAndShowGUI();
-		
+
 		iconFlasher = IconFlasher.getIconFlasher(this);
-		
+
+		connection = new ConnectionManager(profile, sessionWindowManager, this);
+
+		statusLabel.setText("Disconnected");
+
 		if (profile.autoconnectInfo != null) {
 			new Thread(new Runnable() {
 
@@ -225,9 +229,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		});
 
-		// manually use event to set initial state of gui
-		setConnectionStatus(new ConnectionStatusEvent(ConnectionStatus.DISCONNECTED));
-
 		setVisible(true);
 	}
 
@@ -304,20 +305,19 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	}
 
-	public void setConnectionStatus (ConnectionStatusEvent e) {
-		String textToSet = e.status.toPrettyString();
-		if (e.msg != null) textToSet += ": " + e.msg;
-		statusLabel.setText(textToSet);
+	private void setConnectionStatus (ConnectionStatusEvent e) {
+		if (connection.compareClient(e.eventSender)) {
+			String textToSet = e.status.toPrettyString();
+			if (e.msg != null) textToSet += ": " + e.msg;
+			statusLabel.setText(textToSet);
 
-		if (e.status.isConnectionBroken()) {
-			client = null;
-			resetContacts();
+			if (e.status.isConnectionBroken()) resetContacts();
 		}
 	}
 
 	@Override
 	public void dispose () {
-		if (client != null) client.requestDisconnect();
+		if (connection.isConnected()) connection.requestDisconnect();
 		if (sessionWindowManager != null) sessionWindowManager.stop();
 
 		profile.mainWindowBounds = getBounds();
@@ -344,7 +344,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		if (contact.status == ContactStatus.CONNECTED) {
 			sessionWindowManager.showPanelForContactWhenReady(contact);
-			client.createSession(contact);
+			connection.createSession(contact);
 			return;
 		}
 	}
@@ -358,8 +358,8 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	private void updateContacts () {
-		if (client != null) {
-			client.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
+		if (connection.isConnected()) {
+			connection.processLastKeychain(); // automatically calls contactsPanel.updateContactsTable();
 			contactsPanel.updateContactsTable();
 		} else
 			contactsPanel.updateContactsTable();
@@ -407,22 +407,19 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	}
 
 	@Override
-	public void connectToServer (ServerDescriptor info) {
-		if (client == null) {
-			client = new ArgetClient(info, profile, instance, sessionWindowManager);
+	public void connectToServer (final ServerDescriptor info) {
+		new Thread(new Runnable() {
 
-			ArgetClient clientRef = client; // client may be changed by set to null by some event
-
-			sessionWindowManager.setLocalSessionManager(client.getLocalSessionManager());
-
-			if (clientRef.isSuccessfullyInitialized() == false) {
-				clientRef.requestDisconnect();
-				client = null;
+			@Override
+			public void run () {
+				if (connection.isConnected() == false)
+					connection.connect(info);
+				else
+					JOptionPane.showMessageDialog(instance,
+						"Already connected to server. Disconnect first if you want to change your current server.", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
-		} else
-			JOptionPane.showMessageDialog(instance,
-				"Already connected to server. Disconnect first if you want to change your current server.", "Error",
-				JOptionPane.ERROR_MESSAGE);
+		}, "Connection").start();
 	}
 
 	@Override
@@ -430,8 +427,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		if (isFocused() == false) {
 			iconFlasher.flashIcon();
 
-			notificationSound.play();
-		//	if (profile.options.mainPlaySoundNewMsg) SoundUtils.playSound("/data/notification.wav");
+			if (profile.options.mainPlaySoundNewMsg) notificationSound.play();
 		}
 	}
 
@@ -488,11 +484,9 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			new ManageServersDialog(instance, profile);
 			break;
 		case SERVERS_DISCONNECT:
-			if (client != null) {
-				ArgetClient oldClient = client;
-				client = null;
-				oldClient.requestDisconnect();
-			} else
+			if (connection.isConnected())
+				connection.requestDisconnect();
+			else
 				JOptionPane.showMessageDialog(instance,
 					"You need to be connected to a server to disconnect. Please connect to disconnect.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -517,9 +511,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			break;
 		}
 		case CONTACTS_REFRESH:
-			if (client != null) {
-				client.send(new KeychainRequest());
-			}
+			connection.send(new KeychainRequest());
 			break;
 
 		case VIEW_SHOW_HOME:

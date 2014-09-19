@@ -19,17 +19,21 @@
 
 package pl.kotcrab.arget.event;
 
+import pl.kotcrab.arget.server.ArgetClient;
 import pl.kotcrab.arget.server.ConnectionStatus;
 
 public class ConnectionStatusEvent implements Event {
+	public ArgetClient eventSender;
 	public ConnectionStatus status;
 	public String msg;
 
-	public ConnectionStatusEvent (ConnectionStatus status) {
+	public ConnectionStatusEvent (ArgetClient eventSender, ConnectionStatus status) {
+		this.eventSender = eventSender;
 		this.status = status;
 	}
 
-	public ConnectionStatusEvent (ConnectionStatus status, String msg) {
+	public ConnectionStatusEvent (ArgetClient eventSender, ConnectionStatus status, String msg) {
+		this.eventSender = eventSender;
 		this.status = status;
 		this.msg = msg;
 	}

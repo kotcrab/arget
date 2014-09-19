@@ -61,4 +61,21 @@ public enum ConnectionStatus {
 			throw new IllegalStateException("Unknown ConnectionStatus, cannot tell if it's broken or not.");
 		}
 	}
+
+	public boolean isReconnectable () {
+		switch (this) {
+		case CONNECTED:
+		case CONNECTING:
+		case DISCONNECTED:
+		case ERROR:
+		case SERVER_FULL:
+		case SERVER_SHUTDOWN:
+		case KICKED:
+			return false;
+		case TIMEDOUT:
+			return true;
+		default:
+			throw new IllegalStateException("Unknown ConnectionStatus, cannot tell if it's reconnectable or not.");
+		}
+	}
 }

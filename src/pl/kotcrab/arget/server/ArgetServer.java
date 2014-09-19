@@ -48,6 +48,7 @@ import com.esotericsoftware.kryonet.Server;
 
 //TODO premium keys, ban list, white list
 //TODO check version
+//TODO stop pinging clients
 public class ArgetServer {
 	private static final String TAG = "Server";
 	private static final int MAX_CONNECTIONS = 20;

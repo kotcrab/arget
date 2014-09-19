@@ -56,7 +56,6 @@ import pl.kotcrab.arget.server.session.LocalSessionListener;
 import pl.kotcrab.arget.server.session.LocalSessionManager;
 import pl.kotcrab.arget.util.KryoUtils;
 import pl.kotcrab.arget.util.ProcessingQueue;
-import pl.kotcrab.arget.util.ThreadUtils;
 import pl.kotcrab.crypto.CascadeCipher;
 import pl.kotcrab.crypto.RSAEncrypter;
 import pl.kotcrab.crypto.SimpleSymmetricCipher;
@@ -133,8 +132,8 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		pinger = new ExchangePinger(sender, "Client Pinger", new TimeoutListener() {
 			@Override
 			public void timedOut () {
-				disconnect();
 				postStatus(ConnectionStatus.TIMEDOUT, "Server not responded to ping messages.");
+				disconnect(false);
 			}
 		});
 
@@ -196,14 +195,15 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 		disconnect(true);
 	}
 
-	private void disconnect (boolean changeGuiStatus) {
+	private void disconnect (boolean postStatusChange) {
+		sessionManager.closeAll();
 		stop();
 		pinger.stop();
 		sender.stop();
 		client.stop();
 		sessionManager.stop();
 
-		if (changeGuiStatus) postStatus(ConnectionStatus.DISCONNECTED);
+		if (postStatusChange) postStatus(ConnectionStatus.DISCONNECTED);
 	}
 
 	public Profile getProfile () {
@@ -215,10 +215,7 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 			@Override
 			public void run () {
-				sessionManager.closeAll();
 				if (sender != null) sender.processLater(new DisconnectingNotification());
-
-				ThreadUtils.sleep(1000); // give some time for server to shutdown it's socket and close sessions
 				disconnect();
 			}
 		}, "Client ExitRequest").start();
@@ -329,11 +326,11 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 	}
 
 	private void postStatus (ConnectionStatus status) {
-		post(new ConnectionStatusEvent(status));
+		post(new ConnectionStatusEvent(this, status));
 	}
 
 	private void postStatus (ConnectionStatus status, String msg) {
-		post(new ConnectionStatusEvent(status, msg));
+		post(new ConnectionStatusEvent(this, status, msg));
 
 	}
 
