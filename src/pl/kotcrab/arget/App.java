@@ -49,7 +49,7 @@ public class App {
 
 	private static final String TAG = "App";
 	public static final String APP_NAME = "Arget";
-	public static final String APP_VERSION = "1.5.1-b1";
+	public static final String APP_VERSION = "1.5.1-b2";
 
 	private static final String SYSTEM_APPDATA_LOCATION = System.getProperty("user.home") + File.separator;
 	public static final String APP_FOLDER = SYSTEM_APPDATA_LOCATION + ".arget" + File.separator;
