@@ -49,10 +49,12 @@ class ConnectionManager implements EventListener {
 	}
 
 	def connect(ServerDescriptor info) {
-		lastDescriptor = info
-		client = new ArgetClient(info, profile, callback, windowManager)
-
-		windowManager.localSessionManager = client.localSessionManager
+		new Thread(
+			[
+				lastDescriptor = info
+				client = new ArgetClient(info, profile, callback, windowManager)
+				windowManager.localSessionManager = client.localSessionManager
+			], "ConnectionThread").start()
 	}
 
 	def isConnected() {
@@ -93,6 +95,8 @@ class ConnectionManager implements EventListener {
 			if (client == event.eventSender) {
 				if (event.status.isReconnectable && profile.options.mainReconnectWhenTimedout)
 					connect(lastDescriptor)
+				else if (event.status.isConnectionBroken)
+					client = null;
 			}
 
 		}

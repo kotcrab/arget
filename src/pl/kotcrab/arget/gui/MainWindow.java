@@ -133,15 +133,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		statusLabel.setText("Disconnected");
 
-		if (profile.autoconnectInfo != null) {
-			new Thread(new Runnable() {
-
-				@Override
-				public void run () {
-					connectToServer(profile.autoconnectInfo);
-				}
-			}, "AutoConnect").start();
-		}
+		if (profile.autoconnectInfo != null) connectToServer(profile.autoconnectInfo);
 	}
 
 	private boolean checkAndSetInstance () {
@@ -412,18 +404,12 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	@Override
 	public void connectToServer (final ServerDescriptor info) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run () {
-				if (connection.isConnected() == false)
-					connection.connect(info);
-				else
-					JOptionPane.showMessageDialog(instance,
-						"Already connected to server. Disconnect first if you want to change your current server.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}, "Connection").start();
+		if (connection.isConnected() == false)
+			connection.connect(info);
+		else
+			JOptionPane.showMessageDialog(instance,
+				"Already connected to server. Disconnect first if you want to change your current server.", "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	@Override
