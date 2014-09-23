@@ -97,7 +97,7 @@ public class FileTransferManager {
 							File file = task.getFile();
 
 							if (task.isToMemory())
-								windowManager.addMessage(session, new ImageMessage(MsgType.RIGHT, ImageUitls.read(file), null));
+								windowManager.addMessage(session, new ImageMessage(MsgType.RIGHT, ImageUitls.read(file), file.getName()));
 
 							sendFileTransferRequest(task);
 						}

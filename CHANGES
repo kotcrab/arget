@@ -1,3 +1,7 @@
+[1.5.1-b2]
+-Connection bug fixes
+-Fixed bug when image name wasn't displayed in image preview
+
 [1.5.1-b1]
 -Markdown: Change * to ** and _ to __
 -Optimized TextMessage
