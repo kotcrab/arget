@@ -31,6 +31,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -72,6 +74,7 @@ import pl.kotcrab.arget.gui.session.msg.MsgType;
 import pl.kotcrab.arget.gui.session.msg.TextMessage;
 import pl.kotcrab.arget.gui.session.msg.TypingMessage;
 import pl.kotcrab.arget.server.ContactInfo;
+import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
@@ -280,6 +283,8 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		inputTextArea.setBorder(new LineBorder(new Color(192, 192, 192)));
 		inputTextArea.setLineWrap(true);
 		inputTextArea.setWrapStyleWord(true);
+		inputTextArea.setDropTarget(dropTarget);
+		SwingUtils.createDefaultPopupMenu(inputTextArea);
 
 		inputTextArea.addKeyListener(new KeyAdapter() {
 			@Override
@@ -358,7 +363,6 @@ public class SessionPanel extends CenterPanel implements EventListener {
 			}
 		});
 
-		inputTextArea.setDropTarget(dropTarget);
 
 		App.eventBus.register(this);
 		App.eventBus.post(new ScrollLockStatusRequestEvent());

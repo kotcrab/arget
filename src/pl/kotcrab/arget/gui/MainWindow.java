@@ -82,7 +82,6 @@ import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 import com.alee.laf.button.WebToggleButton;
 
 //TODO event bus
-//TODO add right click menu on text input area
 //TODO add version verification
 //TODO clear server details on disconnect
 //TODO create createGUI method in every gui class
