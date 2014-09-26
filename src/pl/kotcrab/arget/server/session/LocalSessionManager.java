@@ -45,7 +45,7 @@ import pl.kotcrab.arget.util.ProcessingQueue;
 
 import com.esotericsoftware.kryo.Kryo;
 
-//TODO implement queue for send!!!, current implementation may be thread unsafe wich will be bad
+//FIXME implement queue for send!!!, current implementation may be thread unsafe wich will be bad
 public class LocalSessionManager {
 	private static final String TAG = "SessionManager";
 

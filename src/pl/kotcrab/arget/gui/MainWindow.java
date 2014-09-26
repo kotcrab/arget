@@ -82,12 +82,12 @@ import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 import com.alee.laf.button.WebToggleButton;
 
 //TODO event bus
-//TODO add version verification
+//FIXME add version verification
 //TODO clear server details on disconnect
 //TODO create createGUI method in every gui class
-//TODO when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
+//FIXME when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 //TODO usage statistics sever
-//TODO too long msg breaks kryo
+//FIXME too long msg breaks kryo
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;

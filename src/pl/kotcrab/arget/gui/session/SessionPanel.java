@@ -78,7 +78,7 @@ import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
-//TODO you can't send msg with tab only, tab + spaces, and mark down signs only: _ and *
+//FIXME you can't send msg with tab only, tab + spaces, and mark down signs only: _ and *
 //TODO better scrolllock
 public class SessionPanel extends CenterPanel implements EventListener {
 	private SessionPanel instance;

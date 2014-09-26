@@ -40,7 +40,7 @@ import pl.kotcrab.arget.gui.MainWindow;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.util.ImageUitls;
 
-//TODO centered on screen
+//FIXME centered on screen, and code optimzie
 public class ImageDisplayPanel extends ESCClosableDialog {
 
 	private BufferedImage orginalImage;

@@ -111,7 +111,7 @@ public class LoginFrame extends JFrame {
 		loadExternalButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				// TODO implement load external
+				// FIXME implement load external
 				JOptionPane.showMessageDialog(instnace, "Feature not available yet!");
 			}
 		});
