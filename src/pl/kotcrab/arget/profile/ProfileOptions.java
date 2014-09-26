@@ -28,7 +28,7 @@ public class ProfileOptions {
 	public boolean notifConnectionLost = true;
 	public boolean notifUserOnline = true;
 	public boolean notifUserOffline = true;
-	public boolean notifNewMsg = true;
+	public boolean notifNewMsg = false;
 	public boolean notifImageFileTrasnfer = true;
 	public boolean notifFileTrasnfer = true;
 
