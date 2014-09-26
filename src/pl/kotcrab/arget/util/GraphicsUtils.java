@@ -24,7 +24,7 @@ import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 
-public class SwingUtils {
+public class GraphicsUtils {
 	public static boolean isRectangleDisplayableOnScreen (Rectangle rect) {
 		GraphicsDevice[] gd = getScreenDevices();
 

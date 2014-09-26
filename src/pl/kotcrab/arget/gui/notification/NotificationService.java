@@ -34,7 +34,7 @@ import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactStatus;
-import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.GraphicsUtils;
 
 public class NotificationService implements EventListener, NotifcationListener {
 	private static final int MAX_NOTIFICATIONS = 3;
@@ -113,7 +113,7 @@ public class NotificationService implements EventListener, NotifcationListener {
 	private void setPositons () {
 		int WIDTH = 330;
 		int HEIGHT = 70;
-		Rectangle size = SwingUtils.getPrimaryMonitorBounds();
+		Rectangle size = GraphicsUtils.getPrimaryMonitorBounds();
 		int x = size.x + size.width - WIDTH - 35;
 		int y = 35;
 

@@ -76,7 +76,7 @@ import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
 import pl.kotcrab.arget.util.Sound;
-import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.GraphicsUtils;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
 import com.alee.laf.button.WebToggleButton;
@@ -157,7 +157,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		sessionWindowManager = new SessionWindowManager(this);
 
-		if (profile.mainWindowBounds != null && SwingUtils.isRectangleDisplayableOnScreen(profile.mainWindowBounds))
+		if (profile.mainWindowBounds != null && GraphicsUtils.isRectangleDisplayableOnScreen(profile.mainWindowBounds))
 			setBounds(profile.mainWindowBounds);
 
 		createMenuBars();

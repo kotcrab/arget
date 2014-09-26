@@ -38,7 +38,7 @@ import pl.kotcrab.arget.event.EventBus;
 import pl.kotcrab.arget.gui.notification.NotificationService;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.util.DesktopUtils;
-import pl.kotcrab.arget.util.SwingUtils;
+import pl.kotcrab.arget.util.GraphicsUtils;
 
 import com.alee.laf.WebLookAndFeel;
 
@@ -99,7 +99,7 @@ public class App {
 			// com.esotericsoftware.minlog.Log.DEBUG();
 
 			if (initGui) {
-				if (SwingUtils.isPerpixelTransparencySupported() == false) {
+				if (GraphicsUtils.isPerpixelTransparencySupported() == false) {
 					System.err.println("Per-pixel transparency not supported");
 					System.exit(-1);
 				}
