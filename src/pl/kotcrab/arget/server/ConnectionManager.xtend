@@ -28,18 +28,18 @@ import pl.kotcrab.arget.gui.session.SessionWindowManager
 import pl.kotcrab.arget.profile.Profile
 
 class ConnectionManager implements EventListener {
-	val Profile profile;
-	val SessionWindowManager windowManager;
-	val MainWindowCallback callback;
+	val Profile profile
+	val SessionWindowManager windowManager
+	val MainWindowCallback callback
 
-	var ArgetClient client;
+	var ArgetClient client
 
-	var ServerDescriptor lastDescriptor;
+	var ServerDescriptor lastDescriptor
 
 	new(Profile profile, SessionWindowManager windowManager, MainWindowCallback callback) {
 		App.eventBus.register(this)
 
-		this.profile = profile;
+		this.profile = profile
 		this.windowManager = windowManager
 		this.callback = callback
 	}
