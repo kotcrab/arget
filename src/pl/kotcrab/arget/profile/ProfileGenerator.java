@@ -63,7 +63,7 @@ public class ProfileGenerator {
 	public static void genereteViaConsole () {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			Log.l(App.APP_VERSION + " " + App.APP_VERSION + " Profile Generator");
+			Log.l(App.APP_NAME + " " + App.APP_VERSION + " - Profile Generator");
 
 			String name;
 			do {
