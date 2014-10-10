@@ -24,7 +24,7 @@ import java.util.UUID;
 
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
+import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.PingRequest;
 import pl.kotcrab.arget.comm.exchange.PingResponse;
 import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
@@ -77,7 +77,7 @@ public class KryoUtils {
 	public static void registerNetClasses (Kryo kryo) {
 		kryo.register(byte[].class);
 
-		kryo.register(EncryptionModeTransfer.class);
+		kryo.register(ServerConfigurationTransfer.class);
 		kryo.register(RSAPublicKeyTransfer.class);
 		kryo.register(SymmetricKeysTransfer.class);
 

@@ -35,7 +35,7 @@ import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
+import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
@@ -234,8 +234,8 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 			ex = (Exchange)KryoUtils.readClassAndObjectFromByteArray(internalKryo, data);
 		}
 
-		if (ex instanceof EncryptionModeTransfer && state == State.WAIT_FOR_CONFIG) {
-			EncryptionModeTransfer config = (EncryptionModeTransfer)ex;
+		if (ex instanceof ServerConfigurationTransfer && state == State.WAIT_FOR_CONFIG) {
+			ServerConfigurationTransfer config = (ServerConfigurationTransfer)ex;
 			encryptionMode = config.mode;
 
 			switch (encryptionMode) {

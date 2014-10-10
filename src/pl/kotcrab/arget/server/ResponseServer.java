@@ -21,13 +21,14 @@ package pl.kotcrab.arget.server;
 
 import java.util.UUID;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.EncryptionModeTransfer;
+import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
@@ -54,10 +55,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 
 public class ResponseServer extends ProcessingQueue<Exchange> {
-// private enum State {
-// AES, TWOFISH, SERPENT, WAIT_FOR_RSA_KEY, VERIFY_RSA, CONNECTED
-// };
-
 	private enum State {
 		WAIT_FOR_AUTHREQUEST, WAIT_FOR_PUBLIC_PROFILE_KEY, WAIT_FOR_TEST_DATA_RESPONSE, CONNECTED
 	};
@@ -125,7 +122,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	private void onConnected () {
-		send(new EncryptionModeTransfer(server.getEncryptionMode()));
+		send(new ServerConfigurationTransfer(server.getEncryptionMode(), App.APP_VERSION, App.VERSION_COMPATIBILITY_CODE));
 		send(new RSAPublicKeyTransfer(rsaCipher.getPublicKey().getEncoded()));
 	}
 

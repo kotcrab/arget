@@ -23,14 +23,18 @@ import pl.kotcrab.arget.server.EncryptionMode;
 
 /** Tells client what {@link EncryptionMode} is used on server
  * @author Pawel Pastuszak */
-public class EncryptionModeTransfer implements Exchange {
+public class ServerConfigurationTransfer implements Exchange {
 	public EncryptionMode mode;
+	public String version;
+	public int versionCompatibilityCode;
 
 	@Deprecated
-	public EncryptionModeTransfer () {
+	public ServerConfigurationTransfer () {
 	}
 
-	public EncryptionModeTransfer (EncryptionMode mode) {
+	public ServerConfigurationTransfer (EncryptionMode mode, String version, int versionCompatibilityCode) {
 		this.mode = mode;
+		this.version = version;
+		this.versionCompatibilityCode = versionCompatibilityCode;
 	}
 }
