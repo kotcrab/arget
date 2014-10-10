@@ -145,7 +145,7 @@ public class FileTransferManager {
 		if (ex instanceof FileTransferToMemoryRequest) {
 			FileTransferToMemoryRequest req = (FileTransferToMemoryRequest)ex;
 
-			final ReceiveFileToMemoryTask task = new ReceiveFileToMemoryTask(req.fileSize, session, req.taskId, req.fileName);
+			final ReceiveFileToMemoryTask task = new ReceiveFileToMemoryTask(session, req.taskId, req.fileName, req.fileSize);
 			task.begin();
 			receiveTasks.add(task);
 

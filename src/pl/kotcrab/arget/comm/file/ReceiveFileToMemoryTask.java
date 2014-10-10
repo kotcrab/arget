@@ -36,8 +36,7 @@ public class ReceiveFileToMemoryTask extends ReceiveFileTask {
 
 	private String fileName;
 
-	// FIXME fix stupid argument order
-	public ReceiveFileToMemoryTask (long exceptedSize, LocalSession session, UUID taskId, String fileName) {
+	public ReceiveFileToMemoryTask (LocalSession session, UUID taskId, String fileName, long exceptedSize) {
 		super(Type.RECEIVE, session, taskId);
 
 		if (exceptedSize > MAX_SIZE)
