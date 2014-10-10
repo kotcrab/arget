@@ -26,14 +26,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /** Log utility, log events are redirected to listener and printed to standard output
  * @author Pawel Pastuszak */
-// FIXME remove silent
-// FIXME create default listener and don't use if(listener == null)
 public class Log {
-	private static final String TAG = "Log";
 	private static final boolean DEBUG = App.DEBUG;
 	private static final boolean LOG_INTERRUPTED = DEBUG;
-
-	private static boolean silentMode = false;
 
 	private static LoggerListener listener = new DefaultLogListener();
 
@@ -53,10 +48,8 @@ public class Log {
 
 	// ============STANDARD LOGGING============
 
-	// TODO check call hierarchy and add tags
-
 	public static void l (String msg) {
-		if (silentMode == false) println(msg);
+		println(msg);
 	}
 
 	public static void w (String msg) {
@@ -74,7 +67,7 @@ public class Log {
 	// ============LOGGING WITHOUT NEW LINE============
 
 	public static void lNnl (String msg) {
-		if (silentMode == false) print(msg);
+		print(msg);
 	}
 
 	public static void wNnl (String msg) {
@@ -92,11 +85,7 @@ public class Log {
 	// ============LOGGING WITH TAG============
 
 	public static void l (String tag, String msg) {
-		l(tag, msg, false);
-	}
-
-	public static void l (String tag, String msg, boolean silentOverride) {
-		if (silentMode == false || silentOverride) println("[" + tag + "] " + msg);
+		l(tag, msg);
 	}
 
 	public static void w (String tag, String msg) {
@@ -139,16 +128,6 @@ public class Log {
 
 	public static void setListener (LoggerListener listener) {
 		Log.listener = listener;
-	}
-
-	public static boolean isSilentMode () {
-		return silentMode;
-	}
-
-	public static void setSilentMode (boolean silentMode) {
-		if (silentMode) l(TAG, "Silent mode enabled"); // this must be done before setting silent
-		Log.silentMode = silentMode;
-		if (!silentMode) l(TAG, "Silent mode disabled"); // this must be done after disabling silent
 	}
 
 	private static String getTimestamp () {

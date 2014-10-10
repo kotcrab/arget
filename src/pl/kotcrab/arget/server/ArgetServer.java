@@ -161,11 +161,6 @@ public class ArgetServer {
 						continue;
 					}
 
-					if (s.equals("silent")) {
-						Log.setSilentMode(!Log.isSilentMode());
-						continue;
-					}
-
 					if (s.startsWith("msg")) {
 						String[] splited = s.split(" ", 3);
 						if (splited.length < 2) {
@@ -176,10 +171,10 @@ public class ArgetServer {
 						String command = splited[1];
 
 						if (command.equals("ls")) {
-							Log.l(TAG, "=====Public msg list=====", true);
+							Log.l(TAG, "=====Public msg list=====");
 							for (int i = 0; i < info.publicMsg.size(); i++)
-								Log.l(TAG, i + ": " + info.publicMsg.get(i), true);
-							Log.l(TAG, "=========================", true);
+								Log.l(TAG, i + ": " + info.publicMsg.get(i));
+							Log.l(TAG, "=========================");
 							continue;
 						}
 
