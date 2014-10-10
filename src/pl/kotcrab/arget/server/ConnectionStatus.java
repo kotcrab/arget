@@ -20,7 +20,7 @@
 package pl.kotcrab.arget.server;
 
 public enum ConnectionStatus {
-	CONNECTING, CONNECTED, DISCONNECTED, ERROR, TIMEDOUT, SERVER_FULL, SERVER_SHUTDOWN, KICKED;
+	CONNECTING, CONNECTED, DISCONNECTED, ERROR, TIMEDOUT, VERSION_MISMATCH, SERVER_FULL, SERVER_SHUTDOWN, KICKED;
 
 	public String toPrettyString () {
 		switch (this) {
@@ -34,6 +34,8 @@ public enum ConnectionStatus {
 			return "Error";
 		case TIMEDOUT:
 			return "Connection timed out";
+		case VERSION_MISMATCH:
+			return "Your client version is incompatible";
 		case SERVER_FULL:
 			return "Server is full";
 		case SERVER_SHUTDOWN:
@@ -53,6 +55,7 @@ public enum ConnectionStatus {
 		case DISCONNECTED:
 		case ERROR:
 		case TIMEDOUT:
+		case VERSION_MISMATCH:
 		case SERVER_FULL:
 		case SERVER_SHUTDOWN:
 		case KICKED:
@@ -68,6 +71,7 @@ public enum ConnectionStatus {
 		case CONNECTING:
 		case DISCONNECTED:
 		case ERROR:
+		case VERSION_MISMATCH:
 		case SERVER_FULL:
 		case SERVER_SHUTDOWN:
 		case KICKED:
