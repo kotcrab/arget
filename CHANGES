@@ -2,6 +2,7 @@
 -Popup message notification disabled by default
 -Added right click menu in message input box
 -Fixed version printing on terminal profile generator
+-Fixed detecting primary monitor
 
 [1.5.1-b2]
 -Connection bug fixes

@@ -19,10 +19,12 @@
 
 package pl.kotcrab.arget.util;
 
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 public class GraphicsUtils {
 	public static boolean isRectangleDisplayableOnScreen (Rectangle rect) {
@@ -37,8 +39,20 @@ public class GraphicsUtils {
 	}
 
 	public static Rectangle getPrimaryMonitorBounds () {
+		// because gd[0] is not always a primary monitor we must search for it
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // this is definitely primary monitor bounds
+
 		GraphicsDevice[] gd = getScreenDevices();
 
+		for (int i = 0; i < gd.length; i++) {
+			Rectangle bounds = gd[i].getDefaultConfiguration().getBounds();
+
+			if (bounds.width == screenSize.width && bounds.height == screenSize.height) return bounds;
+		}
+
+		// Ultimate fallback, if we could not match screenSize to any of the screens, return bounds of gd[0]
+		// which may or may not be primary monitor bounds
 		if (gd.length > 0) return gd[0].getDefaultConfiguration().getBounds();
 
 		return null;
