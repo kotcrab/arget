@@ -95,7 +95,6 @@ import com.alee.laf.button.WebToggleButton;
 //FIXME too long msg breaks kryo
 //TODO themes
 //FIXME uncaught exception hanlder
-//FIXME isCetnerPanel bug
 //TODO add setting for file transfer save directory
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
@@ -252,14 +251,13 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		});
 
-	     addWindowListener(new java.awt.event.WindowAdapter() {
-	         @Override
-				public void windowClosing(WindowEvent evt){
-	         	ExitCleaner.forceExit();
-	         }
-	     });
-		
-		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing (WindowEvent evt) {
+				ExitCleaner.forceExit();
+			}
+		});
+
 		setVisible(true);
 	}
 
