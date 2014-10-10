@@ -9,6 +9,7 @@
 -Fixed bug when Arget will exit on logout
 -Password field is now disabled when profile is not encrypted
 -Added message length limit
+-Better errors and exceptions logging
 -Other bug fixes and code optimization
 
 [1.5.1-b2]
@@ -16,7 +17,7 @@
 -Fixed bug when image name wasn't displayed in image preview
 
 [1.5.1-b1]
--Markdown: Change * to ** and _ to __
+-Markdown: Changed * to ** and _ to __
 -Optimized TextMessage
 -Fixed bug where saving server configuration caused exception
 -Added info in News server settings

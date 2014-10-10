@@ -92,9 +92,7 @@ import com.alee.laf.button.WebToggleButton;
 //TODO create createGUI method in every gui class
 //FIXME when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 //TODO usage statistics sever
-//FIXME too long msg breaks kryo
 //TODO themes
-//FIXME uncaught exception hanlder
 //TODO add setting for file transfer save directory
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
@@ -102,7 +100,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 	private Profile profile;
 	private ConnectionManager connection;
-	// private ArgetClient client;
 	private SessionWindowManager sessionWindowManager;
 
 	private Sound notificationSound;

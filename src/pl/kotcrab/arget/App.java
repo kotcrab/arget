@@ -88,8 +88,9 @@ public class App {
 	 * and checks if proper charset is set */
 	public static void init (boolean initGui) {
 		if (appInitialized == false) {
-
 			checkCharset(initGui);
+			Log.init();
+			
 			Security.addProvider(new BouncyCastleProvider());
 
 			eventBus = new EventBus();

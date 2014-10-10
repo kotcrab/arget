@@ -19,6 +19,7 @@
 
 package pl.kotcrab.arget;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,16 +35,23 @@ public class Log {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
 
+	public static void init () {
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException (Thread t, Throwable e) {
+				e.printStackTrace();
+				listener.exception(ExceptionUtils.getStackTrace(e));
+			}
+		});
+	}
+
 	public static void exception (Exception e) {
 		e.printStackTrace();
 		listener.exception(ExceptionUtils.getStackTrace(e));
 	}
 
 	public static void interruptedEx (InterruptedException e) {
-		if (LOG_INTERRUPTED) {
-			e.printStackTrace();
-			listener.exception(ExceptionUtils.getStackTrace(e));
-		}
+		if (LOG_INTERRUPTED) exception(e);
 	}
 
 	// ============STANDARD LOGGING============
