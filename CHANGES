@@ -3,7 +3,8 @@
 -Added right click menu in message input box
 -Fixed version printing on terminal profile generator
 -Fixed detecting primary monitor
--Added help when running Arget with '--help' from command line 
+-Added help when running Arget with '--help' from command line
+-Added server version checking 
 -Other bug fixes and code optimization
 
 [1.5.1-b2]

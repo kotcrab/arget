@@ -19,6 +19,7 @@
 
 package pl.kotcrab.arget.comm.exchange;
 
+import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.server.EncryptionMode;
 
 /** Tells client what {@link EncryptionMode} is used on server
@@ -32,9 +33,9 @@ public class ServerConfigurationTransfer implements Exchange {
 	public ServerConfigurationTransfer () {
 	}
 
-	public ServerConfigurationTransfer (EncryptionMode mode, String version, int versionCompatibilityCode) {
+	public ServerConfigurationTransfer (EncryptionMode mode) {
 		this.mode = mode;
-		this.version = version;
-		this.versionCompatibilityCode = versionCompatibilityCode;
+		this.version = App.APP_VERSION;
+		this.versionCompatibilityCode = App.VERSION_COMPATIBILITY_CODE;
 	}
 }

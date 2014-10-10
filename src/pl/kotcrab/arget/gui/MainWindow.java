@@ -23,22 +23,26 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -66,15 +70,18 @@ import pl.kotcrab.arget.gui.dialog.CreateServerInfoDialog;
 import pl.kotcrab.arget.gui.dialog.DisplayPublicKeyDialog;
 import pl.kotcrab.arget.gui.dialog.ManageServersDialog;
 import pl.kotcrab.arget.gui.dialog.OptionsDialog;
+import pl.kotcrab.arget.gui.dialog.VersionMismatchDialog;
 import pl.kotcrab.arget.gui.notification.NotificationControler;
 import pl.kotcrab.arget.gui.session.SessionWindowManager;
 import pl.kotcrab.arget.profile.Profile;
 import pl.kotcrab.arget.profile.ProfileIO;
 import pl.kotcrab.arget.profile.ProfileOptions;
 import pl.kotcrab.arget.server.ConnectionManager;
+import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
+import pl.kotcrab.arget.util.DesktopUtils;
 import pl.kotcrab.arget.util.GraphicsUtils;
 import pl.kotcrab.arget.util.Sound;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
@@ -82,7 +89,6 @@ import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 import com.alee.laf.button.WebToggleButton;
 
 //TODO event bus
-//FIXME add version verification
 //TODO clear server details on disconnect
 //TODO create createGUI method in every gui class
 //FIXME when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
@@ -92,6 +98,7 @@ import com.alee.laf.button.WebToggleButton;
 //FIXME uncaught exception hanlder
 //FIXME isCetnerPanel bug
 //FIXME arget image preview window location
+//TODO add setting for file transfer save directory
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
@@ -104,7 +111,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private Sound notificationSound;
 
 	private JMenu serversMenu;
-	private JLabel statusLabel;
+	private JTextPane statusPane;
 	private JSplitPane splitPane;
 
 	private ErrorStatusPanel errorStatusPanel;
@@ -135,8 +142,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		connection = new ConnectionManager(profile, sessionWindowManager, this);
 
-		statusLabel.setText("Disconnected");
-
+		statusPane.setText("Disconnected");
 		if (profile.autoconnectInfo != null) connectToServer(profile.autoconnectInfo);
 	}
 
@@ -167,8 +173,30 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		contactsPanel = new ContactsPanel(profile, this);
 
-		statusLabel = new JLabel();
-		statusLabel.setBorder(new EmptyBorder(1, 3, 2, 0));
+		statusPane = new JTextPane();
+		statusPane.setBorder(new EmptyBorder(1, 3, 2, 0));
+		statusPane.setContentType("text/html");
+		statusPane.setBackground(null);
+		statusPane.setHighlighter(null);
+		statusPane.setEditable(false);
+		statusPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
+		statusPane.setFont(new Font("Tahoma", Font.PLAIN, 13));
+
+		statusPane.addHyperlinkListener(new HyperlinkListener() {
+
+			@Override
+			public void hyperlinkUpdate (HyperlinkEvent e) {
+				if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+					String desc = e.getDescription();
+
+					if (desc.startsWith("version-mismatch")) {
+						desc = desc.substring(desc.indexOf("://") + 3);
+						String[] versionInfo = desc.split("!");
+						new VersionMismatchDialog(MainWindow.instance, versionInfo[0], Integer.valueOf(versionInfo[1]));
+					}
+				}
+			}
+		});
 
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 
@@ -186,7 +214,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			}
 		});
 
-		bottomPanel.add(statusLabel);
+		bottomPanel.add(statusPane);
 		bottomPanel.add(scrollLockToggle, BorderLayout.EAST);
 
 		splitPane = new JSplitPane();
@@ -305,8 +333,14 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 	private void setConnectionStatus (ConnectionStatusEvent e) {
 		if (connection.compareClient(e.eventSender)) {
 			String textToSet = e.status.toPrettyString();
-			if (e.msg != null) textToSet += ": " + e.msg;
-			statusLabel.setText(textToSet);
+
+			if (e.status == ConnectionStatus.VERSION_MISMATCH) {
+				textToSet = "<html>" + textToSet;
+				textToSet += " <a href=\"version-mismatch://" + e.msg + "\">Details...</a>";
+				textToSet += "<html>";
+			} else if (e.msg != null) textToSet += ": " + e.msg;
+
+			statusPane.setText(textToSet);
 
 			if (e.status.isConnectionBroken()) resetContacts();
 		}

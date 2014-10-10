@@ -35,7 +35,7 @@ public enum ConnectionStatus {
 		case TIMEDOUT:
 			return "Connection timed out";
 		case VERSION_MISMATCH:
-			return "Your client version is incompatible";
+			return "Your client version is incompatible with the server";
 		case SERVER_FULL:
 			return "Server is full";
 		case SERVER_SHUTDOWN:

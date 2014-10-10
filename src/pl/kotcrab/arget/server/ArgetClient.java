@@ -115,7 +115,6 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 			// we don't have to print stack trace if this just was "unable to connect" error
 			if (e.getMessage().contains("Unable to connect") == false) Log.exception(e);
-
 		}
 
 	}
@@ -236,6 +235,12 @@ public class ArgetClient extends ProcessingQueue<Exchange> {
 
 		if (ex instanceof ServerConfigurationTransfer && state == State.WAIT_FOR_CONFIG) {
 			ServerConfigurationTransfer config = (ServerConfigurationTransfer)ex;
+
+			if (config.versionCompatibilityCode != App.VERSION_COMPATIBILITY_CODE) {
+				postStatus(ConnectionStatus.VERSION_MISMATCH, config.version + "!" + config.versionCompatibilityCode);
+				disconnect(false);
+			}
+
 			encryptionMode = config.mode;
 
 			switch (encryptionMode) {

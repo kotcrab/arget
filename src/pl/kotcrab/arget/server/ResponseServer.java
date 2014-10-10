@@ -122,7 +122,7 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	private void onConnected () {
-		send(new ServerConfigurationTransfer(server.getEncryptionMode(), App.APP_VERSION, App.VERSION_COMPATIBILITY_CODE));
+		send(new ServerConfigurationTransfer(server.getEncryptionMode()));
 		send(new RSAPublicKeyTransfer(rsaCipher.getPublicKey().getEncoded()));
 	}
 
