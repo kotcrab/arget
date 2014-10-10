@@ -29,7 +29,7 @@ public class ThreadUtils {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			Log.exception(e);
+			Log.interruptedEx(e);
 		}
 	}
 }

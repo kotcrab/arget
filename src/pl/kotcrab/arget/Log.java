@@ -35,19 +35,19 @@ public class Log {
 
 	private static boolean silentMode = false;
 
-	private static LoggerListener listener;
+	private static LoggerListener listener = new DefaultLogListener();
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
 
 	public static void exception (Exception e) {
 		e.printStackTrace();
-		if (listener != null) listener.exception(ExceptionUtils.getStackTrace(e));
+		listener.exception(ExceptionUtils.getStackTrace(e));
 	}
 
 	public static void interruptedEx (InterruptedException e) {
 		if (LOG_INTERRUPTED) {
 			e.printStackTrace();
-			if (listener != null) listener.exception(ExceptionUtils.getStackTrace(e));
+			listener.exception(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -115,25 +115,25 @@ public class Log {
 
 	private static void print (String msg) {
 		msg = getTimestamp() + msg;
-		if (listener != null) listener.log(msg);
+		listener.log(msg);
 		System.out.print(msg);
 	}
 
 	private static void println (String msg) {
 		msg = getTimestamp() + msg;
-		if (listener != null) listener.log(msg);
+		listener.log(msg);
 		System.out.println(msg);
 	}
 
 	private static void printErr (String msg) {
 		msg = getTimestamp() + msg;
-		if (listener != null) listener.err(msg);
+		listener.err(msg);
 		System.err.print(msg);
 	}
 
 	private static void printlnErr (String msg) {
 		msg = getTimestamp() + msg;
-		if (listener != null) listener.err(msg);
+		listener.err(msg);
 		System.err.println(msg);
 	}
 
@@ -154,5 +154,18 @@ public class Log {
 	private static String getTimestamp () {
 		return dateFormat.format(new Date());
 	}
+}
 
+class DefaultLogListener implements LoggerListener {
+	@Override
+	public void log (String msg) {
+	}
+
+	@Override
+	public void err (String msg) {
+	}
+
+	@Override
+	public void exception (String stacktrace) {
+	}
 }
