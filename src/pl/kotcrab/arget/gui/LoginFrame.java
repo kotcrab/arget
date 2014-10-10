@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.App;
@@ -67,7 +68,7 @@ public class LoginFrame extends JFrame {
 
 		setTitle(App.APP_NAME + " " + App.APP_VERSION + " - Login");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 0, 0);
 		setIconImage(App.loadImage("/data/icon/icon.png"));
 

@@ -31,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -48,7 +49,7 @@ class NotificationView extends JDialog {
 	public NotificationView (NotifcationListener listener) {
 		this.listener = listener;
 		getContentPane().setBackground(Color.BLACK);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setUndecorated(true);
 		setSize(330, 70);
 		setOpacity(0.7f);

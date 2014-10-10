@@ -29,6 +29,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.App;
@@ -46,7 +47,7 @@ public class AboutDialog extends ESCClosableDialog {
 		setSize(423, 150);
 		setTitle(App.APP_NAME + " - About");
 		setPositionToCenter(owner);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 
 		JPanel mainPanel = new JPanel(new MigLayout("", "[grow][][]", "[][][grow][]"));

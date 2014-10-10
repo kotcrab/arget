@@ -247,7 +247,7 @@ public class FileTransferManager {
 			if (task != null) task.saveNextBlock(transfer.block);
 
 			if (task instanceof ReceiveFileToFileTask)
-				getMessageByUUID(transfer.taskId).setProgressBarValue((int)task.getPercentProgress());
+				getMessageByUUID(transfer.taskId).setProgressBarValue(task.getPercentProgress());
 
 			if (task.isBlockOkShouldBeSend()) {
 				send(new FileDataBlockReceivedNotification(session.id, task.getId()));

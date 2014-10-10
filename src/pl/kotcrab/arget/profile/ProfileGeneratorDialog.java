@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
 import pl.kotcrab.arget.gui.components.DocumentFieldsChangeListener;
@@ -45,7 +46,7 @@ public class ProfileGeneratorDialog extends JDialog {
 	public ProfileGeneratorDialog (final ProfileGeneratorDialogListener listener) {
 		setResizable(false);
 		setBounds(100, 100, 272, 134);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Profile Generator");
 
 		JPanel mainPanel = new JPanel(new MigLayout("", "[][grow][][]", "[][][][]"));

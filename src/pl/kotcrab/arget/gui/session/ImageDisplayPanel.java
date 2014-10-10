@@ -32,6 +32,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.imgscalr.Scalr;
 
@@ -53,7 +54,7 @@ public class ImageDisplayPanel extends ESCClosableDialog {
 		this.orginalImage = bufImage;
 		this.image = bufImage;
 
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setSize(758, 499);
 		setTitle(App.APP_NAME + " Image Preview - " + fileName);

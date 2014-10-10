@@ -50,7 +50,7 @@ public class ErrorStatusPanel extends JPanel implements EventListener {
 	public ErrorStatusPanel () {
 		App.eventBus.register(this);
 		setMinimumSize(new Dimension(150, 10));
-		setBorder(new MatteBorder(1, 0, 0, 0, (Color)Color.LIGHT_GRAY));
+		setBorder(new MatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
