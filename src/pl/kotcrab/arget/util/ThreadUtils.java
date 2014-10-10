@@ -19,15 +19,17 @@
 
 package pl.kotcrab.arget.util;
 
+import pl.kotcrab.arget.Log;
+
 public class ThreadUtils {
 	/** Thread that executed this method will sleep for the specific number of milliseconds. If happen InterruptedException will be
-	 * ignored.
+	 * logged using {@link Log} class.
 	 * @param millis length of time to sleep in milliseconds */
 	public static void sleep (long millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			// Log.interruptedEx(e); //one place that we can completely safely ignore this //FIXME really?
+			Log.exception(e);
 		}
 	}
 }
