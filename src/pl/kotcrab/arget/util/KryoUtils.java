@@ -24,10 +24,10 @@ import java.util.UUID;
 
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.PingRequest;
 import pl.kotcrab.arget.comm.exchange.PingResponse;
 import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
+import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.internal.KeyUsedByOtherNotification;

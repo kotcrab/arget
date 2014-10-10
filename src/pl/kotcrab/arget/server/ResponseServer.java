@@ -21,16 +21,15 @@ package pl.kotcrab.arget.server;
 
 import java.util.UUID;
 
-import pl.kotcrab.arget.App;
 import pl.kotcrab.arget.Log;
 import pl.kotcrab.arget.comm.ExchangePinger;
 import pl.kotcrab.arget.comm.ExchangeSender;
 import pl.kotcrab.arget.comm.TimeoutListener;
 import pl.kotcrab.arget.comm.exchange.DisconnectingNotification;
 import pl.kotcrab.arget.comm.exchange.EncryptedTransfer;
-import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.Exchange;
 import pl.kotcrab.arget.comm.exchange.RSAPublicKeyTransfer;
+import pl.kotcrab.arget.comm.exchange.ServerConfigurationTransfer;
 import pl.kotcrab.arget.comm.exchange.SymmetricKeysTransfer;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification;
 import pl.kotcrab.arget.comm.exchange.UnsecuredEventNotification.Type;

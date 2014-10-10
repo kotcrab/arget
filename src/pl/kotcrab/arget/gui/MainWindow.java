@@ -81,7 +81,6 @@ import pl.kotcrab.arget.server.ConnectionStatus;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
-import pl.kotcrab.arget.util.DesktopUtils;
 import pl.kotcrab.arget.util.GraphicsUtils;
 import pl.kotcrab.arget.util.Sound;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
