@@ -51,6 +51,7 @@ public class LoginFrame extends JFrame {
 	private JComboBox<String> profilesCombobox;
 	private JButton loginButton;
 	private JCheckBox autoLoginCheckbox;
+	private JPasswordField passwordField;
 
 	public LoginFrame (String name) {
 		tryToLoadProfileForName(name, null);
@@ -75,7 +76,7 @@ public class LoginFrame extends JFrame {
 		JPanel mainPanel = new JPanel(new MigLayout("", "[][87.00][grow]", "[][][][]"));
 		setContentPane(mainPanel);
 
-		final JPasswordField passwordField = new JPasswordField();
+		passwordField = new JPasswordField();
 		profilesCombobox = new JComboBox<String>();
 		autoLoginCheckbox = new JCheckBox("Login automatically ");
 		loginButton = new JButton("Login");
@@ -184,14 +185,19 @@ public class LoginFrame extends JFrame {
 		String name = getSelectedProfileName();
 
 		if (name == null) {
-			autoLoginCheckbox.setEnabled(false);
+			changeEncryptionDependentControls(false);
 			return;
 		}
 
 		if (ProfileIO.isProfileEncryptedByName(name))
-			autoLoginCheckbox.setEnabled(false);
+			changeEncryptionDependentControls(false);
 		else
-			autoLoginCheckbox.setEnabled(true);
+			changeEncryptionDependentControls(true);
+	}
+
+	private void changeEncryptionDependentControls (boolean enabled) {
+		autoLoginCheckbox.setEnabled(enabled);
+		passwordField.setEnabled(!enabled);
 	}
 
 	private String getSelectedProfileName () {
