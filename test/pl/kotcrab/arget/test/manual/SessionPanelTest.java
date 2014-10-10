@@ -71,12 +71,10 @@ public class SessionPanelTest extends JFrame {
 				MsgType.RIGHT,
 				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tincidunt, eros id convallis ultricies, nulla mi eleifend velit,"
 					+ " vel placerat ante urna interdum velit. Nunc tincidunt eros ac consectetur varius. Aenean a pretium est, id tincidunt eros."));
-		
-		panel
-		.addMsg(new TextMessage(
-			MsgType.RIGHT,
+
+		panel.addMsg(new TextMessage(MsgType.RIGHT,
 			"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-			+ "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+				+ "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
 		panel
 			.addMsg(new TextMessage(

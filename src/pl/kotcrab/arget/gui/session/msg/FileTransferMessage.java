@@ -65,7 +65,7 @@ public class FileTransferMessage extends MessageComponent {
 
 		setLayout(new MigLayout("", "[fill][][]", "[][][]"));
 
-		//TODO change name display scheme
+		// TODO change name display scheme
 		JLabel fileInfoLabel = new JLabel(" File: " + fileName + " Size: " + FileUitls.readableFileSize(fileSize));
 		fileInfoLabel.setFont(textFont);
 

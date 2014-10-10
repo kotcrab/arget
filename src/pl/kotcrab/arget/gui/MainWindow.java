@@ -75,8 +75,8 @@ import pl.kotcrab.arget.server.ConnectionManager;
 import pl.kotcrab.arget.server.ContactInfo;
 import pl.kotcrab.arget.server.ContactStatus;
 import pl.kotcrab.arget.server.ServerDescriptor;
-import pl.kotcrab.arget.util.Sound;
 import pl.kotcrab.arget.util.GraphicsUtils;
+import pl.kotcrab.arget.util.Sound;
 import pl.kotcrab.arget.util.iconflasher.IconFlasher;
 
 import com.alee.laf.button.WebToggleButton;
@@ -88,6 +88,10 @@ import com.alee.laf.button.WebToggleButton;
 //FIXME when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 //TODO usage statistics sever
 //FIXME too long msg breaks kryo
+//TODO themes
+//FIXME uncaught exception hanlder
+//FIXME isCetnerPanel bug
+//FIXME arget image preview window location
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
 	public static MainWindow instance;
