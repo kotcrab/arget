@@ -85,7 +85,7 @@ public class Log {
 	// ============LOGGING WITH TAG============
 
 	public static void l (String tag, String msg) {
-		l(tag, msg);
+		println("[" + tag + "] " + msg);
 	}
 
 	public static void w (String tag, String msg) {
