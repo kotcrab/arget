@@ -40,34 +40,42 @@ import pl.kotcrab.arget.gui.MainWindow;
 import pl.kotcrab.arget.gui.components.ESCClosableDialog;
 import pl.kotcrab.arget.util.ImageUitls;
 
-//FIXME centered on screen, and code optimzie
 public class ImageDisplayPanel extends ESCClosableDialog {
 
 	private BufferedImage orginalImage;
 	private BufferedImage image;
+
+	private String fileName;
 	private boolean saved;
 
-	public ImageDisplayPanel (BufferedImage bufImage, final String fileName) {
+	private JButton saveButton;
+	private JButton closeButton;
+
+	public ImageDisplayPanel (BufferedImage bufImage, String fileName) {
 		super(MainWindow.instance);
 
 		this.orginalImage = bufImage;
 		this.image = bufImage;
+		this.fileName = fileName;
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setSize(758, 499);
+		setLocationByPlatform(true);
 		setTitle(App.APP_NAME + " Image Preview - " + fileName);
 
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout(0, 0));
+		JPanel mainPanel = new JPanel(new BorderLayout(0, 0));
 
-		JLabel imageLabel = new JLabel("");
+		JLabel imageLabel = new JLabel();
+		if (image.getWidth() > 800 || image.getHeight() > 800) image = Scalr.resize(image, 800);
+		imageLabel.setIcon(new ImageIcon(image));
 		mainPanel.add(imageLabel, BorderLayout.CENTER);
 
-		final JButton saveButton = new JButton("Save");
-		JButton closeButton = new JButton("Close");
+		saveButton = new JButton("Save");
+		closeButton = new JButton("Close");
 
 		JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
 		if (fileName != null) buttonPane.add(saveButton);
 		buttonPane.add(closeButton);
 
@@ -75,26 +83,13 @@ public class ImageDisplayPanel extends ESCClosableDialog {
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-		if (image.getWidth() > 800 || image.getHeight() > 800) image = Scalr.resize(image, 800);
-		imageLabel.setIcon(new ImageIcon(image));
-
 		pack();
-
 		setVisible(true);
 
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed (ActionEvent e) {
-				if (saved == false) {
-					File out = new File(App.DOWNLOAD_FOLDER_PATH + fileName);
-					if (out.exists()) out = new File(App.DOWNLOAD_FOLDER_PATH + Math.random() + ") " + fileName);
-
-					ImageUitls.write(orginalImage, out);
-
-					saveButton.setText("Saved");
-					saved = true;
-				} else
-					JOptionPane.showMessageDialog(MainWindow.instance, "Image already saved!");
+				saveImage();
 			}
 		});
 
@@ -104,7 +99,20 @@ public class ImageDisplayPanel extends ESCClosableDialog {
 				dispose();
 			}
 		});
+	}
 
+	private void saveImage () {
+		if (saved == false) {
+			File out = new File(App.DOWNLOAD_FOLDER_PATH + fileName);
+			if (out.exists()) out = new File(App.DOWNLOAD_FOLDER_PATH + Math.random() + ") " + fileName);
+
+			ImageUitls.write(orginalImage, out);
+
+			saveButton.setText("Saved");
+			saveButton.setEnabled(false);
+			saved = true;
+		} else
+			JOptionPane.showMessageDialog(MainWindow.instance, "Image already saved!");
 	}
 
 }

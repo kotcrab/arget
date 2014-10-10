@@ -96,7 +96,6 @@ import com.alee.laf.button.WebToggleButton;
 //TODO themes
 //FIXME uncaught exception hanlder
 //FIXME isCetnerPanel bug
-//FIXME arget image preview window location
 //TODO add setting for file transfer save directory
 public class MainWindow extends JFrame implements MainWindowCallback, EventListener, NotificationControler {
 	private static final String TAG = "MainWindow";
