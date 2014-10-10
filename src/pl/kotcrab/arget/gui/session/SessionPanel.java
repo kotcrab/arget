@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -65,6 +66,7 @@ import pl.kotcrab.arget.comm.exchange.internal.session.data.TypingStartedNotific
 import pl.kotcrab.arget.event.Event;
 import pl.kotcrab.arget.event.EventListener;
 import pl.kotcrab.arget.gui.CenterPanel;
+import pl.kotcrab.arget.gui.MainWindow;
 import pl.kotcrab.arget.gui.ScrollLockEvent;
 import pl.kotcrab.arget.gui.ScrollLockStatusRequestEvent;
 import pl.kotcrab.arget.gui.session.msg.MessageComponent;
@@ -290,6 +292,15 @@ public class SessionPanel extends CenterPanel implements EventListener {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String msg = inputTextArea.getText();
 
+					if (msg.length() > 50000) {
+						JOptionPane.showMessageDialog(MainWindow.instance, "Hey, you are trying to send message that "
+							+ "is over 50000 characters! Thats too much for us, sorry. Try splitting it.");
+
+						stopTypingTimer();
+						e.consume();
+						return;
+					}
+
 					if (msg.equals("") == false && isOnlySpacesInString(msg) == false) {
 
 						if (isOnlySlashInString(msg) == false) {
@@ -304,9 +315,7 @@ public class SessionPanel extends CenterPanel implements EventListener {
 					revalidate();
 					repaint();
 
-					send(new TypingFinishedNotification(id));
-					typing = false;
-					typingTimer.cancel();
+					stopTypingTimer();
 
 					e.consume();
 					return;
@@ -318,6 +327,12 @@ public class SessionPanel extends CenterPanel implements EventListener {
 					typing = true;
 				}
 
+				typingTimer.cancel();
+			}
+
+			private void stopTypingTimer () {
+				send(new TypingFinishedNotification(id));
+				typing = false;
 				typingTimer.cancel();
 			}
 

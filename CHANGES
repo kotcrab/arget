@@ -8,6 +8,7 @@
 -Better image preview placing
 -Fixed bug when Arget will exit on logout
 -Password field is now disabled when profile is not encrypted
+-Added message length limit
 -Other bug fixes and code optimization
 
 [1.5.1-b2]
