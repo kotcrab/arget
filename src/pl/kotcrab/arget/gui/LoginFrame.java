@@ -48,17 +48,17 @@ import pl.kotcrab.arget.profile.ProfileIO;
 public class LoginFrame extends JFrame {
 	private LoginFrame instnace;
 
-	private JComboBox<String> profilesCombobox;
-	private JButton loginButton;
-	private JCheckBox autoLoginCheckbox;
 	private JPasswordField passwordField;
+	private JComboBox<String> profilesCombobox;
+	private JCheckBox autoLoginCheckbox;
+	private JButton loginButton;
+	private JButton createProfileButton;
 
 	public LoginFrame (String name) {
 		tryToLoadProfileForName(name, null);
 		return;
 	}
 
-	/** Create the frame. */
 	public LoginFrame () {
 		this.instnace = this;
 
@@ -66,7 +66,7 @@ public class LoginFrame extends JFrame {
 			tryToLoadProfileForName(Settings.autoLoginProfileName, null);
 			return;
 		}
-
+		
 		setTitle(App.APP_NAME + " " + App.APP_VERSION + " - Login");
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -80,8 +80,7 @@ public class LoginFrame extends JFrame {
 		profilesCombobox = new JComboBox<String>();
 		autoLoginCheckbox = new JCheckBox("Login automatically ");
 		loginButton = new JButton("Login");
-		JButton createProfileButton = new JButton("Create..");
-		JButton loadExternalButton = new JButton("Load External");
+		createProfileButton = new JButton("Create...");
 
 		mainPanel.add(new JLabel(App.loadImageIcon("/data/banner.png")), "cell 0 0 3 1");
 		mainPanel.add(new JLabel("Profile:"), "cell 0 1,alignx left");
@@ -90,7 +89,6 @@ public class LoginFrame extends JFrame {
 		mainPanel.add(passwordField, "cell 1 2 2 1,growx");
 		mainPanel.add(autoLoginCheckbox, "cell 0 3 2 1");
 		mainPanel.add(createProfileButton, "flowx,cell 2 3,alignx right");
-		mainPanel.add(loadExternalButton, "cell 2 3,alignx right");
 		mainPanel.add(loginButton, "cell 2 3,alignx right");
 
 		// -------
@@ -107,14 +105,6 @@ public class LoginFrame extends JFrame {
 						buildProfilesList();
 					}
 				});
-			}
-		});
-
-		loadExternalButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				// FIXME implement load external
-				JOptionPane.showMessageDialog(instnace, "Feature not available yet!");
 			}
 		});
 
