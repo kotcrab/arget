@@ -5,7 +5,8 @@
 -Fixed detecting primary monitor
 -Added help when running Arget with '--help' from command line
 -Added server version checking
--Better image preview placing 
+-Better image preview placing
+-Fixed bug when Arget will exit on logout
 -Other bug fixes and code optimization
 
 [1.5.1-b2]

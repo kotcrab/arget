@@ -252,6 +252,14 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 
 		});
 
+	     addWindowListener(new java.awt.event.WindowAdapter() {
+	         @Override
+				public void windowClosing(WindowEvent evt){
+	         	ExitCleaner.forceExit();
+	         }
+	     });
+		
+		
 		setVisible(true);
 	}
 
@@ -353,8 +361,6 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 		ProfileIO.saveProfile(profile);
 
 		MainWindow.instance = null;
-
-		ExitCleaner.forceExit();
 
 		super.dispose();
 	}
@@ -493,6 +499,7 @@ public class MainWindow extends JFrame implements MainWindowCallback, EventListe
 			break;
 		case ARGET_EXIT:
 			dispose();
+			ExitCleaner.forceExit();
 			break;
 
 		case SERVERS_ADD:
