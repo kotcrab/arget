@@ -163,6 +163,8 @@ public class FileTransferMessage extends MessageComponent {
 			@Override
 			public void run () {
 				remove(comp);
+				revalidate();
+				repaint();
 			}
 		});
 	}

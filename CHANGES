@@ -1,16 +1,18 @@
 [1.5.2-b1]
--Popup message notification disabled by default
 -Added right click menu in message input box
--Fixed version printing on terminal profile generator
--Fixed detecting primary monitor
 -Added help when running Arget with '--help' from command line
 -Added server version checking
--Better image preview placing
--Fixed bug when Arget will exit on logout
--Password field is now disabled when profile is not encrypted
 -Added message length limit
--Better errors and exceptions logging
+-Fixed bug when Arget will exit on logout
+-Fixed version printing on terminal profile generator
+-Fixed detecting primary monitor
 -Fixed bug when you paste URL copied from Arget it result in broken URL
+-Fixed bug when empty message could be send
+-Fixed bug when file transfer message was not updated after canceling 
+-Popup message notification disabled by default
+-Better image preview placing
+-Better errors and exceptions logging
+-Password field is now disabled when profile is not encrypted
 -Other bug fixes and code optimization
 
 [1.5.1-b2]
