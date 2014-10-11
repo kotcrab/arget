@@ -47,7 +47,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 //TODO premium keys, ban list, white list
-//TODO check version
 //TODO stop pinging clients
 public class ArgetServer {
 	private static final String TAG = "Server";
@@ -267,7 +266,6 @@ public class ArgetServer {
 				remotes.put(connection, responseServer);
 			}
 
-			// TODO queue
 			@Override
 			public void received (Connection connection, Object object) {
 				if (object instanceof KeepAlive) return;

@@ -131,7 +131,6 @@ public class SessionPanel extends CenterPanel implements EventListener {
 		}
 	};
 
-	// TODO create this on EDT! (maybe not required)
 	public SessionPanel (ContactInfo contact, UUID sessionId, final SessionPanelListener listener) {
 		instance = this;
 		this.contact = contact;

@@ -252,7 +252,6 @@ public class SessionWindowManager implements LocalSessionListener {
 	}
 
 	// TODO reanme to addMsg
-	// TODO depracted na factory use
 	public void addMessage (LocalSession session, MessageComponent comp) {
 		SessionPanel panel = getPanelByUUID(session.id);
 		if (panel != null) panel.addMsg(comp);

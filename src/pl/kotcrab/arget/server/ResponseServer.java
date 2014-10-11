@@ -126,7 +126,6 @@ public class ResponseServer extends ProcessingQueue<Exchange> {
 	}
 
 	@Override
-	// TODO auto close all sessions associated with this response server
 	public void stop () {
 		if (running) {
 			running = false;

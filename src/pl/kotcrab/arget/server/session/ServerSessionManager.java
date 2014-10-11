@@ -40,7 +40,6 @@ import pl.kotcrab.arget.server.ArgetServer;
 import pl.kotcrab.arget.server.ResponseServer;
 import pl.kotcrab.arget.util.ProcessingQueue;
 
-//TODO clean outdated session when creating new ones
 public class ServerSessionManager extends ProcessingQueue<ServerSessionUpdate> {
 	private static final String TAG = "SessionManager";
 
