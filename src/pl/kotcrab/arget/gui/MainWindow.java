@@ -90,7 +90,6 @@ import com.alee.laf.button.WebToggleButton;
 //TODO event bus
 //TODO clear server details on disconnect
 //TODO create createGUI method in every gui class
-//FIXME when pasting text HTML space MUST be replaced with normal space without this text with link will be broken
 //TODO usage statistics sever
 //TODO themes
 //TODO add setting for file transfer save directory

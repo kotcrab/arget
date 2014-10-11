@@ -305,6 +305,10 @@ public class SessionPanel extends CenterPanel implements EventListener {
 
 						if (isOnlySlashInString(msg) == false) {
 							msg = removeSlashes(msg);
+							
+							//this fixes bug when you paste URL copied from Arget it will 
+							//not properly recognize whitespace resulting in broken URL
+							msg = msg.replace((char)160, ' '); //160 is non-breaking space id
 
 							addMsg(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
 							send(new MessageTransfer(id, msg));

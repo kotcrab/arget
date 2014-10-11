@@ -10,6 +10,7 @@
 -Password field is now disabled when profile is not encrypted
 -Added message length limit
 -Better errors and exceptions logging
+-Fixed bug when you paste URL copied from Arget it result in broken URL
 -Other bug fixes and code optimization
 
 [1.5.1-b2]
