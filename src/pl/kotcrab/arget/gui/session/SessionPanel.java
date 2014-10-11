@@ -78,7 +78,6 @@ import pl.kotcrab.arget.util.SwingUtils;
 import pl.kotcrab.arget.util.Timer;
 import pl.kotcrab.arget.util.TimerListener;
 
-//FIXME you can't send msg with tab only, tab + spaces, and mark down signs only: _ and *
 //TODO better scrolllock
 public class SessionPanel extends CenterPanel implements EventListener {
 	private SessionPanel instance;
@@ -301,18 +300,15 @@ public class SessionPanel extends CenterPanel implements EventListener {
 						return;
 					}
 
-					if (msg.equals("") == false && isOnlySpacesInString(msg) == false) {
+					if (isMessageValid(msg)) {
+						msg = removeSlashes(msg);
 
-						if (isOnlySlashInString(msg) == false) {
-							msg = removeSlashes(msg);
-							
-							//this fixes bug when you paste URL copied from Arget it will 
-							//not properly recognize whitespace resulting in broken URL
-							msg = msg.replace((char)160, ' '); //160 is non-breaking space id
+						// this fixes bug when you paste URL copied from Arget it will
+						// not properly recognize whitespace resulting in broken URL
+						msg = msg.replace((char)160, ' '); // 160 is non-breaking space id
 
-							addMsg(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
-							send(new MessageTransfer(id, msg));
-						}
+						addMsg(new TextMessage(MsgType.RIGHT, msg, isRemoteCenterPanel()));
+						send(new MessageTransfer(id, msg));
 					}
 
 					inputTextArea.setText("");
@@ -334,6 +330,22 @@ public class SessionPanel extends CenterPanel implements EventListener {
 				typingTimer.cancel();
 			}
 
+			private boolean isMessageValid (String msg) {
+				if (msg.equals("")) return false;
+				if (isOnlyCharInString(msg, '/')) return false;
+
+				if (msg.length() % 2 == 0) {
+					if (isOnlyCharInString(msg, '*')) return false;
+					if (isOnlyCharInString(msg, '_')) return false;
+				}
+
+				for (int i = 0; i < msg.length(); i++) {
+					if (msg.charAt(i) != ' ' && msg.charAt(i) != (char)9) return true;
+				}
+				
+				return false;
+			}
+
 			private void stopTypingTimer () {
 				send(new TypingFinishedNotification(id));
 				typing = false;
@@ -350,17 +362,9 @@ public class SessionPanel extends CenterPanel implements EventListener {
 				return msg;
 			}
 
-			private boolean isOnlySlashInString (String msg) {
+			private boolean isOnlyCharInString (String msg, char _char) {
 				for (int i = 0; i < msg.length(); i++) {
-					if (msg.charAt(i) != '/') return false;
-				}
-
-				return true;
-			}
-
-			private boolean isOnlySpacesInString (String msg) {
-				for (int i = 0; i < msg.length(); i++) {
-					if (msg.charAt(i) != ' ') return false;
+					if (msg.charAt(i) != _char) return false;
 				}
 
 				return true;
