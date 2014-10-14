@@ -171,7 +171,7 @@ public class FileTransferManager {
 		if (ex instanceof FileTransferToFileRequest) {
 			final FileTransferToFileRequest req = (FileTransferToFileRequest)ex;
 
-			final ReceiveFileToFileTask task = new ReceiveFileToFileTask(req.fileSize, session, req.taskId, req.fileName);
+			final ReceiveFileToFileTask task = new ReceiveFileToFileTask(session, req.taskId, req.fileName, req.fileSize);
 			receiveTasks.add(task);
 
 			task.setListener(new FileTransferListener() {
