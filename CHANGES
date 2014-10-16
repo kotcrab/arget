@@ -8,7 +8,8 @@
 -Fixed detecting primary monitor
 -Fixed bug when you paste URL copied from Arget it result in broken URL
 -Fixed bug when empty message could be send
--Fixed bug when file transfer message was not updated after canceling 
+-Fixed bug when file transfer message was not updated after canceling
+-Updated profile creator messages
 -Popup message notification disabled by default
 -Better image preview placing
 -Better errors and exceptions logging

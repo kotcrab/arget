@@ -32,10 +32,7 @@ import pl.kotcrab.crypto.CryptoUtils;
 
 //TODO add name check before generating in GUI
 public class ProfileGenerator {
-	private static final String FINISHED_MSG = "Profile generated in your user folder, name of the file is: '%s'. \nIf you want you can move this file to external location. "
-		+ "Then when you launch " + App.APP_NAME + " you can use 'Load External' to load profile from non-standard location.";
-	private static final String FINISHED_MSG_SHORT = "Profile '%s' generated.";
-
+	private static final String FINISHED_MSG = "Profile '%s' created.";
 	private static final String CONTINUE_OR_CANCEL_MSG = "Press ENTER to continue, exit to cancel.";
 	private static final String INVALID_PROFILE_NAME_MSG = "'%s' is not valid profile name! (name already in use or invalid name in system)";
 
@@ -50,7 +47,7 @@ public class ProfileGenerator {
 					Profile profile = ProfileIO.generateEmptyProfile();
 					ProfileIO.saveProfile(profile, name, password);
 					CryptoUtils.fillZeros(password);
-					JOptionPane.showMessageDialog(null, getFinishShortMsg(name));
+					JOptionPane.showMessageDialog(null, getFinishMsg(name));
 					if (listener != null) listener.ok(name, null);
 				} catch (IOException e) {
 					Log.exception(e);
@@ -108,7 +105,7 @@ public class ProfileGenerator {
 	private static char[] readPassword (BufferedReader br) throws IOException {
 		Console c = System.console();
 		if (c == null) {
-			return br.readLine().toCharArray(); // console inside IDE is not available;
+			return br.readLine().toCharArray(); // console inside IDE is not available
 		} else {
 			return c.readPassword(); // if console if available (outside IDE)
 		}
@@ -120,9 +117,5 @@ public class ProfileGenerator {
 
 	private static String getFinishMsg (String profileName) {
 		return String.format(FINISHED_MSG, profileName);
-	}
-
-	private static String getFinishShortMsg (String profileName) {
-		return String.format(FINISHED_MSG_SHORT, profileName);
 	}
 }
